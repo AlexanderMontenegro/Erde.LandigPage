@@ -1,14 +1,15 @@
-import "../styles/servicios.css";
-import React from "react";
-export default function Servicios() {
+import React from 'react';
+import '../styles/Servicios.css';
+
+const Servicios = () => {
   return (
-    <section style={{ padding: '1rem', background: '#fff8dc', borderRadius: '1rem', marginBottom: '1rem' }}>
-      <h2>Servicios</h2>
-      <ul>
-        <li>Impresiones 3D personalizadas</li>
-        <li>Diseño y fabricación de llaveros, porta cápsulas y más</li>
-        <li>Indumentaria personalizada</li>
-      </ul>
+    <section id="servicios" className="servicios-section">
+      <h2>Nuestros Servicios</h2>
+      <div className="servicios-grid">
+        {/* Contenido de servicios aquí */}
+      </div>
     </section>
   );
-}
+};
+
+export default Servicios;

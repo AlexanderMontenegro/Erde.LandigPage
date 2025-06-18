@@ -1,1 +1,19 @@
-.servicios { background-color: #ffe; padding: 20px; }
+/* src/styles/Servicios.css */
+.servicios-section {
+  padding: 5rem 2rem;
+  background-color: var(--bg-secondary);
+}
+
+.servicios-section h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
