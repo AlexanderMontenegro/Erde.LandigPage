@@ -1,12 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ERDE Diseño & Creación</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERDE Diseño & Creación</title>
+  <meta name="description" content="Personalización de artículos e impresión 3D personalizada. Contactanos y conoce nuestros trabajos.">
+  <link rel="canonical" href="https://tusitio.com/">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <button id="theme-toggle" aria-label="Cambiar tema">🌓</button>
+
+  <header>
+    <img src="img/LOGO.png" alt="Logo ERDE Diseño & Creación" class="logo">
+    <h1 class="titulo">ERDE Diseño & Creación</h1>
+    <p>Personalizando tu vida con impresión 3D y artículos únicos</p>
+  </header>
+
+  <nav class="nav">
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <ul id="nav-links">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#instagram">Instagram</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="nosotros">
+      <h2>✨ Nosotros</h2>
+      <p>
+        En ERDE Diseño & Creación nos dedicamos a transformar ideas en productos personalizados y únicos, combinando distintas técnicas como la sublimación, serigrafía, vinilo y la impresión 3D. Trabajamos sobre una amplia variedad de artículos, desde indumentaria hasta tazas y accesorios, brindando soluciones creativas para particulares y empresas.
+        <br><br>
+        Nuestro compromiso es ofrecer calidad, innovación y un acompañamiento cercano en todo el proceso, para que cada cliente pueda expresar su estilo y mensaje de manera auténtica y profesional. En ERDE, la personalización es nuestra pasión y la base para generar piezas que realmente reflejen la identidad de quienes nos eligen.
+      </p>
+    </section>
+
+    <section id="servicios">
+      <h2>🛠️ Servicios</h2>
+      <p>En ERDE ofrecemos una amplia gama de servicios enfocados en alta personalización y calidad:</p>
+      <ul>
+        <li>Sublimación y serigrafía: trabajamos sobre diferentes superficies y textiles, aplicando técnicas duraderas y profesionales que permiten una reproducción fiel de diseños, logos o mensajes.</li>
+        <li>Vinilo de corte y estampado: ideal para acabados precisos y de alto contraste sobre una variedad de materiales, especialmente útiles en personalización de indumentaria y elementos promocionales.</li>
+        <li>Personalización de artículos e indumentaria: ofrecemos soluciones gráficas adaptadas a cada necesidad, desde uniformes de trabajo hasta artículos decorativos, con estilo y presencia visual.</li>
+        <li>Impresión 3D personalizada: desarrollamos modelos únicos, funcionales o decorativos, creados con precisión y pensados a medida para cada proyecto.</li>
+      </ul>
+      <p>Cada servicio incluye asesoramiento, desarrollo gráfico, revisión de diseño y entrega final, garantizando calidad, innovación y compromiso en cada trabajo.</p>
+    </section>
+
+    <section id="instagram">
+      <h2>Instagram</h2>
+      <div class="historias">
+        <div class="tagembed-widget" data-widget-id="287657" website="1"></div>
+        <script src="https://widget.tagembed.com/embed.min.js" type="text/javascript"></script>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <h2>Contacto</h2>
+      <form action="#contacto" method="post" class="contact-form">
+        <label for="nombre">Nombre:
+          <input type="text" name="nombre" id="nombre" required>
+        </label>
+        <label for="email">Email:
+          <input type="email" name="email" id="email" required>
+        </label>
+        <label for="mensaje">Mensaje:
+          <textarea name="mensaje" id="mensaje" required></textarea>
+        </label>
+        <button type="submit">Enviar</button>
+      </form>
+
+      <div class="icon-grid">
+        <a href="https://www.facebook.com/share/19C6R9ygNf/" target="_blank" rel="noopener">
+          <img src="img/facebook.png" alt="Facebook" class="icon-img" />
+        </a>
+        <a href="https://www.instagram.com/erde.personalizados?igsh=MXNuejFueDc1bDdrdg==" target="_blank" rel="noopener">
+          <img src="img/instagram.png" alt="Instagram" class="icon-img" />
+        </a>
+        <a href="https://wa.me/5491170504193" target="_blank" rel="noopener">
+          <img src="img/whatsapp.png" alt="WhatsApp" class="icon-img" />
+        </a>
+        <a href="mailto:elrincondeemily.erde@gmail.com">
+          <img src="img/correo.png" alt="Correo" class="icon-img" />
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <a href="https://wa.me/5491170504193" class="whatsapp" aria-label="WhatsApp">
+    <img src="img/whatsapp.png" alt="WhatsApp" class="icon-img">
+  </a>
+
+  <script>
+    document.getElementById('theme-toggle').onclick = () => {
+      document.body.classList.toggle('dark');
+    };
+    document.getElementById('menu-toggle').onclick = () => {
+      document.getElementById('nav-links').classList.toggle('active');
+    };
+  </script>
+</body>
 </html>

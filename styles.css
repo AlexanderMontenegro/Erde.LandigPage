@@ -1,0 +1,281 @@
+:root {
+  --bg-color: #fff;
+  --text-color: #000;
+  --accent-color: #276fbf;
+  --highlight-color: #25d366;
+  --title-color: #fff;
+}
+
+body.dark {
+  --bg-color: #1e1e1e;
+  --text-color: #fff;
+  --accent-color: #1ebea5;
+  --highlight-color: #128c7e;
+  --title-color: #1ebea5;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Header */
+header {
+  text-align: center;
+  color: #fff;
+  padding: 3rem 1rem;
+  background: #000 url("img/Baner web.png") center/cover no-repeat;
+  margin-top: 5px;
+}
+.logo {
+  width: 120px;
+  margin-bottom: 1rem;
+}
+.titulo {
+  color: var(--title-color);
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+}
+header p {
+  margin: 0;
+}
+
+/* Nav */
+.nav {
+  background: var(--accent-color);
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-toggle {
+  font-size: 1.5rem;
+  color: #fff;
+  display: none;
+  cursor: pointer;
+}
+.nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav ul li a {
+  color: #fff;
+  font-weight: bold;
+  padding: 0.5rem;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.nav ul li a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+/* Main */
+main {
+  padding: 2rem 1rem;
+}
+section {
+  margin-bottom: 3rem;
+}
+section h2 {
+  font-size: 2rem;
+  color: var(--accent-color);
+}
+section p,
+ul {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+ul {
+  padding-left: 1.5rem;
+}
+ul li {
+  margin-bottom: 0.5rem;
+}
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos especiales para Nosotros y Servicios */
+#nosotros, #servicios {
+  border-left: 6px solid var(--accent-color);
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+#nosotros {
+  background: #f2f2f2;
+}
+#servicios {
+  background: #e8f0fc;
+}
+body.dark #nosotros {
+  background: #2a2a2a;
+}
+body.dark #servicios {
+  background: #263544;
+}
+#nosotros h2::before,
+#servicios h2::before {
+  content: "▍";
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  margin-right: 5px;
+}
+
+/* Lista de servicios con ícono */
+#servicios ul li {
+  position: relative;
+  padding-left: 1.2rem;
+}
+#servicios ul li::before {
+  content: "✔";
+  color: var(--accent-color);
+  position: absolute;
+  left: 0;
+}
+
+/* Instagram */
+#instagram {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+#instagram .historias {
+  height: 100%;
+  border: 1px solid var(--accent-color);
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+/* Formulario de Contacto */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background-color: var(--accent-color);
+  border: 4px dashed #ffa500;
+  border-radius: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.contact-form label {
+  font-weight: bold;
+  color: #ff6600;
+  font-size: 1.1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.8rem;
+  border: 2px solid #ffcc66;
+  border-radius: 1rem;
+  width: 80%;
+  font-size: 1rem;
+  background-color: #fffbe0;
+  transition: transform 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #ff9900;
+  transform: scale(1.02);
+}
+
+.contact-form button {
+  background: #ff6600;
+  color: #fff;
+  border: 2px solid #cc5200;
+  padding: 0.8rem 1.5rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #e65c00;
+  transform: scale(1.1);
+}
+
+
+/* Iconos */
+.icon-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.icon-img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Botones flotantes */
+#theme-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1100;
+}
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: #fff;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .nav ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: var(--accent-color);
+    z-index: 1000;
+  }
+  .nav ul.active {
+    display: flex;
+  }
+  .nav ul li {
+    text-align: center;
+    padding: 1rem 0;
+  }
+}
