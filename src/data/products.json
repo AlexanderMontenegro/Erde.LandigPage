@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Devimon Multicolor",
+    "description": "Figura impresa en 3D estilo Digimon",
+    "category": "figuras",
+    "featured": true,
+    "image": "https://firebasestorage.googleapis.com/XXXX/devimon.jpg",
+    "fabricationTime": "3 a 5 días",
+    "customizable": true,
+    "variants": [
+      {
+        "material": "PLA",
+        "color": "Negro",
+        "size": "25cm",
+        "quality": "Premium",
+        "price": 45000,
+        "stock": 5
+      },
+      {
+        "material": "PLA",
+        "color": "Rojo",
+        "size": "25cm",
+        "quality": "Standard",
+        "price": 38000,
+        "stock": 0
+      }
+    ]
+  }
+]
