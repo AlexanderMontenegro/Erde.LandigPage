@@ -4,12 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_SENDER_ID",
-  appId: "TU_APP_ID",
+  apiKey: "AIzaSyA2PZ2TK6wmbdyb5KXOqGNNMG73clMaEYg",
+  authDomain: "erde-personalizados.firebaseapp.com",
+  projectId: "erde-personalizados",
+  storageBucket: "erde-personalizados.firebasestorage.app",
+  messagingSenderId: "637143710056",
+  appId: "1:637143710056:web:550a63e82d84e5f745fedd",
+  measurementId: "G-Z1CQ8B4Z0P"
 };
 
 const app = getApps().length === 0
