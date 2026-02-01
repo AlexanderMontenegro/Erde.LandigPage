@@ -6,19 +6,18 @@ export const useAuthStore = create((set) => ({
   user: null,
   loading: true,
 
-  showAuthModal: false,
-  authMode: "login",
-
-  openAuthModal: (mode = "login") =>
-    set({ showAuthModal: true, authMode: mode }),
-
-  closeAuthModal: () => set({ showAuthModal: false }),
-
-  setAuthMode: (mode) => set({ authMode: mode }),
-
-  initAuthListener: () => {
+  // 🔐 Escucha el estado de autenticación
+  listenAuth: () => {
     onAuthStateChanged(auth, (user) => {
-      set({ user, loading: false, showAuthModal: false });
+      set({
+        user,
+        loading: false,
+      });
     });
+  },
+
+  logout: async () => {
+    await auth.signOut();
+    set({ user: null });
   },
 }));

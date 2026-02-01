@@ -1,32 +1,34 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Cart";
-import Navbar from "./components/Navbar";
-import AuthModal from "./components/auth/AuthModal";
 import { useAuthStore } from "./store/authStore";
-import { useEffect } from "react";
+
+import Navbar from "./components/Navbar";
+import Shop from "./pages/Shop";
+import Home from "./pages/Home";
+import Cart from "./pages/Cart";
+import AuthModal from "./components/auth/AuthModal";
 
 export default function App() {
-  const initAuthListener = useAuthStore((s) => s.initAuthListener);
-  const loading = useAuthStore((s) => s.loading);
+  const user = useAuthStore((state) => state.user);
+  const loading = useAuthStore((state) => state.loading);
 
-  useEffect(() => {
-    initAuthListener();
-  }, []);
-
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <p>Cargando...</p>
+      </div>
+    );
+  }
 
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
+      {!user && <AuthModal />}
 
-      <AuthModal />
+      <Routes>
+        <Route path="/" element={<Shop />} />
+        {user && <Route path="/home" element={<Home />} />}
+        {user && <Route path="/cart" element={<Cart />} />}
+      </Routes>
     </>
   );
 }
