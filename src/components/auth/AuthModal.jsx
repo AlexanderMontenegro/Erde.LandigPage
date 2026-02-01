@@ -1,5 +1,5 @@
-import LoginForm from "./auth/LoginForm";
-import RegisterForm from "./auth/RegisterForm";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
 export default function AuthModal({ open, onClose }) {
   if (!open) return null;
