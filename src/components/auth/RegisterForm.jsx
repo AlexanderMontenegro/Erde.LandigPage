@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../../config/firebase";
+
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");

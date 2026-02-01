@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../../config/firebase";
 
-export default function LoginForm() {
+export default function LoginForm({ onSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,47 +13,35 @@ export default function LoginForm() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      onSuccess();
     } catch (err) {
       setError("Credenciales incorrectas");
     }
   };
 
   return (
-    <>
-      <h2 className="text-xl font-bold mb-4 text-center">
-        🔐 Iniciar sesión
-      </h2>
+    <form onSubmit={handleSubmit}>
+      <h2>Iniciar sesión</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 rounded bg-zinc-800 text-white"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          className="w-full p-2 rounded bg-zinc-800 text-white"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+      <input
+        type="password"
+        placeholder="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
 
-        {error && (
-          <p className="text-red-500 text-sm text-center">{error}</p>
-        )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <button
-          type="submit"
-          className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded"
-        >
-          Entrar
-        </button>
-      </form>
-    </>
+      <button type="submit">Ingresar</button>
+    </form>
   );
 }

@@ -1,34 +1,29 @@
-import { Routes, Route } from "react-router-dom";
-import { useAuthStore } from "./store/authStore";
-
-import Navbar from "./components/Navbar";
-import Shop from "./pages/Shop";
+import { useState } from "react";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
-import AuthModal from "./components/auth/AuthModal";
+import AuthModal from "./components/AuthModal";
+import { useAuthStore } from "./store/authStore";
 
 export default function App() {
-  const user = useAuthStore((state) => state.user);
-  const loading = useAuthStore((state) => state.loading);
+  const user = useAuthStore((s) => s.user);
+  const loading = useAuthStore((s) => s.loading);
+  const [authOpen, setAuthOpen] = useState(false);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <p>Cargando...</p>
-      </div>
-    );
-  }
+  if (loading) return <p>Cargando...</p>;
 
   return (
     <>
-      <Navbar />
-      {!user && <AuthModal />}
+      <button onClick={() => setAuthOpen(true)}>
+        {user ? "Mi cuenta" : "Ingresar / Registrarse"}
+      </button>
 
-      <Routes>
-        <Route path="/" element={<Shop />} />
-        {user && <Route path="/home" element={<Home />} />}
-        {user && <Route path="/cart" element={<Cart />} />}
-      </Routes>
+      <Home />
+      {user && <Cart />}
+
+      <AuthModal
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+      />
     </>
   );
 }
