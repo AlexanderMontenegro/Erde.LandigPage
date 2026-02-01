@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 export const useAuthStore = create((set) => ({
@@ -8,12 +8,15 @@ export const useAuthStore = create((set) => ({
 
   initAuthListener: () => {
     onAuthStateChanged(auth, (user) => {
-      set({ user, loading: false });
+      set({
+        user: user ?? null,
+        loading: false,
+      });
     });
   },
 
   logout: async () => {
-    await signOut(auth);
+    await auth.signOut();
     set({ user: null });
   },
 }));

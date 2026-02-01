@@ -2,46 +2,29 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
 
-export default function LoginForm({ onSuccess }) {
+export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      onSuccess();
-    } catch (err) {
-      setError("Credenciales incorrectas");
-    }
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Iniciar sesión</h2>
-
+    <form onSubmit={handleLogin} className="space-y-4">
       <input
-        type="email"
+        className="input"
         placeholder="Email"
-        value={email}
         onChange={(e) => setEmail(e.target.value)}
-        required
       />
-
       <input
+        className="input"
         type="password"
-        placeholder="Contraseña"
-        value={password}
+        placeholder="Password"
         onChange={(e) => setPassword(e.target.value)}
-        required
       />
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <button type="submit">Ingresar</button>
+      <button className="btn w-full">Ingresar</button>
     </form>
   );
 }
