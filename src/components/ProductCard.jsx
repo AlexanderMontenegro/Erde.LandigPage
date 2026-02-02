@@ -1,97 +1,43 @@
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onSelect }) {
   if (!product) return null;
 
-  const {
-    name,
-    description,
-    basePrice,
-    stock = 0,
-    image,
-    variants = {},
-  } = product;
-
-  const isOutOfStock = stock <= 0;
+  const { name, basePrice, image, stock = 0 } = product;
 
   return (
     <div
+      onClick={() => onSelect(product)}
       style={{
-        border: "1px solid #333",
-        padding: "16px",
-        borderRadius: "10px",
-        background: "#111",
-        color: "#fff",
-        opacity: isOutOfStock ? 0.6 : 1,
+        background: "#020617",
+        border: "1px solid #334155",
+        borderRadius: "12px",
+        padding: "12px",
+        cursor: "pointer",
+        transition: "transform 0.2s",
       }}
     >
-      {/* 🖼️ IMAGEN */}
-      {image ? (
+      {/* Imagen */}
+      {image && (
         <img
           src={image}
           alt={name}
           style={{
             width: "100%",
-            height: "200px",
+            height: "180px",
             objectFit: "cover",
             borderRadius: "8px",
-            marginBottom: "12px",
           }}
         />
-      ) : (
-        <div
-          style={{
-            width: "100%",
-            height: "200px",
-            background: "#222",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "8px",
-            marginBottom: "12px",
-            color: "#777",
-          }}
-        >
-          Sin imagen
-        </div>
       )}
 
-      <h3>{name}</h3>
-      <p>{description}</p>
+      <h3 style={{ marginTop: "8px" }}>{name}</h3>
 
-      <p>
-        <strong>Precio base:</strong> ${basePrice}
+      <p style={{ fontWeight: "bold", color: "#22c55e" }}>
+        ${basePrice}
       </p>
 
-      <p>
-        <strong>Stock:</strong> {stock}
+      <p style={{ fontSize: "12px", color: "#94a3b8" }}>
+        {stock > 0 ? `Stock: ${stock}` : "Sin stock"}
       </p>
-
-      {variants.material && (
-        <p>
-          <strong>Material:</strong> {variants.material.join(", ")}
-        </p>
-      )}
-
-      {variants.color && (
-        <p>
-          <strong>Color:</strong> {variants.color.join(", ")}
-        </p>
-      )}
-
-      <button
-        disabled={isOutOfStock}
-        style={{
-          marginTop: "10px",
-          width: "100%",
-          padding: "10px",
-          background: isOutOfStock ? "#444" : "#7c3aed",
-          color: "#fff",
-          border: "none",
-          borderRadius: "6px",
-          cursor: isOutOfStock ? "not-allowed" : "pointer",
-        }}
-      >
-        {isOutOfStock ? "Sin stock" : "Comprar"}
-      </button>
     </div>
   );
 }

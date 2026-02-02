@@ -1,40 +1,37 @@
-import { useEffect } from "react";
-import useProductStore from "../store/productStore";
+import { useState } from "react";
 import ProductCard from "../components/ProductCard";
+import ProductModal from "../components/ProductModal";
+import { useProductStore } from "../store/productStore";
 
 export default function Home() {
-  const { products, loadProducts, loading } = useProductStore();
-
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
-
-  if (loading) {
-    return <p style={{ padding: 20 }}>Cargando productos...</p>;
-  }
+  const products = useProductStore((s) => s.products);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Productos</h1>
-
-      {products.length === 0 && (
-        <p>No hay productos disponibles</p>
-      )}
-
+    <>
       <div
         style={{
           display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
           gap: "16px",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          padding: "20px",
         }}
       >
-        {products.map((product) => (
+        {products.map((p) => (
           <ProductCard
-            key={product.id}
-            product={product}
+            key={p.id}
+            product={p}
+            onSelect={setSelectedProduct}
           />
         ))}
       </div>
-    </div>
+
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
+    </>
   );
 }

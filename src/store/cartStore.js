@@ -6,25 +6,19 @@ export const useCartStore = create(
     (set, get) => ({
       items: [],
 
-      addToCart: (product, variant) => {
+      addToCart: (product, variants) => {
         const items = get().items;
 
-        const existing = items.find(
+        const existingIndex = items.findIndex(
           (item) =>
             item.id === product.id &&
-            JSON.stringify(item.variant) === JSON.stringify(variant)
+            JSON.stringify(item.variants) === JSON.stringify(variants)
         );
 
-        if (existing) {
-          if (existing.quantity >= variant.stock) return;
-
-          set({
-            items: items.map((item) =>
-              item === existing
-                ? { ...item, quantity: item.quantity + 1 }
-                : item
-            ),
-          });
+        if (existingIndex >= 0) {
+          const updated = [...items];
+          updated[existingIndex].quantity += 1;
+          set({ items: updated });
         } else {
           set({
             items: [
@@ -32,8 +26,9 @@ export const useCartStore = create(
               {
                 id: product.id,
                 name: product.name,
-                price: variant.price,
-                variant,
+                price: product.basePrice,
+                image: product.image,
+                variants,
                 quantity: 1,
               },
             ],
@@ -42,12 +37,21 @@ export const useCartStore = create(
       },
 
       removeFromCart: (index) => {
-        const items = get().items;
+        const items = [...get().items];
         items.splice(index, 1);
-        set({ items: [...items] });
+        set({ items });
       },
 
       clearCart: () => set({ items: [] }),
+
+      totalItems: () =>
+        get().items.reduce((acc, item) => acc + item.quantity, 0),
+
+      totalPrice: () =>
+        get().items.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+          0
+        ),
     }),
     {
       name: "erde-cart",
