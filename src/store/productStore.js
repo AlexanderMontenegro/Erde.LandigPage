@@ -4,18 +4,20 @@ import { getProducts } from "../services/productService";
 const useProductStore = create((set) => ({
   products: [],
   loading: false,
+  error: null,
 
   loadProducts: async () => {
-    set({ loading: true });
+    set({ loading: true, error: null });
 
     try {
       const products = await getProducts();
       set({ products, loading: false });
     } catch (error) {
       console.error("Error cargando productos:", error);
-      set({ loading: false });
+      set({ loading: false, error });
     }
   },
 }));
 
 export default useProductStore;
+export { useProductStore };
