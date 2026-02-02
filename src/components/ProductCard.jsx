@@ -1,26 +1,40 @@
-export default function ProductCard(props) {
-  const product = props.product;
-
-  // 🛑 Protección ABSOLUTA
-  if (!product || typeof product !== "object") {
-    console.warn("ProductCard recibió product inválido:", product);
-    return null;
-  }
+export default function ProductCard({ product }) {
+  if (!product) return null;
 
   const {
-    name = "Producto sin nombre",
-    description = "",
-    image = "",
-    basePrice = 0,
+    name,
+    description,
+    basePrice,
     stock = 0,
+    variants = {},
   } = product;
 
+  const isOutOfStock = stock <= 0;
+
   return (
-    <div className="product-card">
+    <div style={{
+      border: "1px solid #ccc",
+      padding: "16px",
+      borderRadius: "8px",
+      opacity: isOutOfStock ? 0.6 : 1
+    }}>
       <h3>{name}</h3>
       <p>{description}</p>
-      <p>$ {basePrice}</p>
-      <p>Stock: {stock}</p>
+
+      <p><strong>Precio base:</strong> ${basePrice}</p>
+      <p><strong>Stock:</strong> {stock}</p>
+
+      {variants.material && (
+        <p><strong>Materiales:</strong> {variants.material.join(", ")}</p>
+      )}
+
+      {variants.color && (
+        <p><strong>Colores:</strong> {variants.color.join(", ")}</p>
+      )}
+
+      <button disabled={isOutOfStock}>
+        {isOutOfStock ? "Sin stock" : "Comprar"}
+      </button>
     </div>
   );
 }

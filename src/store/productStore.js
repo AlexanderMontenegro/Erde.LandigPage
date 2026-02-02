@@ -1,12 +1,21 @@
 import { create } from "zustand";
 import { getProducts } from "../services/productService";
 
-export const useProductStore = create((set) => ({
+const useProductStore = create((set) => ({
   products: [],
-  loading: true,
+  loading: false,
 
-  fetchProducts: async () => {
-    const data = await getProducts();
-    set({ products: data, loading: false });
+  loadProducts: async () => {
+    set({ loading: true });
+
+    try {
+      const products = await getProducts();
+      set({ products, loading: false });
+    } catch (error) {
+      console.error("Error cargando productos:", error);
+      set({ loading: false });
+    }
   },
 }));
+
+export default useProductStore;
