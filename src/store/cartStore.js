@@ -1,60 +1,26 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from "zustand"
 
-export const useCartStore = create(
-  persist(
-    (set, get) => ({
-      items: [],
+export const useCartStore = create((set) => ({
+  cart: [],
 
-      addToCart: (product, variants) => {
-        const items = get().items;
+  addToCart: (product, variants, finalPrice) =>
+    set((state) => ({
+      cart: [
+        ...state.cart,
+        {
+          id: Date.now(),
+          productId: product.id,
+          name: product.name,
+          image: product.image,
+          variants,
+          price: finalPrice,
+          qty: 1,
+        },
+      ],
+    })),
 
-        const existingIndex = items.findIndex(
-          (item) =>
-            item.id === product.id &&
-            JSON.stringify(item.variants) === JSON.stringify(variants)
-        );
-
-        if (existingIndex >= 0) {
-          const updated = [...items];
-          updated[existingIndex].quantity += 1;
-          set({ items: updated });
-        } else {
-          set({
-            items: [
-              ...items,
-              {
-                id: product.id,
-                name: product.name,
-                price: product.basePrice,
-                image: product.image,
-                variants,
-                quantity: 1,
-              },
-            ],
-          });
-        }
-      },
-
-      removeFromCart: (index) => {
-        const items = [...get().items];
-        items.splice(index, 1);
-        set({ items });
-      },
-
-      clearCart: () => set({ items: [] }),
-
-      totalItems: () =>
-        get().items.reduce((acc, item) => acc + item.quantity, 0),
-
-      totalPrice: () =>
-        get().items.reduce(
-          (acc, item) => acc + item.price * item.quantity,
-          0
-        ),
-    }),
-    {
-      name: "erde-cart",
-    }
-  )
-);
+  removeFromCart: (id) =>
+    set((state) => ({
+      cart: state.cart.filter((item) => item.id !== id),
+    })),
+}))

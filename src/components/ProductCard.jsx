@@ -1,43 +1,18 @@
-export default function ProductCard({ product, onSelect }) {
-  if (!product) return null;
+import { useProductStore } from "../store/productStore"
 
-  const { name, basePrice, image, stock = 0 } = product;
+export default function ProductCard({ product }) {
+  const openProduct = useProductStore((s) => s.openProduct)
+
+  if (!product) return null
 
   return (
-    <div
-      onClick={() => onSelect(product)}
-      style={{
-        background: "#020617",
-        border: "1px solid #334155",
-        borderRadius: "12px",
-        padding: "12px",
-        cursor: "pointer",
-        transition: "transform 0.2s",
-      }}
-    >
-      {/* Imagen */}
-      {image && (
-        <img
-          src={image}
-          alt={name}
-          style={{
-            width: "100%",
-            height: "180px",
-            objectFit: "cover",
-            borderRadius: "8px",
-          }}
-        />
-      )}
+    <div className="product-card" onClick={() => openProduct(product)}>
+      <div className="product-img-wrapper">
+        <img src={product.image} alt={product.name} />
+      </div>
 
-      <h3 style={{ marginTop: "8px" }}>{name}</h3>
-
-      <p style={{ fontWeight: "bold", color: "#22c55e" }}>
-        ${basePrice}
-      </p>
-
-      <p style={{ fontSize: "12px", color: "#94a3b8" }}>
-        {stock > 0 ? `Stock: ${stock}` : "Sin stock"}
-      </p>
+      <h3>{product.name}</h3>
+      <p className="price">${product.basePrice}</p>
     </div>
-  );
+  )
 }

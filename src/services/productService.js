@@ -1,11 +1,17 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { db } from "../config/firebase"
+import { collection, getDocs } from "firebase/firestore"
 
-export async function getProducts() {
-  const snapshot = await getDocs(collection(db, "products"));
+export const getProducts = async () => {
+  const querySnapshot = await getDocs(collection(db, "products"))
 
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
+  const products = []
+
+  querySnapshot.forEach((doc) => {
+    products.push({
+      id: doc.id,
+      ...doc.data(),
+    })
+  })
+
+  return products
 }

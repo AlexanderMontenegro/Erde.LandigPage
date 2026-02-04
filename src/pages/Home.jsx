@@ -1,37 +1,29 @@
-import { useState } from "react";
-import ProductCard from "../components/ProductCard";
-import ProductModal from "../components/ProductModal";
-import { useProductStore } from "../store/productStore";
+import { useEffect } from "react"
+import { useProductStore } from "../store/productStore"
+import ProductCard from "../components/ProductCard"
+import ProductModal from "../components/ProductModal"
+import Cart from "../components/Cart"
 
 export default function Home() {
-  const products = useProductStore((s) => s.products);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { products, fetchProducts } = useProductStore()
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   return (
-    <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "16px",
-          padding: "20px",
-        }}
-      >
+    <div className="container">
+
+      <h1>Catálogo</h1>
+
+      <div className="grid">
         {products.map((p) => (
-          <ProductCard
-            key={p.id}
-            product={p}
-            onSelect={setSelectedProduct}
-          />
+          <ProductCard key={p.id} product={p} />
         ))}
       </div>
 
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
-    </>
-  );
+      <ProductModal />
+      <Cart />
+    </div>
+  )
 }
