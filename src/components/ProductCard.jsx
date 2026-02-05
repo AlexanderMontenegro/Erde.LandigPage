@@ -1,4 +1,4 @@
-import { useProductStore } from "../store/productStore"
+import  useProductStore  from "../store/productStore"
 
 export default function ProductCard({ product }) {
   const openProduct = useProductStore((s) => s.openProduct)

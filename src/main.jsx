@@ -4,10 +4,9 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
 import "./index.css";
-import { db, auth } from "./config/firebase";
 
-console.log("Firestore:", db);
-console.log("Auth:", auth);
+
+
 
 
 useAuthStore.getState().initAuthListener();

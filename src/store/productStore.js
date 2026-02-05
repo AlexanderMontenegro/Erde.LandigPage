@@ -1,80 +1,86 @@
-import { create } from "zustand"
-import { getProducts } from "../services/productService"
+import { create } from "zustand";
 
-export const useProductStore = create((set, get) => ({
+const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
-  loading: false,
+  isModalOpen: false,
+  cartOpen: false,
 
-  // variantes seleccionadas
-  selectedVariants: {
-    material: "",
-    color: "",
-    size: "",
-    quality: "",
-  },
+  cart: [],
+  coupon: null,
 
-  // cargar productos desde FIREBASE
-  fetchProducts: async () => {
-    try {
-      set({ loading: true })
+  setProducts: (products) => set({ products }),
 
-      const data = await getProducts()
-
-      set({
-        products: data,
-        loading: false,
-      })
-    } catch (error) {
-      console.error("Error cargando productos:", error)
-      set({ loading: false })
-    }
-  },
-
-  // abrir modal
-  openProduct: (product) => {
+  openModal: (product) =>
     set({
       selectedProduct: product,
-      selectedVariants: {
-        material: "",
-        color: "",
-        size: "",
-        quality: "",
-      },
-    })
-  },
+      isModalOpen: true,
+    }),
 
-  // cerrar modal
-  closeProduct: () => {
-    set({ selectedProduct: null })
-  },
+  closeModal: () =>
+    set({
+      selectedProduct: null,
+      isModalOpen: false,
+    }),
 
-  // seleccionar variante
-  setVariant: (type, value) => {
+  toggleCart: () =>
     set((state) => ({
-      selectedVariants: {
-        ...state.selectedVariants,
-        [type]: value,
-      },
-    }))
+      cartOpen: !state.cartOpen,
+    })),
+
+  addToCart: (product, selections, price) => {
+    const cart = get().cart;
+
+    const newItem = {
+      id: Date.now(),
+      product,
+      selections,
+      price,
+      qty: 1,
+    };
+
+    set({
+      cart: [...cart, newItem],
+      isModalOpen: false,
+    });
   },
 
-  // calcular precio FINAL (FASE 5.2)
-  getFinalPrice: () => {
-    const { selectedProduct, selectedVariants } = get()
+  removeFromCart: (id) => {
+    set({
+      cart: get().cart.filter((i) => i.id !== id),
+    });
+  },
 
-    if (!selectedProduct) return 0
+  updateQty: (id, qty) => {
+    set({
+      cart: get().cart.map((item) =>
+        item.id === id ? { ...item, qty } : item
+      ),
+    });
+  },
 
-    let price = selectedProduct.basePrice
+  applyCoupon: (code) => {
+    if (code === "ERDE10") {
+      set({ coupon: { code, discount: 0.1 } });
+    } else {
+      set({ coupon: null });
+    }
+  },
 
-    // ✔ calidad suma costo FIJO
-    if (selectedVariants.quality === "Premium") {
-      price += 5000
+  totalPrice: () => {
+    const { cart, coupon } = get();
+
+    let total = cart.reduce(
+      (acc, item) => acc + item.price * item.qty,
+      0
+    );
+
+    if (coupon) {
+      total = total - total * coupon.discount;
     }
 
-    // ✔ tamaño NO cambia precio (como pediste)
-    // ✔ material y color tampoco por ahora
-
-    return price
+    return total;
   },
-}))
+}));
+
+export default useProductStore;
