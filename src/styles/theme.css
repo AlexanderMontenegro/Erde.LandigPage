@@ -1,58 +1,179 @@
+/* ==========================================================================
+   ERDE Store - Tema Gamer/Otaku/Neon Centralizado
+   Todas las variables y estilos base están aquí.
+   Importar solo una vez (en App.jsx o main.jsx)
+   ========================================================================== */
+
 :root {
-  --bg: #020617;
-  --dark-bg: #0a0a0a;
-  --dark-card: #111;
-  --dark-input: #222;
-  --text: #e2e8f0;
-  --neon-green: #00ff00;
-  --neon-blue: #00ffff;
-  --neon-pink: #ff00ff;
-  --neon-purple: #9900ff;
+  /* Modo oscuro (default - gamer/neon) */
+  --bg:           #0a0e17;
+  --card:         #111827;
+  --card-hover:   #1e293b;
+  --input:        #1e293b;
+  --border:       #334155;
+  --text:         #e2e8f0;
+  --text-muted:   #94a3b8;
+  --neon-green:   #00ff9d;
+  --neon-blue:    #00f0ff;
+  --neon-pink:    #ff00aa;
+  --neon-purple:  #a855f7;
+  --neon-yellow:  #ffe700;
+  --price:        var(--neon-green);
+  --success:      #10b981;
+  --danger:       #ff2d55;
+
+  /* Glows y sombras */
+  --glow-green:   0 0 15px rgba(0, 255, 157, 0.6);
+  --glow-blue:    0 0 15px rgba(0, 240, 255, 0.6);
+  --glow-pink:    0 0 15px rgba(255, 0, 170, 0.6);
+  --shadow-sm:    0 4px 6px -1px rgba(0,0,0,0.2);
+  --shadow-md:    0 10px 15px -3px rgba(0,0,0,0.3);
+
+  /* Transiciones y radios */
+  --transition:   all 0.25s ease;
+  --radius-sm:    0.5rem;
+  --radius-md:    1rem;
+  --radius-lg:    1.5rem;
+}
+
+/* Modo claro (activado con .light en <html> o <body>) */
+.light {
+  --bg:           #f8fafc;
+  --card:         #ffffff;
+  --card-hover:   #f1f5f9;
+  --input:        #f1f5f9;
+  --border:       #cbd5e1;
+  --text:         #0f172a;
+  --text-muted:   #475569;
+  --neon-green:   #00c47f;
+  --neon-blue:    #0099cc;
+  --neon-pink:    #e6007e;
+  --neon-purple:  #8b5cf6;
+  --neon-yellow:  #facc15;
+  --price:        #16a34a;
+  --success:      #059669;
+  --danger:       #dc2626;
+
+  --glow-green:   0 0 12px rgba(0, 196, 127, 0.4);
+  --glow-blue:    0 0 12px rgba(0, 153, 204, 0.4);
+  --glow-pink:    0 0 12px rgba(230, 0, 126, 0.4);
+}
+
+/* Estilos base globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Arial', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  transition: var(--transition);
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+/* Clases reutilizables */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition);
 }
 
-.glow-border {
-  box-shadow: 0 0 10px var(--neon-green);
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
-.glow-hover:hover {
-  box-shadow: 0 0 20px var(--neon-blue);
-  transform: scale(1.05);
-  transition: all 0.2s;
+.glow {
+  box-shadow: var(--glow-green);
+  transition: var(--transition);
 }
 
-.badge-oferta {
-  background: var(--neon-pink);
-  color: black;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
+.glow:hover {
+  box-shadow: var(--glow-blue);
+  transform: translateY(-2px);
 }
 
-.animate-pulse {
-  animation: pulse 1s infinite;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+.btn-primary {
+  background: var(--neon-green);
+  color: #000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+.btn-primary:hover {
+  background: #00e089;
+  box-shadow: var(--glow-green);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--neon-blue);
+  color: var(--neon-blue);
+}
+
+.btn-outline:hover {
+  background: var(--neon-blue);
+  color: #000;
+  box-shadow: var(--glow-blue);
+}
+
+.text-neon-green { color: var(--neon-green); }
+.text-neon-blue  { color: var(--neon-blue); }
+.text-neon-pink  { color: var(--neon-pink); }
+
+.bg-card       { background: var(--card); }
+.bg-input      { background: var(--input); border: 1px solid var(--border); }
+
+/* Toggle button */
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  width: 48px;
+  height: 24px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: 0 0 8px var(--glow-green);
+}
+
+.light .theme-toggle::before {
+  transform: translateX(24px);
+  background: var(--neon-blue);
+  box-shadow: 0 0 8px var(--glow-blue);
+}
+
+/* Grid productos */
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
 }
