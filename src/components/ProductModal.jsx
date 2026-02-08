@@ -1,40 +1,53 @@
 import useProductStore from '../store/productStore.js';
 
 export default function ProductModal() {
-  const { selectedProduct, closeModal, addToCart } = useProductStore();
+  const { selectedProduct, isModalOpen, closeModal, addToCart } = useProductStore();
 
-  if (!selectedProduct) return null;
+  if (!isModalOpen || !selectedProduct) return null;
+
+  const handleAdd = () => {
+    addToCart(selectedProduct);
+  };
+
+  const whatsappMsg = encodeURIComponent(
+    `Hola! Quiero: ${selectedProduct.name}\nPrecio: $${selectedProduct.basePrice.toLocaleString('es-AR')}\nDescripción: ${selectedProduct.description || 'N/A'}`
+  );
+  const whatsappLink = `https://wa.me/549TU_NUMERO?text=${whatsappMsg}`;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={closeModal}>
-      <div className="relative bg-zinc-900 text-white p-6 rounded-xl w-[90%] max-w-lg shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={closeModal}>
+      <div className="modal-content">
+        <button className="modal-close-btn" onClick={closeModal}>×</button>
 
-        <button
-          onClick={closeModal}
-          className="absolute top-3 right-3 text-white text-xl"
-        >
-          X
-        </button>
+        <div className="modal-grid">
+          <div className="modal-image-container">
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              className="modal-main-image"
+            />
+          </div>
 
-        <img
-          src={selectedProduct.image}
-          alt={selectedProduct.name}
-          className="w-full rounded-lg mb-4"
-        />
+          <div className="modal-info-container">
+            <h1 className="modal-title">{selectedProduct.name}</h1>
 
-        <h2 className="text-xl font-bold mb-2">{selectedProduct.name}</h2>
-        <p className="text-sm opacity-80 mb-4">{selectedProduct.description}</p>
+            <p className="modal-description">{selectedProduct.description || 'Sin descripción disponible'}</p>
 
-        <div className="text-lg font-semibold mb-4">
-          ${selectedProduct.basePrice}
+            <div className="modal-price">
+              ${selectedProduct.basePrice.toLocaleString('es-AR')}
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-add-cart" onClick={handleAdd}>
+                Agregar al carrito
+              </button>
+
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
+                Comprar por WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
-
-        <button
-          onClick={() => addToCart(selectedProduct)}
-          className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded text-white font-bold"
-        >
-          Agregar al Carrito
-        </button>
       </div>
     </div>
   );
