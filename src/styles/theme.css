@@ -1,7 +1,8 @@
-/* ERDE Store - Tema Gamer/Neon/Otaku Dark (inspirado en todo3dsf.com.ar pero adaptado) */
+/* ==========================================================================
+   ERDE Store - Tema Gamer/Neon/Otaku Dark - Estilos 100% centralizados
+   ========================================================================== */
 
 :root {
-  /* Colores neon/gamer principales */
   --bg:           #0b0f19;
   --card:         #111827;
   --card-hover:   #1e293b;
@@ -10,229 +11,367 @@
   --text:         #e2e8f0;
   --text-muted:   #94a3b8;
   
-  --primary:      #00ff9d;       /* Verde neón principal */
+  --primary:      #00ff9d;
   --primary-dark: #00c47f;
   --accent-blue:  #00f0ff;
   --accent-pink:  #ff00aa;
   --accent-purple:#a855f7;
-  --accent-yellow:#ffe700;
   --price:        var(--primary);
 
-  /* Glows y sombras */
-  --glow:         0 0 15px rgba(0, 255, 157, 0.5);
-  --glow-blue:    0 0 15px rgba(0, 240, 255, 0.5);
-  --glow-pink:    0 0 15px rgba(255, 0, 170, 0.5);
-  --shadow-sm:    0 4px 10px rgba(0,0,0,0.4);
+  --glow-green:   0 0 15px rgba(0, 255, 157, 0.6);
+  --glow-blue:    0 0 15px rgba(0, 240, 255, 0.6);
+  --glow-purple:  0 0 15px rgba(168, 85, 247, 0.6);
   --shadow-md:    0 10px 25px rgba(0,0,0,0.5);
 
-  /* Espaciados y radios */
-  --radius:       1rem;
   --transition:   all 0.3s ease;
+  --radius-md:    1rem;
+  --radius-lg:    1.5rem;
 }
 
-/* Modo claro (opcional) */
-.light {
-  --bg:           #f8fafc;
-  --card:         #ffffff;
-  --card-hover:   #f1f5f9;
-  --input:        #f1f5f9;
-  --border:       #cbd5e1;
-  --text:         #0f172a;
-  --text-muted:   #475569;
-  --primary:      #059669;
-  --primary-dark: #047857;
-  --price:        #059669;
-  --glow:         0 0 12px rgba(5, 150, 105, 0.4);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
-  transition: var(--transition);
+  min-height: 100vh;
 }
 
 /* Clases reutilizables */
 
-.navbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.hero {
-  background: linear-gradient(to bottom right, #0b0f19, #111827);
-  padding: 8rem 2rem 6rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 30% 20%, rgba(0,255,157,0.08) 0%, transparent 40%);
-  pointer-events: none;
-}
-
-.hero h1 {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 900;
-  background: linear-gradient(90deg, var(--primary), var(--accent-blue));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 1.5rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.9rem 2rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  transition: var(--transition);
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: #000;
-  box-shadow: var(--glow);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(0,255,157,0.3);
-}
-
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  transition: var(--transition);
-  position: relative;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--glow);
-}
-
-.card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  transition: var(--transition);
-}
-
-.card:hover img {
-  transform: scale(1.05);
-}
-
-.price {
-  color: var(--price);
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.grid-products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.8rem;
-  padding: 2rem 1rem;
-}
-
-/* Botón WhatsApp flotante */
-.whatsapp-float {
+.modal-overlay {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  z-index: 1000;
-  transition: var(--transition);
+  padding: 1rem;
 }
 
-.whatsapp-float:hover {
+.modal-content {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  max-width: 1000px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--primary);
+  box-shadow: var(--glow-green);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border-radius: 9999px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 10;
+}
+
+.modal-close-btn:hover {
+  background: #ef4444;
   transform: scale(1.1);
 }
 
-/* Toggle theme (ya en App) */
-.theme-toggle {
-  background: var(--card);
+.modal-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-image-container {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-main-image {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  border: 2px solid rgba(0, 255, 157, 0.3);
+  box-shadow: var(--glow-green);
+}
+
+.modal-info-container {
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.modal-description {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.modal-price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--price);
+  margin-bottom: 2rem;
+}
+
+.quantity-container {
+  margin-bottom: 2rem;
+}
+
+.quantity-label {
+  display: block;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-btn {
+  width: 3rem;
+  height: 3rem;
+  background: var(--input);
   border: 1px solid var(--border);
-  border-radius: 9999px;
-  width: 48px;
-  height: 24px;
-  position: relative;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.quantity-btn:hover {
+  background: var(--card-hover);
+}
+
+.quantity-display {
+  width: 4rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.btn-add-cart {
+  background: var(--accent-purple);
+  color: white;
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-add-cart:hover {
+  background: #9333ea;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-purple);
+}
+
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-whatsapp:hover {
+  background: #22c55e;
+  transform: translateY(-2px);
+}
+
+/* Carrito lateral */
+.cart-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  box-shadow: -15px 0 40px rgba(0,0,0,0.6);
+  z-index: 9999;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.4s ease-in-out;
+}
+
+.cart-drawer.open {
+  transform: translateX(0);
+}
+
+.cart-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.cart-close-btn {
+  font-size: 2rem;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
-.theme-toggle::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background: var(--primary);
-  border-radius: 50%;
-  transition: 0.3s;
-  box-shadow: var(--glow);
+.cart-close-btn:hover {
+  color: var(--accent-pink);
 }
 
-.light .theme-toggle::before {
-  transform: translateX(24px);
-  background: var(--accent-blue);
+.cart-item {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: var(--input);
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-/* Animaciones para emergentes */
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in;
+.cart-item-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.cart-item-info {
+  flex: 1;
 }
 
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+.cart-item-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(50%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.cart-item-price {
+  color: var(--price);
+  font-weight: bold;
+  font-size: 1.125rem;
 }
 
-.animate-slide-left {
-  animation: slideLeft 0.3s ease-out;
+.cart-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
 }
 
-@keyframes slideLeft {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
 }
 
-.shadow-left {
-  box-shadow: -10px 0 20px rgba(0, 0, 0, 0.3);
+.cart-total-price {
+  color: var(--primary);
+}
+
+.btn-checkout {
+  width: 100%;
+  background: var(--accent-purple);
+  color: white;
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-checkout:hover {
+  background: #9333ea;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-purple);
+}
+
+/* Responsive - media queries en lugar de prefijos Tailwind */
+@media (min-width: 768px) {
+  .modal-grid {
+    flex-direction: row;
+  }
+
+  .modal-image-container {
+    width: 40%;
+  }
+
+  .modal-info-container {
+    width: 60%;
+  }
+
+  .modal-title {
+    font-size: 2.5rem;
+  }
+
+  .modal-price {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-content {
+    max-width: 1200px;
+  }
 }

@@ -7,45 +7,46 @@ export default function ProductModal() {
 
   const handleAdd = () => {
     addToCart(selectedProduct);
-    // NO cerramos automáticamente → queda abierto hasta que el usuario cierre manualmente
   };
 
+  const whatsappMsg = encodeURIComponent(
+    `Hola! Quiero: ${selectedProduct.name}\nPrecio: $${selectedProduct.basePrice.toLocaleString('es-AR')}\nDescripción: ${selectedProduct.description || 'N/A'}`
+  );
+  const whatsappLink = `https://wa.me/549TU_NUMERO?text=${whatsappMsg}`;
+
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]"
-      onClick={closeModal}
-    >
-      <div
-        className="bg-dark-card p-8 rounded-xl max-w-lg w-full relative glow-border"
-        onClick={e => e.stopPropagation()}
-      >
-        <button onClick={closeModal} className="absolute top-4 right-4 text-3xl text-gray-400 hover:text-white">✖</button>
+    <div className="modal-overlay" onClick={closeModal}>
+      <div className="modal-content">
+        <button className="modal-close-btn" onClick={closeModal}>×</button>
 
-        <h2 className="text-3xl font-bold mb-4 text-neon-green">{selectedProduct.name}</h2>
+        <div className="modal-grid">
+          <div className="modal-image-container">
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              className="modal-main-image"
+            />
+          </div>
 
-        <img
-          src={selectedProduct.image}
-          alt={selectedProduct.name}
-          className="w-full h-64 object-contain mb-6 rounded-lg"
-        />
+          <div className="modal-info-container">
+            <h1 className="modal-title">{selectedProduct.name}</h1>
 
-        <p className="text-gray-300 mb-6">{selectedProduct.description}</p>
+            <p className="modal-description">{selectedProduct.description || 'Sin descripción disponible'}</p>
 
-        <p className="text-4xl font-bold text-neon-green mb-8">
-          ${selectedProduct.basePrice.toLocaleString('es-AR')}
-        </p>
+            <div className="modal-price">
+              ${selectedProduct.basePrice.toLocaleString('es-AR')}
+            </div>
 
-        <div className="flex gap-4">
-          <button onClick={handleAdd} className="flex-1 bg-blue-600 hover:bg-blue-700 py-4 rounded-lg font-bold">
-            Agregar al carrito
-          </button>
-          <a
-            href={`https://wa.me/549TU_NUMERO?text=Hola!%20Quiero%20${encodeURIComponent(selectedProduct.name)}`}
-            target="_blank"
-            className="flex-1 bg-green-600 hover:bg-green-700 py-4 rounded-lg font-bold text-center"
-          >
-            Comprar por WhatsApp
-          </a>
+            <div className="modal-actions">
+              <button className="btn-add-cart" onClick={handleAdd}>
+                Agregar al carrito
+              </button>
+
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
+                Comprar por WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

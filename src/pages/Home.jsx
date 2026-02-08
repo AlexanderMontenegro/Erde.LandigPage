@@ -13,13 +13,13 @@ export default function Home() {
   }, [fetchProducts]);
 
   return (
-    <div className="min-h-screen bg-bg p-6">
+    <div className="min-h-screen bg-bg p-6 relative">
       <h1 className="text-4xl font-bold text-center mb-12 text-neon-green">
         Productos Personalizados 3D - ERDE
       </h1>
 
       {products.length === 0 ? (
-        <p className="text-center text-xl text-text-muted">Cargando productos desde Firebase...</p>
+        <p className="text-center text-xl text-text-muted">Cargando productos...</p>
       ) : (
         <div className="grid-products">
           {products.map(product => (
@@ -28,9 +28,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* Modal siempre en el árbol - se muestra solo cuando isModalOpen = true */}
+      {/* Componentes emergentes */}
       <ProductModal />
-
       <CartDrawer />
       <FloatingCartButton />
     </div>
