@@ -1,12 +1,13 @@
 :root {
   --bg: #020617;
-  --card: #0a0a0a;
+  --dark-bg: #0a0a0a;
+  --dark-card: #111;
+  --dark-input: #222;
   --text: #e2e8f0;
   --neon-green: #00ff00;
   --neon-blue: #00ffff;
   --neon-pink: #ff00ff;
   --neon-purple: #9900ff;
-  --price: #00ff88;
 }
 
 body {
@@ -15,18 +16,10 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
-.catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.product-card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 12px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .glow-border {
@@ -36,29 +29,15 @@ body {
 .glow-hover:hover {
   box-shadow: 0 0 20px var(--neon-blue);
   transform: scale(1.05);
+  transition: all 0.2s;
 }
 
 .badge-oferta {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: var(--neon-pink);
   color: black;
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
-}
-
-.product-img {
-  width: 100%;
-  height: 260px;
-  object-fit: contain;
-}
-
-.dark-input {
-  background: #111;
-  border: 1px solid var(--neon-green);
-  color: white;
+  font-size: 0.75rem;
 }
 
 .animate-pulse {
@@ -73,10 +52,7 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .catalog-grid {
+  .grid {
     grid-template-columns: 1fr;
-  }
-  .fixed.w-80 {
-    width: 100%;
   }
 }

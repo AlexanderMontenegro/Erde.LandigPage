@@ -7,7 +7,7 @@ export default function Navbar() {
         <FaGamepad className="text-neon-green" size={24} />
         <h1 className="text-xl font-bold text-neon-pink">ERDE Store</h1>
       </div>
-      <ul className="flex gap-6">
+      <ul className="flex gap-6 text-white">
         <li><a href="#productos" className="hover:glow-hover">Productos</a></li>
         <li><a href="#quienes-somos" className="hover:glow-hover">Quiénes Somos</a></li>
         <li><a href="#contacto" className="hover:glow-hover">Contacto</a></li>
