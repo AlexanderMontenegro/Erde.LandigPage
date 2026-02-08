@@ -1,18 +1,22 @@
-import { FaGamepad } from 'react-icons/fa';
+import { FaGamepad, FaSun, FaMoon } from 'react-icons/fa';
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 bg-dark-bg p-4 flex justify-between items-center z-40 glow-border">
-      <div className="flex items-center gap-2">
-        <FaGamepad className="text-neon-green" size={24} />
-        <h1 className="text-xl font-bold text-neon-pink">ERDE Store</h1>
+    <nav className="bg-card border-b border-border sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center gap-3">
+            <FaGamepad className="text-neon-green text-2xl" />
+            <span className="text-xl font-bold text-neon-pink">ERDE Store</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <a href="#productos" className="text-text hover:text-neon-green transition">Productos</a>
+            <a href="#promociones" className="text-text hover:text-neon-blue transition">Ofertas</a>
+            <a href="#contacto" className="text-text hover:text-neon-purple transition">Contacto</a>
+          </div>
+        </div>
       </div>
-      <ul className="flex gap-6 text-white">
-        <li><a href="#productos" className="hover:glow-hover">Productos</a></li>
-        <li><a href="#quienes-somos" className="hover:glow-hover">Quiénes Somos</a></li>
-        <li><a href="#contacto" className="hover:glow-hover">Contacto</a></li>
-        <li><a href="#promociones" className="hover:glow-hover">Promociones</a></li>
-      </ul>
     </nav>
   );
 }
