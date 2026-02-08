@@ -5,46 +5,47 @@ const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
   isModalOpen: false,
-  cartOpen: false,
   cart: [],
-  coupon: null,
+  cartOpen: false,
 
   fetchProducts: async () => {
-    try {
-      const products = await getProducts();
-      set({ products });
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
+    const products = await getProducts();
+    set({ products });
   },
 
   openModal: (product) => set({ selectedProduct: product, isModalOpen: true }),
-  closeModal: () => set({ selectedProduct: null, isModalOpen: false }),
-  toggleCart: () => set((state) => ({ cartOpen: !state.cartOpen })),
+  closeModal: () => set({ isModalOpen: false }),
 
-  addToCart: (product, selections, price) => {
-    const newItem = { id: Date.now(), product, selections, price, qty: 1 };
-    set({ cart: [...get().cart, newItem], isModalOpen: false });
-  },
+  toggleCart: () => set(state => ({ cartOpen: !state.cartOpen })),
 
-  removeFromCart: (id) => set({ cart: get().cart.filter(i => i.id !== id) }),
-  updateQty: (id, delta) => set({
-    cart: get().cart.map(item => item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item)
-  }),
-
-  applyCoupon: (code) => {
-    if (code === 'ERDE10') {
-      set({ coupon: { code, discount: 0.1 } });
+  addToCart: (product, qty = 1) => {
+    const existing = get().cart.find(item => item.id === product.id);
+    if (existing) {
+      set({
+        cart: get().cart.map(item =>
+          item.id === product.id ? { ...item, qty: item.qty + qty } : item
+        )
+      });
     } else {
-      set({ coupon: null });
+      set({ cart: [...get().cart, { ...product, qty }] });
     }
+    set({ isModalOpen: false });
   },
+
+  removeFromCart: (id) => set({ cart: get().cart.filter(item => item.id !== id) }),
+
+  updateQty: (id, delta) => {
+    set({
+      cart: get().cart.map(item =>
+        item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+      )
+    });
+  },
+
+  totalItems: () => get().cart.reduce((acc, item) => acc + item.qty, 0),
 
   totalPrice: () => {
-    let total = get().cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-    const coupon = get().coupon;
-    if (coupon) total *= (1 - coupon.discount);
-    return total.toFixed(2);
+    return get().cart.reduce((acc, item) => acc + item.basePrice * item.qty, 0).toFixed(0);
   },
 }));
 
