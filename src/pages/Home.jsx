@@ -13,19 +13,10 @@ export default function Home() {
   }, [fetchProducts]);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <h1 className="text-4xl font-bold text-center mb-10 text-green-400">Productos ERDE Personalizados</h1>
-
-      {products.length === 0 ? (
-        <p className="text-center text-xl">Cargando productos... o no hay productos en Firestore.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
-
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
+      ))}
       <ProductModal />
       <CartDrawer />
       <FloatingCartButton />
