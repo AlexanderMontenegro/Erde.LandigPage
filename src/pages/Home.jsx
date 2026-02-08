@@ -1,29 +1,27 @@
 import { useEffect } from "react"
-import { useProductStore } from "../store/productStore"
+import useProductStore from "../store/productStore"
 import ProductCard from "../components/ProductCard"
-import ProductModal from "../components/ProductModal"
-import Cart from "../components/Cart"
 
 export default function Home() {
-  const { products, fetchProducts } = useProductStore()
+  const { products = [], fetchProducts, loading } = useProductStore()
 
   useEffect(() => {
     fetchProducts()
   }, [])
 
-  return (
-    <div className="container">
-
-      <h1>Catálogo</h1>
-
-      <div className="grid">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+  if (loading) {
+    return (
+      <div className="text-center mt-10 text-white">
+        Cargando productos...
       </div>
+    )
+  }
 
-      <ProductModal />
-      <Cart />
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
+      ))}
     </div>
   )
 }

@@ -1,12 +1,12 @@
-import Home from "./pages/Home";
-import ThemeToggle from "./components/ThemeToggle";
-import "./styles/theme.css";
+import Home from './pages/Home.jsx';
+import Navbar from './components/Navbar.jsx';
+import './styles/theme.css'; // Mantiene dark mode
 
 export default function App() {
   return (
     <>
+      <Navbar />
       <Home />
-      <ThemeToggle />
     </>
   );
 }
