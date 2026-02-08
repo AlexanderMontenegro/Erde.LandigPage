@@ -13,11 +13,24 @@ export default function Home() {
   }, [fetchProducts]);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
-      {products.map((p) => (
-        <ProductCard key={p.id} product={p} />
-      ))}
+    <div className="min-h-screen bg-bg p-6">
+      <h1 className="text-4xl font-bold text-center mb-12 text-neon-green">
+        Productos Personalizados 3D - ERDE
+      </h1>
+
+      {products.length === 0 ? (
+        <p className="text-center text-xl text-text-muted">Cargando productos desde Firebase...</p>
+      ) : (
+        <div className="grid-products">
+          {products.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+
+      {/* Modal siempre en el árbol - se muestra solo cuando isModalOpen = true */}
       <ProductModal />
+
       <CartDrawer />
       <FloatingCartButton />
     </div>

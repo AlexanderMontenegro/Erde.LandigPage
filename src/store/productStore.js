@@ -5,64 +5,71 @@ const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
   isModalOpen: false,
-  cart: [],           // array de items con { id, name, image, basePrice, qty, ... }
+  cart: [],           // [{ id, name, image, basePrice, qty }]
   cartOpen: false,
 
   fetchProducts: async () => {
-    const products = await getProducts();
-    set({ products });
+    try {
+      const products = await getProducts();
+      set({ products });
+      console.log('Productos cargados:', products);
+    } catch (error) {
+      console.error('Error al cargar productos:', error);
+    }
   },
 
-  openModal: (product) => set({ selectedProduct: product, isModalOpen: true }),
-  closeModal: () => set({ selectedProduct: null, isModalOpen: false }),
+  openModal: (product) => {
+    console.log('openModal llamado con:', product);
+    set({ selectedProduct: product, isModalOpen: true });
+  },
 
-  toggleCart: () => set((state) => ({ cartOpen: !state.cartOpen })),
+  closeModal: () => {
+    console.log('closeModal llamado');
+    set({ selectedProduct: null, isModalOpen: false });
+  },
+
+  toggleCart: () => set(state => ({ cartOpen: !state.cartOpen })),
 
   addToCart: (product, quantity = 1) => {
-    const itemToAdd = {
-      id: product.id,
-      name: product.name,
-      image: product.image,
-      basePrice: product.basePrice,
-      qty: quantity,
-    };
-
-    const existingItemIndex = get().cart.findIndex(item => item.id === product.id);
-
-    if (existingItemIndex !== -1) {
-      // Ya existe → aumentar cantidad
+    console.log('Agregando al carrito:', product.name, 'x' + quantity);
+    
+    const existingIndex = get().cart.findIndex(item => item.id === product.id);
+    
+    if (existingIndex !== -1) {
+      // Actualizar cantidad si ya existe
       const updatedCart = [...get().cart];
-      updatedCart[existingItemIndex].qty += quantity;
+      updatedCart[existingIndex].qty += quantity;
       set({ cart: updatedCart });
     } else {
-      // Nuevo item
-      set({ cart: [...get().cart, itemToAdd] });
+      // Agregar nuevo
+      set({
+        cart: [...get().cart, {
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          basePrice: product.basePrice,
+          qty: quantity,
+        }]
+      });
     }
-
-    // Opcional: cerrar modal después de agregar
-    set({ isModalOpen: false });
   },
 
-  removeFromCart: (productId) => {
-    set({ cart: get().cart.filter(item => item.id !== productId) });
+  removeFromCart: (id) => {
+    set({ cart: get().cart.filter(item => item.id !== id) });
   },
 
-  updateQty: (productId, newQty) => {
-    if (newQty < 1) return;
+  updateQty: (id, delta) => {
     set({
       cart: get().cart.map(item =>
-        item.id === productId ? { ...item, qty: newQty } : item
+        item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
       )
     });
   },
 
-  clearCart: () => set({ cart: [] }),
-
+  // Funciones que faltaban → ahora sí existen
   getTotalItems: () => get().cart.reduce((sum, item) => sum + item.qty, 0),
 
-  getTotalPrice: () => {
-    return get().cart.reduce((sum, item) => sum + (item.basePrice * item.qty), 0);
-  },
+  getTotalPrice: () => get().cart.reduce((sum, item) => sum + (item.basePrice * item.qty), 0).toFixed(0),
 }));
 
 export default useProductStore;

@@ -1,40 +1,52 @@
 import useProductStore from '../store/productStore.js';
 
 export default function ProductModal() {
-  const { selectedProduct, closeModal, addToCart } = useProductStore();
+  const { selectedProduct, isModalOpen, closeModal, addToCart } = useProductStore();
 
-  if (!selectedProduct) return null;
+  if (!isModalOpen || !selectedProduct) return null;
+
+  const handleAdd = () => {
+    addToCart(selectedProduct);
+    // NO cerramos automáticamente → queda abierto hasta que el usuario cierre manualmente
+  };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={closeModal}>
-      <div className="relative bg-zinc-900 text-white p-6 rounded-xl w-[90%] max-w-lg shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]"
+      onClick={closeModal}
+    >
+      <div
+        className="bg-dark-card p-8 rounded-xl max-w-lg w-full relative glow-border"
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={closeModal} className="absolute top-4 right-4 text-3xl text-gray-400 hover:text-white">✖</button>
 
-        <button
-          onClick={closeModal}
-          className="absolute top-3 right-3 text-white text-xl"
-        >
-          X
-        </button>
+        <h2 className="text-3xl font-bold mb-4 text-neon-green">{selectedProduct.name}</h2>
 
         <img
           src={selectedProduct.image}
           alt={selectedProduct.name}
-          className="w-full rounded-lg mb-4"
+          className="w-full h-64 object-contain mb-6 rounded-lg"
         />
 
-        <h2 className="text-xl font-bold mb-2">{selectedProduct.name}</h2>
-        <p className="text-sm opacity-80 mb-4">{selectedProduct.description}</p>
+        <p className="text-gray-300 mb-6">{selectedProduct.description}</p>
 
-        <div className="text-lg font-semibold mb-4">
-          ${selectedProduct.basePrice}
+        <p className="text-4xl font-bold text-neon-green mb-8">
+          ${selectedProduct.basePrice.toLocaleString('es-AR')}
+        </p>
+
+        <div className="flex gap-4">
+          <button onClick={handleAdd} className="flex-1 bg-blue-600 hover:bg-blue-700 py-4 rounded-lg font-bold">
+            Agregar al carrito
+          </button>
+          <a
+            href={`https://wa.me/549TU_NUMERO?text=Hola!%20Quiero%20${encodeURIComponent(selectedProduct.name)}`}
+            target="_blank"
+            className="flex-1 bg-green-600 hover:bg-green-700 py-4 rounded-lg font-bold text-center"
+          >
+            Comprar por WhatsApp
+          </a>
         </div>
-
-        <button
-          onClick={() => addToCart(selectedProduct)}
-          className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded text-white font-bold"
-        >
-          Agregar al Carrito
-        </button>
       </div>
     </div>
   );

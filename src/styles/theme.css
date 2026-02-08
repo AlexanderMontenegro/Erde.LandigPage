@@ -1,42 +1,36 @@
-/* ==========================================================================
-   ERDE Store - Tema Gamer/Otaku/Neon Centralizado
-   Todas las variables y estilos base están aquí.
-   Importar solo una vez (en App.jsx o main.jsx)
-   ========================================================================== */
+/* ERDE Store - Tema Gamer/Neon/Otaku Dark (inspirado en todo3dsf.com.ar pero adaptado) */
 
 :root {
-  /* Modo oscuro (default - gamer/neon) */
-  --bg:           #0a0e17;
+  /* Colores neon/gamer principales */
+  --bg:           #0b0f19;
   --card:         #111827;
   --card-hover:   #1e293b;
   --input:        #1e293b;
   --border:       #334155;
   --text:         #e2e8f0;
   --text-muted:   #94a3b8;
-  --neon-green:   #00ff9d;
-  --neon-blue:    #00f0ff;
-  --neon-pink:    #ff00aa;
-  --neon-purple:  #a855f7;
-  --neon-yellow:  #ffe700;
-  --price:        var(--neon-green);
-  --success:      #10b981;
-  --danger:       #ff2d55;
+  
+  --primary:      #00ff9d;       /* Verde neón principal */
+  --primary-dark: #00c47f;
+  --accent-blue:  #00f0ff;
+  --accent-pink:  #ff00aa;
+  --accent-purple:#a855f7;
+  --accent-yellow:#ffe700;
+  --price:        var(--primary);
 
   /* Glows y sombras */
-  --glow-green:   0 0 15px rgba(0, 255, 157, 0.6);
-  --glow-blue:    0 0 15px rgba(0, 240, 255, 0.6);
-  --glow-pink:    0 0 15px rgba(255, 0, 170, 0.6);
-  --shadow-sm:    0 4px 6px -1px rgba(0,0,0,0.2);
-  --shadow-md:    0 10px 15px -3px rgba(0,0,0,0.3);
+  --glow:         0 0 15px rgba(0, 255, 157, 0.5);
+  --glow-blue:    0 0 15px rgba(0, 240, 255, 0.5);
+  --glow-pink:    0 0 15px rgba(255, 0, 170, 0.5);
+  --shadow-sm:    0 4px 10px rgba(0,0,0,0.4);
+  --shadow-md:    0 10px 25px rgba(0,0,0,0.5);
 
-  /* Transiciones y radios */
-  --transition:   all 0.25s ease;
-  --radius-sm:    0.5rem;
-  --radius-md:    1rem;
-  --radius-lg:    1.5rem;
+  /* Espaciados y radios */
+  --radius:       1rem;
+  --transition:   all 0.3s ease;
 }
 
-/* Modo claro (activado con .light en <html> o <body>) */
+/* Modo claro (opcional) */
 .light {
   --bg:           #f8fafc;
   --card:         #ffffff;
@@ -45,102 +39,144 @@
   --border:       #cbd5e1;
   --text:         #0f172a;
   --text-muted:   #475569;
-  --neon-green:   #00c47f;
-  --neon-blue:    #0099cc;
-  --neon-pink:    #e6007e;
-  --neon-purple:  #8b5cf6;
-  --neon-yellow:  #facc15;
-  --price:        #16a34a;
-  --success:      #059669;
-  --danger:       #dc2626;
-
-  --glow-green:   0 0 12px rgba(0, 196, 127, 0.4);
-  --glow-blue:    0 0 12px rgba(0, 153, 204, 0.4);
-  --glow-pink:    0 0 12px rgba(230, 0, 126, 0.4);
-}
-
-/* Estilos base globales */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --primary:      #059669;
+  --primary-dark: #047857;
+  --price:        #059669;
+  --glow:         0 0 12px rgba(5, 150, 105, 0.4);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
   min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
   transition: var(--transition);
 }
 
 /* Clases reutilizables */
 
-.card {
+.navbar {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.hero {
+  background: linear-gradient(to bottom right, #0b0f19, #111827);
+  padding: 8rem 2rem 6rem;
+  text-align: center;
+  position: relative;
   overflow: hidden;
-  transition: var(--transition);
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 20%, rgba(0,255,157,0.08) 0%, transparent 40%);
+  pointer-events: none;
 }
 
-.glow {
-  box-shadow: var(--glow-green);
-  transition: var(--transition);
-}
-
-.glow:hover {
-  box-shadow: var(--glow-blue);
-  transform: translateY(-2px);
+.hero h1 {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--primary), var(--accent-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius);
   font-weight: 600;
-  cursor: pointer;
   transition: var(--transition);
-  border: none;
+  cursor: pointer;
 }
 
 .btn-primary {
-  background: var(--neon-green);
+  background: var(--primary);
   color: #000;
+  box-shadow: var(--glow);
 }
 
 .btn-primary:hover {
-  background: #00e089;
-  box-shadow: var(--glow-green);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0,255,157,0.3);
 }
 
-.btn-outline {
-  background: transparent;
-  border: 2px solid var(--neon-blue);
-  color: var(--neon-blue);
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  position: relative;
 }
 
-.btn-outline:hover {
-  background: var(--neon-blue);
-  color: #000;
-  box-shadow: var(--glow-blue);
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--glow);
 }
 
-.text-neon-green { color: var(--neon-green); }
-.text-neon-blue  { color: var(--neon-blue); }
-.text-neon-pink  { color: var(--neon-pink); }
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: var(--transition);
+}
 
-.bg-card       { background: var(--card); }
-.bg-input      { background: var(--input); border: 1px solid var(--border); }
+.card:hover img {
+  transform: scale(1.05);
+}
 
-/* Toggle button */
+.price {
+  color: var(--price);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+  padding: 2rem 1rem;
+}
+
+/* Botón WhatsApp flotante */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+}
+
+/* Toggle theme (ya en App) */
 .theme-toggle {
   background: var(--card);
   border: 1px solid var(--border);
@@ -149,7 +185,6 @@ body {
   height: 24px;
   position: relative;
   cursor: pointer;
-  transition: var(--transition);
 }
 
 .theme-toggle::before {
@@ -159,21 +194,45 @@ body {
   left: 2px;
   width: 20px;
   height: 20px;
-  background: var(--neon-green);
+  background: var(--primary);
   border-radius: 50%;
-  transition: var(--transition);
-  box-shadow: 0 0 8px var(--glow-green);
+  transition: 0.3s;
+  box-shadow: var(--glow);
 }
 
 .light .theme-toggle::before {
   transform: translateX(24px);
-  background: var(--neon-blue);
-  box-shadow: 0 0 8px var(--glow-blue);
+  background: var(--accent-blue);
 }
 
-/* Grid productos */
-.grid-products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
+/* Animaciones para emergentes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.3s ease-out;
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.shadow-left {
+  box-shadow: -10px 0 20px rgba(0, 0, 0, 0.3);
 }
