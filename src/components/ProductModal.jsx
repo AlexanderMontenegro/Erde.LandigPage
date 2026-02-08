@@ -68,7 +68,7 @@ export default function ProductModal() {
           />
         )}
 
-        {/* Material */}
+        {/* Material  
         <div className="mb-3">
           <p>Material</p>
           <select
