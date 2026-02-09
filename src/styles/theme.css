@@ -28,6 +28,21 @@
   --radius-lg:    1.5rem;
 }
 
+/* Modo claro (opcional) */
+.light {
+  --bg:           #f8fafc;
+  --card:         #ffffff;
+  --card-hover:   #f1f5f9;
+  --input:        #f1f5f9;
+  --border:       #cbd5e1;
+  --text:         #0f172a;
+  --text-muted:   #475569;
+  --primary:      #059669;
+  --primary-dark: #047857;
+  --price:        #059669;
+  --glow:         0 0 12px rgba(5, 150, 105, 0.4);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -490,4 +505,33 @@ body {
 
 .whatsapp-float:hover {
   transform: scale(1.1);
+}
+
+/* Toggle theme (ya en App) */
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  width: 48px;
+  height: 24px;
+  position: relative;
+  cursor: pointer;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: var(--glow);
+}
+
+.light .theme-toggle::before {
+  transform: translateX(24px);
+  background: var(--accent-blue);
 }
