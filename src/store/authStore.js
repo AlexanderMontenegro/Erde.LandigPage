@@ -10,52 +10,30 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   loading: true,
   error: null,
+  isAuthModalOpen: false,
+
+  toggleAuthModal: () => set(state => ({ isAuthModalOpen: !state.isAuthModalOpen })),
 
   initAuth: () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      set({ loading: true });
       if (firebaseUser) {
-        try {
-          const userDocRef = doc(db, 'users', firebaseUser.uid);
-          const userDoc = await getDoc(userDocRef);
-          let userData = {};
-
-          if (!userDoc.exists()) {
-            // Primer login con Google o email → crear documento
-            userData = {
-              uid: firebaseUser.uid,
-              email: firebaseUser.email,
-              nombre: firebaseUser.displayName?.split(' ')[0] || '',
-              apellido: firebaseUser.displayName?.split(' ').slice(1).join(' ') || '',
-              direccion: '',
-              telefono: firebaseUser.phoneNumber || '',
-              createdAt: new Date(),
-            };
-            await setDoc(userDocRef, userData);
-          } else {
-            userData = userDoc.data();
-          }
-
-          set({ user: { ...firebaseUser, ...userData }, loading: false });
-        } catch (err) {
-          console.error('Error al cargar datos de usuario:', err);
-          set({ error: err.message, loading: false });
-        }
+        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+        const userData = userDoc.exists() ? userDoc.data() : {};
+        set({ user: { ...firebaseUser, ...userData }, loading: false });
       } else {
         set({ user: null, loading: false });
       }
     });
-
     return unsubscribe;
   },
 
   registerWithEmail: async (email, password, nombre, apellido, direccion, telefono) => {
     try {
-      set({ error: null, loading: true });
+      set({ error: null });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
@@ -70,34 +48,34 @@ const useAuthStore = create((set) => ({
       };
 
       await setDoc(doc(db, 'users', user.uid), userData);
-      set({ user: { ...user, ...userData }, loading: false });
+      set({ user: { ...user, ...userData }, isAuthModalOpen: false });
       return user;
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message });
       throw err;
     }
   },
 
   loginWithEmail: async (email, password) => {
     try {
-      set({ error: null, loading: true });
+      set({ error: null });
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       const userData = userDoc.exists() ? userDoc.data() : {};
 
-      set({ user: { ...user, ...userData }, loading: false });
+      set({ user: { ...user, ...userData }, isAuthModalOpen: false });
       return user;
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message });
       throw err;
     }
   },
 
   loginWithGoogle: async () => {
     try {
-      set({ error: null, loading: true });
+      set({ error: null });
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
@@ -120,21 +98,20 @@ const useAuthStore = create((set) => ({
         userData = userDoc.data();
       }
 
-      set({ user: { ...user, ...userData }, loading: false });
+      set({ user: { ...user, ...userData }, isAuthModalOpen: false });
       return user;
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message });
       throw err;
     }
   },
 
   logout: async () => {
     try {
-      set({ loading: true });
       await signOut(auth);
-      set({ user: null, loading: false });
+      set({ user: null });
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message });
     }
   },
 }));
