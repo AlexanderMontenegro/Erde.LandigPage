@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const MP_ACCESS_TOKEN = import.meta.env.VITE_MERCADO_PAGO_ACCESS_TOKEN;
+const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5173';
 
 export const createPreference = async (cartItems, user) => {
   if (!MP_ACCESS_TOKEN) {
-    throw new Error('Access Token de Mercado Pago no configurado');
+    throw new Error('Access Token de Mercado Pago no configurado en .env');
   }
 
   const items = cartItems.map(item => ({
@@ -25,12 +26,12 @@ export const createPreference = async (cartItems, user) => {
       address: { street_name: user?.direccion || '' },
     },
     back_urls: {
-      success: `${window.location.origin}/success`,
-      failure: `${window.location.origin}/failure`,
-      pending: `${window.location.origin}/pending`,
+      success: `${BASE_URL}/success`,
+      failure: `${BASE_URL}/failure`,
+      pending: `${BASE_URL}/pending`,
     },
     auto_return: 'approved',
-    notification_url: `${window.location.origin}/webhook`, // Opcional por ahora
+    notification_url: `${BASE_URL}/webhook`, // Opcional por ahora
   };
 
   try {
@@ -48,6 +49,6 @@ export const createPreference = async (cartItems, user) => {
     return response.data.init_point; // URL del checkout
   } catch (error) {
     console.error('Error creando preferencia Mercado Pago:', error.response?.data || error);
-    throw new Error('No se pudo iniciar el pago. Intenta de nuevo.');
+    throw new Error('No se pudo iniciar el pago. Verifica las URLs o las credenciales.');
   }
 };
