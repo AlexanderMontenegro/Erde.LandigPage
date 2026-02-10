@@ -22,11 +22,11 @@ export default function App() {
       <Navbar />
       <Home />
 
-      {/* Emergentes – renderizados al final para prioridad en z-index */}
+      {/* TODOS los emergentes al final del return – esto es clave */}
       <AuthModal />
       <ProfileModal />
       <ProductModal />
-      <CartDrawer />
+      <CartDrawer /> {/* ← Debe estar aquí, después de <Home /> */}
       <FloatingCartButton />
     </div>
   );

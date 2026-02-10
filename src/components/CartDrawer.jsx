@@ -10,30 +10,19 @@ export default function CartDrawer() {
 
   return (
     <>
-      {/* Backdrop oscuro – clic fuera cierra */}
+      {/* Backdrop – usa tu clase existente */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-[99998]"
+        className="cart-drawer-backdrop"
         onClick={toggleCart}
       />
 
-      {/* Drawer desde derecha */}
-      <div
-        className={`fixed top-0 right-0 z-[99999] h-full w-full max-w-md bg-card shadow-left transform transition-transform duration-500 ease-out ${
-          cartOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
+      {/* Drawer – usa tu clase existente + .open para slide */}
+      <div className={`cart-drawer ${cartOpen ? 'open' : ''}`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b border-border flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-neon-green">
-              Mi carrito ({totalItems})
-            </h2>
-            <button
-              onClick={toggleCart}
-              className="text-3xl text-text-muted hover:text-neon-pink transition"
-            >
-              ×
-            </button>
+          <div className="cart-header">
+            <h2 className="cart-title">Mi carrito ({totalItems})</h2>
+            <button className="cart-close-btn" onClick={toggleCart}>×</button>
           </div>
 
           {/* Lista de productos */}
@@ -45,19 +34,19 @@ export default function CartDrawer() {
               </div>
             ) : (
               cart.map(item => (
-                <div key={item.id} className="flex gap-5 bg-dark-input p-5 rounded-xl">
+                <div key={item.id} className="cart-item">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-24 h-24 object-cover rounded-lg border border-border flex-shrink-0"
+                    className="cart-item-img"
                     onError={e => e.target.src = 'https://via.placeholder.com/96?text=Sin+img'}
                   />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-lg mb-1 line-clamp-2">{item.name}</h3>
-                    <p className="text-neon-green font-bold mb-3">
+                  <div className="cart-item-info">
+                    <h3 className="cart-item-name">{item.name}</h3>
+                    <p className="cart-item-price">
                       ${item.basePrice.toLocaleString('es-AR')} × {item.qty}
                     </p>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 mt-2">
                       <div className="flex items-center bg-bg rounded-lg border border-border overflow-hidden">
                         <button
                           onClick={() => updateQty(item.id, -1)}
@@ -88,16 +77,14 @@ export default function CartDrawer() {
 
           {/* Footer */}
           {cart.length > 0 && (
-            <div className="p-6 border-t border-border mt-auto">
-              <div className="flex justify-between text-xl font-bold mb-6">
+            <div className="cart-footer">
+              <div className="cart-total">
                 <span>Total:</span>
-                <span className="text-neon-green">${totalPrice.toLocaleString('es-AR')}</span>
+                <span className="cart-total-price">${totalPrice.toLocaleString('es-AR')}</span>
               </div>
-
-              <button className="w-full bg-neon-purple hover:bg-opacity-90 py-5 text-xl font-bold rounded-xl transition shadow-glow-purple">
+              <button className="btn-checkout">
                 Finalizar compra
               </button>
-
               <button
                 onClick={toggleCart}
                 className="w-full text-center text-text-muted hover:text-neon-blue mt-4 transition"
