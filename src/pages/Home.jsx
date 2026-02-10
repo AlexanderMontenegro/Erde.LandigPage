@@ -99,39 +99,39 @@ export default function Home() {
         )}
       </section>
 
-      {/* Contacto */}
-      <section id="contacto" className="contact-section">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="contact-title">Contactanos</h2>
-          <p className="contact-subtitle">
-            ¿Querés un diseño personalizado o tenés dudas? Escribinos y te respondemos en minutos.
-          </p>
+      {/* Contacto en footer */}
+      <footer id="contacto" className="footer-contact">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="footer-title">Contactanos</h2>
 
-          <form className="contact-form">
-            <input type="text" placeholder="Nombre" className="contact-input" required />
-            <input type="email" placeholder="Email" className="contact-input" required />
-            <textarea placeholder="Mensaje" rows="5" className="contact-textarea" required></textarea>
-            <button type="submit" className="contact-btn">
-              Enviar mensaje
-            </button>
-          </form>
+          <div className="footer-info">
+            <div className="footer-item">
+              <h4>Dirección</h4>
+              <p>Merlo, Buenos Aires, Argentina</p>
+            </div>
 
-          <div className="mt-12">
-            <p className="text-lg mb-4">O escribinos directamente:</p>
-            <a
-              href="https://wa.me/549TU_NUMERO"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 px-8 py-4 rounded-xl text-white text-xl font-bold transition"
-            >
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12c0 2.14.7 4.11 1.88 5.71L2 22l4.29-1.88C7.89 21.3 9.86 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm.71 14.93c-1.48 0-2.92-.4-4.18-1.16l-.3-.18-3.12 1.37 1.37-3.12-.18-.3c-.76-1.26-1.16-2.7-1.16-4.18 0-4.14 3.36-7.5 7.5-7.5s7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5z"/>
-              </svg>
-              WhatsApp
-            </a>
+            <div className="footer-item">
+              <h4>WhatsApp</h4>
+              <a href="https://wa.me/549TU_NUMERO" target="_blank" rel="noopener noreferrer">
+                +54 9 TU_NUMERO
+              </a>
+            </div>
+
+            <div className="footer-item">
+              <h4>Redes Sociales</h4>
+              <div className="footer-links">
+                <a href="#" className="footer-link">Instagram</a>
+                <a href="#" className="footer-link">Facebook</a>
+                <a href="#" className="footer-link">YouTube</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-text-muted">© 2025 ERDE Personalizados - Todos los derechos reservados</p>
           </div>
         </div>
-      </section>
+      </footer>
 
       {/* Componentes emergentes */}
       <ProductModal />
