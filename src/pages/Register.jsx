@@ -1,40 +1,129 @@
-import { useState } from "react";
-import { useAuthStore } from "../store/authStore";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../store/authStore.js';
 
 export default function Register() {
-  const register = useAuthStore((s) => s.register);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const { registerWithEmail, loginWithGoogle, user, loading, error } = useAuthStore();
+  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-    address: "",
-  });
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  useEffect(() => {
+    if (user && !loading) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(form.email, form.password, {
-      name: form.name,
-      phone: form.phone,
-      address: form.address,
-    });
+    try {
+      await registerWithEmail(email, password, nombre, apellido, direccion, telefono);
+    } catch (err) {
+      // Error ya está en el store
+    }
   };
 
+  const handleGoogle = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      // Error ya está en el store
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="text-2xl text-neon-green">Cargando...</div>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Registro</h2>
+    <div className="min-h-screen flex items-center justify-center bg-bg px-4">
+      <div className="auth-container">
+        <h1 className="auth-title">Crear Cuenta</h1>
 
-      <input name="name" placeholder="Nombre completo" onChange={handleChange} />
-      <input name="email" placeholder="Email" onChange={handleChange} />
-      <input name="password" type="password" placeholder="Contraseña" onChange={handleChange} />
-      <input name="phone" placeholder="Teléfono" onChange={handleChange} />
-      <input name="address" placeholder="Dirección de envío" onChange={handleChange} />
+        {error && <p className="text-red-500 mb-6 text-center font-medium">{error}</p>}
 
-      <button>Crear cuenta</button>
-    </form>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Apellido"
+              value={apellido}
+              onChange={(e) => setApellido(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </div>
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="auth-input"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="auth-input"
+            required
+          />
+
+          <input
+            type="text"
+            placeholder="Dirección"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+            className="auth-input"
+            required
+          />
+
+          <input
+            type="tel"
+            placeholder="Teléfono"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            className="auth-input"
+            required
+          />
+
+          <button type="submit" className="auth-btn">
+            Registrarse
+          </button>
+        </form>
+
+        <div className="my-6 text-center text-text-muted font-medium">o</div>
+
+        <button onClick={handleGoogle} className="w-full bg-accent-blue text-black py-3 rounded-lg font-bold hover:bg-opacity-90 transition">
+          Registrarse con Google
+        </button>
+
+        <p className="text-center text-text-muted mt-8">
+          ¿Ya tenés cuenta?{' '}
+          <a href="/login" className="text-accent-blue hover:underline font-semibold">
+            Iniciá sesión
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }
