@@ -1,25 +1,36 @@
-import { useState } from "react";
-import { useAuthStore } from "../store/authStore";
+import { Link } from 'react-router-dom';
 
 export default function Login() {
-  const login = useAuthStore((s) => s.login);
-  const google = useAuthStore((s) => s.loginWithGoogle);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   return (
-    <div>
-      <h2>Iniciar sesión</h2>
+    <div className="min-h-screen flex items-center justify-center bg-bg px-4">
+      <div className="auth-container">
+        <h1 className="auth-title">Iniciar Sesión</h1>
 
-      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} />
+        <form className="space-y-6">
+          <input
+            type="email"
+            placeholder="Email"
+            className="auth-input"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            className="auth-input"
+            required
+          />
+          <button type="submit" className="auth-btn">
+            Entrar
+          </button>
+        </form>
 
-      <button onClick={() => login(email, password)}>Ingresar</button>
-
-      <hr />
-
-      <button onClick={google}>Ingresar con Google</button>
+        <div className="auth-toggle">
+          ¿No tenés cuenta?{' '}
+          <Link to="/register" className="text-accent-blue hover:underline">
+            Registrate aquí
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

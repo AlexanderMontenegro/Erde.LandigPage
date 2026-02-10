@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Home from './pages/Home.jsx';
 import Navbar from './components/Navbar.jsx';
-import './styles/theme.css';
+import './styles/theme1.css';
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
