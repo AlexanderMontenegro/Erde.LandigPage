@@ -5,18 +5,22 @@ import {
   signInWithEmailAndPassword, 
   signInWithPopup, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  updateProfile 
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   loading: true,
   error: null,
-  isAuthModalOpen: false, // Control del modal
+  isAuthModalOpen: false,
+  isProfileModalOpen: false,
 
   toggleAuthModal: () => set(state => ({ isAuthModalOpen: !state.isAuthModalOpen })),
+
+  toggleProfileModal: () => set(state => ({ isProfileModalOpen: !state.isProfileModalOpen })),
 
   initAuth: () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -45,7 +49,9 @@ const useAuthStore = create((set) => ({
         apellido,
         direccion,
         telefono,
+        imagen: '', // Imagen predefinida inicial
         createdAt: new Date(),
+        favorites: [],
       };
 
       await setDoc(doc(db, 'users', user.uid), userData);
@@ -92,7 +98,9 @@ const useAuthStore = create((set) => ({
           apellido: user.displayName?.split(' ').slice(1).join(' ') || '',
           direccion: '',
           telefono: user.phoneNumber || '',
+          imagen: '',
           createdAt: new Date(),
+          favorites: [],
         };
         await setDoc(userDocRef, userData);
       } else {
@@ -107,10 +115,49 @@ const useAuthStore = create((set) => ({
     }
   },
 
+  updateUser: async (updates) => {
+    try {
+      const { user } = get();
+      if (!user) return;
+
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, updates);
+      set({ user: { ...user, ...updates } });
+    } catch (err) {
+      set({ error: err.message });
+    }
+  },
+
+  addFavorite: async (productId) => {
+    try {
+      const { user } = get();
+      if (!user) return;
+
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, { favorites: arrayUnion(productId) });
+      set({ user: { ...user, favorites: [...(user.favorites || []), productId] } });
+    } catch (err) {
+      set({ error: err.message });
+    }
+  },
+
+  removeFavorite: async (productId) => {
+    try {
+      const { user } = get();
+      if (!user) return;
+
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, { favorites: arrayRemove(productId) });
+      set({ user: { ...user, favorites: user.favorites.filter(id => id !== productId) } });
+    } catch (err) {
+      set({ error: err.message });
+    }
+  },
+
   logout: async () => {
     try {
       await signOut(auth);
-      set({ user: null });
+      set({ user: null, isAuthModalOpen: false, isProfileModalOpen: false });
     } catch (err) {
       set({ error: err.message });
     }
