@@ -1,12 +1,29 @@
 import useProductStore from '../store/productStore.js';
+import useAuthStore from '../store/authStore.js';
 
 export default function CartDrawer() {
   const { cart, cartOpen, toggleCart, removeFromCart, updateQty, getTotalItems, getTotalPrice } = useProductStore();
+  const { user, toggleAuthModal } = useAuthStore();
 
   if (!cartOpen) return null;
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
+
+  const handleCheckout = () => {
+    if (!user) {
+      toggleAuthModal(); // Abre modal de login si no está logueado
+      return;
+    }
+
+    // Lógica temporal de prueba (reemplazar con Mercado Pago después)
+    alert(`Procesando pago de $${totalPrice.toLocaleString('es-AR')} para ${totalItems} productos. ¡Gracias por tu compra!`);
+
+    // Opcional: limpiar carrito después de "pago" simulado
+    // clearCart(); // si agregas clearCart en productStore
+
+    toggleCart(); // Cierra el drawer
+  };
 
   return (
     <>
@@ -75,14 +92,14 @@ export default function CartDrawer() {
             )}
           </div>
 
-          {/* Footer */}
+          {/* Footer – botón reparado con onClick */}
           {cart.length > 0 && (
             <div className="cart-footer">
               <div className="cart-total">
                 <span>Total:</span>
                 <span className="cart-total-price">${totalPrice.toLocaleString('es-AR')}</span>
               </div>
-              <button className="btn-checkout">
+              <button onClick={handleCheckout} className="btn-checkout">
                 Finalizar compra
               </button>
               <button
