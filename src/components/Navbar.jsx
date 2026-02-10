@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore.js';
 
 export default function Navbar() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, toggleAuthModal } = useAuthStore();
 
   return (
     <nav className="navbar">
@@ -25,9 +24,9 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="btn btn-outline px-6 py-2">
+            <button onClick={toggleAuthModal} className="btn btn-outline px-6 py-2">
               Iniciar sesión
-            </Link>
+            </button>
           )}
         </div>
       </div>
