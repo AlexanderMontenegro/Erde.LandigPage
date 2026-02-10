@@ -827,4 +827,11 @@ body {
 }
 
 
-/***********************************************/
+/*Usuarios*/
+.u{
+  width: 60px;
+  height: 60px;
+  background: var(--primary);
+  border-radius: 50%;
+
+}

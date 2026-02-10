@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import AuthModal from './components/AuthModal.jsx';
+import ProfileModal from './components/ProfileModal.jsx';
 import ProductModal from './components/ProductModal.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import FloatingCartButton from './components/FloatingCartButton.jsx';
@@ -21,10 +22,9 @@ export default function App() {
       <Navbar />
       <Home />
 
-      {/* Modal de auth (login + register en uno) */}
+      {/* Modals – renderizados al final para prioridad */}
       <AuthModal />
-
-      {/* Otros emergentes */}
+      <ProfileModal />
       <ProductModal />
       <CartDrawer />
       <FloatingCartButton />

@@ -1,7 +1,7 @@
 import useAuthStore from '../store/authStore.js';
 
 export default function Navbar() {
-  const { user, logout, toggleAuthModal } = useAuthStore();
+  const { user, logout, toggleAuthModal, toggleProfileModal } = useAuthStore();
 
   return (
     <nav className="navbar">
@@ -18,7 +18,17 @@ export default function Navbar() {
 
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-text-muted">Hola, {user.nombre || user.email}</span>
+              {user.imagen && (
+                <img
+                  src={user.imagen}
+                  alt="Perfil"
+                  className="u w-10 h-10 rounded-full object-cover border-2 border-neon-green cursor-pointer"
+                  onClick={toggleProfileModal}
+                />
+              )}
+              <button onClick={toggleProfileModal} className="text-text-muted hover:text-primary">
+                Hola, {user.nombre || user.email}
+              </button>
               <button onClick={logout} className="btn btn-outline px-6 py-2">
                 Cerrar sesión
               </button>
