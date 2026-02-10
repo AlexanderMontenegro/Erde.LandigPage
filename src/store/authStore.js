@@ -10,16 +10,17 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-const useAuthStore = create((set, get) => ({
+const useAuthStore = create((set) => ({
   user: null,
   loading: true,
   error: null,
-  isAuthModalOpen: false,
+  isAuthModalOpen: false, // Control del modal
 
   toggleAuthModal: () => set(state => ({ isAuthModalOpen: !state.isAuthModalOpen })),
 
   initAuth: () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      set({ loading: true });
       if (firebaseUser) {
         const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
         const userData = userDoc.exists() ? userDoc.data() : {};
