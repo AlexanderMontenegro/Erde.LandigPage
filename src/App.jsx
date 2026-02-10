@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
+import AuthModal from './components/AuthModal.jsx';
+import ProductModal from './components/ProductModal.jsx';
+import CartDrawer from './components/CartDrawer.jsx';
+import FloatingCartButton from './components/FloatingCartButton.jsx';
 import useAuthStore from './store/authStore.js';
-import AuthModal from './components/AuthModal.jsx'; // Nuevo modal
 import './styles/theme.css';
 
 export default function App() {
@@ -14,10 +17,17 @@ export default function App() {
   }, [initAuth]);
 
   return (
-    <div>
+    <div className="relative min-h-screen bg-bg">
       <Navbar />
       <Home />
+
+      {/* Modal de auth (login + register en uno) */}
       <AuthModal />
+
+      {/* Otros emergentes */}
+      <ProductModal />
+      <CartDrawer />
+      <FloatingCartButton />
     </div>
   );
 }
