@@ -22,7 +22,7 @@ export default function App() {
       <Navbar />
       <Home />
 
-      {/* Modals – renderizados al final para prioridad */}
+      {/* Emergentes – renderizados al final para prioridad en z-index */}
       <AuthModal />
       <ProfileModal />
       <ProductModal />

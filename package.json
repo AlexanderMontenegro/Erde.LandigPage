@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mercadopago/sdk-js": "^0.0.3",
+    "axios": "^1.13.5",
     "firebase": "^12.9.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
