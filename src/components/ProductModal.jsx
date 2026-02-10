@@ -9,7 +9,7 @@ export default function ProductModal() {
 
   const handleAdd = () => {
     if (!user) {
-      toggleAuthModal(); // Abre modal de auth si no está logueado
+      toggleAuthModal();
       return;
     }
     addToCart(selectedProduct);
@@ -18,11 +18,11 @@ export default function ProductModal() {
   const whatsappMsg = encodeURIComponent(
     `Hola! Estoy interesado en: ${selectedProduct.name}\nPrecio: $${selectedProduct.basePrice.toLocaleString('es-AR')}\nDescripción: ${selectedProduct.description || 'N/A'}`
   );
-  const whatsappLink = `https://wa.me/549TU_NUMERO?text=${whatsappMsg}`; // ← CAMBIA TU NÚMERO REAL
+  const whatsappLink = `https://wa.me/549TU_NUMERO?text=${whatsappMsg}`;
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
-      <div className="modal-content">
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={closeModal}>×</button>
 
         <div className="modal-grid">

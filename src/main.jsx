@@ -2,9 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
-import Login from './pages/Login.jsx'
-import Register from './pages/Register.jsx'
-import './index.css'
+import Success from './pages/Success.jsx'
+import Failure from './pages/Failure.jsx'
 import './styles/theme.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -12,8 +11,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/failure" element={<Failure />} />
+        {/* Puedes agregar /pending si quieres */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
