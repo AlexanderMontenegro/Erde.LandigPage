@@ -2,8 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
-import './styles/themeX.css'
-import Login from './pages/Login.jsx' // Crea esta página después
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
+import './index.css'
+import './styles/theme.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -11,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
-        {/* Agrega /register cuando lo tengas */}
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

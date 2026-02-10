@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import useAuthStore from '../store/authStore.js';
 
 export default function Navbar() {
+  const { user, logout } = useAuthStore();
+
   return (
     <nav className="navbar">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
@@ -13,9 +16,19 @@ export default function Navbar() {
           <a href="#productos" className="text-text hover:text-primary transition">Productos</a>
           <a href="#ofertas" className="text-text hover:text-primary transition">Ofertas</a>
           <a href="#contacto" className="text-text hover:text-primary transition">Contacto</a>
-          <Link to="/login" className="btn btn-outline px-6 py-2">
-            Iniciar sesión
-          </Link>
+
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-text-muted">Hola, {user.nombre || user.email}</span>
+              <button onClick={logout} className="btn btn-outline px-6 py-2">
+                Cerrar sesión
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="btn btn-outline px-6 py-2">
+              Iniciar sesión
+            </Link>
+          )}
         </div>
       </div>
     </nav>
