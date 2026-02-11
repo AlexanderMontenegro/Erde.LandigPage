@@ -1,48 +1,49 @@
+import { useState } from 'react';
 import useProductStore from '../store/productStore.js';
 import useAuthStore from '../store/authStore.js';
+import { createPreference } from '../api/mpService.js';
 
 export default function CartDrawer() {
-  const { cart, cartOpen, toggleCart, removeFromCart, updateQty, getTotalItems, getTotalPrice } = useProductStore();
+  const { cart, cartOpen, toggleCart, removeFromCart, updateQty, getTotalItems, getTotalPrice, clearCart } = useProductStore();
   const { user, toggleAuthModal } = useAuthStore();
+  const [loading, setLoading] = useState(false);
 
   if (!cartOpen) return null;
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!user) {
-      toggleAuthModal(); // Abre modal de login si no está logueado
+      toggleAuthModal();
       return;
     }
 
-    // Lógica temporal de prueba (reemplazar con Mercado Pago después)
-    alert(`Procesando pago de $${totalPrice.toLocaleString('es-AR')} para ${totalItems} productos. ¡Gracias por tu compra!`);
-
-    // Opcional: limpiar carrito después de "pago" simulado
-    // clearCart(); // si agregas clearCart en productStore
-
-    toggleCart(); // Cierra el drawer
+    setLoading(true);
+    try {
+      const checkoutUrl = await createPreference(cart, user);
+      window.location.href = checkoutUrl; // Redirige a Mercado Pago
+    } catch (err) {
+      alert(err.message || 'Error al iniciar el pago');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {/* Backdrop – usa tu clase existente */}
       <div
         className="cart-drawer-backdrop"
         onClick={toggleCart}
       />
 
-      {/* Drawer – usa tu clase existente + .open para slide */}
       <div className={`cart-drawer ${cartOpen ? 'open' : ''}`}>
         <div className="flex flex-col h-full">
-          {/* Header */}
           <div className="cart-header">
             <h2 className="cart-title">Mi carrito ({totalItems})</h2>
             <button className="cart-close-btn" onClick={toggleCart}>×</button>
           </div>
 
-          {/* Lista de productos */}
           <div className="flex-1 p-6 overflow-y-auto space-y-6">
             {cart.length === 0 ? (
               <div className="text-center py-20 text-text-muted">
@@ -92,15 +93,18 @@ export default function CartDrawer() {
             )}
           </div>
 
-          {/* Footer – botón reparado con onClick */}
           {cart.length > 0 && (
             <div className="cart-footer">
               <div className="cart-total">
                 <span>Total:</span>
                 <span className="cart-total-price">${totalPrice.toLocaleString('es-AR')}</span>
               </div>
-              <button onClick={handleCheckout} className="btn-checkout">
-                Finalizar compra
+              <button
+                onClick={handleCheckout}
+                disabled={loading}
+                className={`btn-checkout ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {loading ? 'Procesando...' : 'Finalizar compra'}
               </button>
               <button
                 onClick={toggleCart}

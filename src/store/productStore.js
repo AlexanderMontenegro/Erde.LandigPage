@@ -70,6 +70,11 @@ const useProductStore = create((set, get) => ({
   getTotalItems: () => get().cart.reduce((sum, item) => sum + item.qty, 0),
 
   getTotalPrice: () => get().cart.reduce((sum, item) => sum + (item.basePrice * item.qty), 0).toFixed(0),
-}));
+
+  clearCart: () => set({ cart: [] }),
+})
+
+);
+
 
 export default useProductStore;
