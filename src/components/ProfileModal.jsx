@@ -19,10 +19,14 @@ export default function ProfileModal() {
   useEffect(() => {
     if (isProfileModalOpen && user) {
       const fetchOrders = async () => {
-        const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setOrders(ordersData);
+        try {
+          const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
+          const querySnapshot = await getDocs(q);
+          const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setOrders(ordersData);
+        } catch (err) {
+          console.error('Error fetching orders:', err);
+        }
       };
       fetchOrders();
     }
@@ -34,7 +38,7 @@ export default function ProfileModal() {
       await updateUser({ nombre, apellido, direccion, telefono, email, imagen });
       toggleProfileModal();
     } catch (err) {
-      // Error manejado en store
+      console.error('Error updating user:', err);
     }
   };
 
@@ -48,38 +52,69 @@ export default function ProfileModal() {
     }
   };
 
-  // Imágenes predefinidas en src/img/Usuarios/
+  // Imágenes predefinidas – ruta desde public/img/Usuarios (asegúrate de mover la carpeta a public)
   const predefinedImages = [
-    "../img/Usuarios/U1.jpg",
-    "../img/Usuarios/U2.jpg",
-    "../img/Usuarios/U3.jpg",
-     "../img/Usuarios/U4.jpg",
-    "../img/Usuarios/U5.jpg",
-    "../img/Usuarios/U6.jpg",
-    
+    '/img/Usuarios/U1.jpg',
+    '/img/Usuarios/U2.jpg',
+    '/img/Usuarios/U3.jpg',
     // Agrega más si tienes
   ];
 
   if (!isProfileModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center p-4" onClick={toggleProfileModal}>
-      <div className="modal-content relative max-w-lg w-full" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={toggleProfileModal}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
         <h1 className="modal-title text-center">Mi Perfil</h1>
 
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        {error && <p className="text-red-500 mb-6 text-center">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="text" placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} className="auth-input" required />
-          <input type="text" placeholder="Apellido" value={apellido} onChange={e => setApellido(e.target.value)} className="auth-input" required />
-          <input type="text" placeholder="Dirección" value={direccion} onChange={e => setDireccion(e.target.value)} className="auth-input" required />
-          <input type="tel" placeholder="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} className="auth-input" required />
-          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="auth-input" required />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            className="auth-input"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Apellido"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+            className="auth-input"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Dirección"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+            className="auth-input"
+            required
+          />
+          <input
+            type="tel"
+            placeholder="Teléfono"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            className="auth-input"
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="auth-input"
+            required
+          />
 
-          <div className="mt-4">
-            <label className="block text-text-muted mb-2 text-center">Imagen de perfil</label>
+          <div className="mt-6">
+            <label className="block text-text-muted mb-3 text-center font-medium">Imagen de perfil</label>
             <div className="grid grid-cols-3 gap-4 justify-items-center">
               {predefinedImages.map((imgSrc, idx) => (
                 <button
@@ -88,13 +123,18 @@ export default function ProfileModal() {
                   onClick={() => setImagen(imgSrc)}
                   className={`border-2 rounded-full overflow-hidden w-20 h-20 ${imagen === imgSrc ? 'border-neon-green' : 'border-transparent'}`}
                 >
-                  <img src={imgSrc} alt={`Perfil ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={imgSrc}
+                    alt={`Perfil ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
+                  />
                 </button>
               ))}
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary w-full mt-6">
+          <button type="submit" className="btn btn-primary w-full py-4 mt-6 font-bold">
             Guardar Cambios
           </button>
         </form>
