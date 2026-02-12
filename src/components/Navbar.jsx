@@ -22,7 +22,7 @@ export default function Navbar() {
                 <img
                   src={user.imagen}
                   alt="Perfil"
-                  className="u w-10 h-10 rounded-full object-cover border-2 border-neon-green cursor-pointer"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-neon-green cursor-pointer"
                   onClick={toggleProfileModal}
                 />
               )}

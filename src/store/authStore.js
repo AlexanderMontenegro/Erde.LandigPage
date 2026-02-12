@@ -11,7 +11,7 @@ import {
 import { doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-const useAuthStore = create((set, get) => ({
+const useAuthStore = create((set) => ({
   user: null,
   loading: true,
   error: null,
@@ -49,7 +49,7 @@ const useAuthStore = create((set, get) => ({
         apellido,
         direccion,
         telefono,
-        imagen: '', // Imagen predefinida inicial
+        imagen: '', // Inicial sin imagen
         createdAt: new Date(),
         favorites: [],
       };

@@ -50,23 +50,24 @@ export default function ProfileModal() {
 
   // Imágenes predefinidas en src/img/Usuarios/
   const predefinedImages = [
-    "/src/img/Usuarios/U1.jpg",
-    "/src/img/Usuarios/U2.jpg",
-    "/src/img/Usuarios/U3.jpg", 
-    "/src/img/Usuarios/U4.jpg",
+    "../img/Usuarios/U1.jpg",
+    "../img/Usuarios/U2.jpg",
+    "../img/Usuarios/U3.jpg",
+     "../img/Usuarios/U4.jpg",
+    "../img/Usuarios/U5.jpg",
+    "../img/Usuarios/U6.jpg",
     
-
-   
+    // Agrega más si tienes
   ];
 
   if (!isProfileModalOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[99999] bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center p-4" onClick={toggleProfileModal}>
+      <div className="modal-content relative max-w-lg w-full" onClick={e => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
-        <h1 className="modal-title">Mi Perfil</h1>
+        <h1 className="modal-title text-center">Mi Perfil</h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
@@ -78,16 +79,16 @@ export default function ProfileModal() {
           <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="auth-input" required />
 
           <div className="mt-4">
-            <label className="block text-text-muted mb-2">Imagen de perfil</label>
-            <div className="grid grid-cols-3 gap-4">
+            <label className="block text-text-muted mb-2 text-center">Imagen de perfil</label>
+            <div className="grid grid-cols-3 gap-4 justify-items-center">
               {predefinedImages.map((imgSrc, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setImagen(imgSrc)}
-                  className={`border-2 rounded-lg overflow-hidden ${imagen === imgSrc ? 'border-neon-green' : 'border-transparent'}`}
+                  className={`border-2 rounded-full overflow-hidden w-20 h-20 ${imagen === imgSrc ? 'border-neon-green' : 'border-transparent'}`}
                 >
-                  <img src={imgSrc} alt={`Perfil ${idx + 1}`} className="u w-full h-24 object-cover" />
+                  <img src={imgSrc} alt={`Perfil ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -100,11 +101,11 @@ export default function ProfileModal() {
 
         <h2 className="text-2xl font-bold mt-8 mb-4 text-neon-green">Historial de Compras</h2>
         {orders.length === 0 ? (
-          <p className="text-text-muted">No hay compras realizadas</p>
+          <p className="text-text-muted text-center">No hay compras realizadas</p>
         ) : (
           orders.map(order => (
             <div key={order.id} className="bg-input p-4 rounded-lg mb-4">
-              <p>Orden ID: {order.id}</p>
+              <p className="font-medium">Orden ID: {order.id}</p>
               <p>Total: ${order.total.toLocaleString('es-AR')}</p>
               <p>Fecha: {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}</p>
             </div>
@@ -113,7 +114,7 @@ export default function ProfileModal() {
 
         <h2 className="text-2xl font-bold mt-8 mb-4 text-neon-green">Favoritos</h2>
         {favorites.length === 0 ? (
-          <p className="text-text-muted">No hay favoritos</p>
+          <p className="text-text-muted text-center">No hay favoritos</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {favorites.map(productId => {
