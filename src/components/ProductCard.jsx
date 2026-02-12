@@ -9,9 +9,7 @@ export default function ProductCard({ product }) {
   const isFavorite = user?.favorites?.includes(product.id) || false;
 
   const handleFavorite = () => {
-    if (!user) {
-      return; // No permite favoritos sin login
-    }
+    if (!user) return; // No favoritos sin login
     if (isFavorite) {
       removeFavorite(product.id);
     } else {

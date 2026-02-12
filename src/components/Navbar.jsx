@@ -22,12 +22,12 @@ export default function Navbar() {
                 <img
                   src={user.imagen}
                   alt="Perfil"
-                  className="u w-10 h-10 rounded-full object-cover border-2 border-neon-green cursor-pointer"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-neon-green cursor-pointer shadow-glow-green"
                   onClick={toggleProfileModal}
                 />
               )}
-              <button onClick={toggleProfileModal} className="text-text-muted hover:text-primary">
-                Hola, {user.nombre || user.email}
+              <button onClick={toggleProfileModal} className="text-text-muted hover:text-primary transition">
+                Hola, {user.nombre || user.email.split('@')[0]}
               </button>
               <button onClick={logout} className="btn btn-outline px-6 py-2">
                 Cerrar sesión
