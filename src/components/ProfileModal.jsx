@@ -52,7 +52,7 @@ export default function ProfileModal() {
     }
   };
 
-  // Imágenes predefinidas – ruta desde public/img/Usuarios (asegúrate de mover la carpeta a public)
+  // Imágenes predefinidas – ruta desde public/img/Usuarios
   const predefinedImages = [
     '/img/Usuarios/U1.jpg',
     '/img/Usuarios/U2.jpg',
