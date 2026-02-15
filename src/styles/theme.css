@@ -835,3 +835,180 @@ body {
   border-radius: 50%;
 
 }
+
+
+.navb {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.navb > div {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.navb span:first-child {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navb span:last-child {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 1.4rem;
+}
+
+/* Contenedor de links + auth */
+.navb > div > div:nth-child(2) {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+/* Links principales */
+.navb a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.navb a:hover {
+  color: var(--text-primary);
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* Área de autenticación */
+.navb button,
+.navb [onClick] {
+  cursor: pointer;
+}
+
+/* Perfil (logged in) */
+.navb [onClick] > div {               /* contenedor de la foto + badge */
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, var(--accent), #c084fc);
+  padding: 2px;
+  transition: var(--transition);
+}
+
+.navb [onClick] > div:hover {
+  transform: scale(1.08);
+  box-shadow: var(--neon-glow);
+}
+
+.navb [onClick] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--bg-nav-alt);
+}
+
+.navb [onClick] span {                /* badge de favoritos */
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+}
+
+/* Nombre + botones logout */
+.navb > div > div:nth-child(2) > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navb button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.navb button:hover {
+  color: var(--text-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.navb button:nth-child(2) {           /* botón Cerrar sesión */
+  color: #f87171;
+}
+
+.navb button:nth-child(2):hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+}
+
+/* Botón Iniciar sesión (sin login) */
+.navb > div > div:nth-child(2) > button {
+  background: linear-gradient(90deg, var(--accent), #a855f7);
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius);
+  border: none;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+  transition: var(--transition);
+}
+
+.navb > div > div:nth-child(2) > button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
+
+/* Responsive básico */
+@media (max-width: 768px) {
+  .navb > div > div:nth-child(2) {
+    gap: 1.2rem;
+  }
+
+  .navb a {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .navb button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
