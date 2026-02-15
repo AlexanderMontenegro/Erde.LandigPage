@@ -1,181 +1,53 @@
-import { useState, useEffect } from 'react';
 import useAuthStore from '../store/authStore.js';
-import useProductStore from '../store/productStore.js';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 
-export default function ProfileModal() {
-  const { user, isProfileModalOpen, toggleProfileModal, updateUser, addFavorite, removeFavorite, error } = useAuthStore();
-  const { products } = useProductStore();
-  const [nombre, setNombre] = useState(user?.nombre || '');
-  const [apellido, setApellido] = useState(user?.apellido || '');
-  const [direccion, setDireccion] = useState(user?.direccion || '');
-  const [telefono, setTelefono] = useState(user?.telefono || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [imagen, setImagen] = useState(user?.imagen || '');
-  const [orders, setOrders] = useState([]);
-  const favorites = user?.favorites || [];
+export default function Navbar() {
+  const { user, logout, toggleAuthModal, toggleProfileModal } = useAuthStore();
 
-  useEffect(() => {
-    if (isProfileModalOpen && user) {
-      const fetchOrders = async () => {
-        try {
-          const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
-          const querySnapshot = await getDocs(q);
-          const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setOrders(ordersData);
-        } catch (err) {
-          console.error('Error fetching orders:', err);
-        }
-      };
-      fetchOrders();
-    }
-  }, [isProfileModalOpen, user]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await updateUser({ nombre, apellido, direccion, telefono, email, imagen });
-      toggleProfileModal();
-    } catch (err) {
-      console.error('Error updating user:', err);
-    }
-  };
-
-  const isFavorite = (productId) => favorites.includes(productId);
-
-  const handleFavorite = (productId) => {
-    if (isFavorite(productId)) {
-      removeFavorite(productId);
-    } else {
-      addFavorite(productId);
-    }
-  };
-
-  // Imágenes predefinidas – ruta desde public/img/Usuarios
-  const predefinedImages = [
-    '/img/Usuarios/U1.jpg',
-    '/img/Usuarios/U2.jpg',
-    '/img/Usuarios/U3.jpg',
-    // Agrega más si tienes
-  ];
-
-  if (!isProfileModalOpen) return null;
+  const favoriteCount = user?.favorites?.length || 0;
 
   return (
-    <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
+    <nav className="navbar">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl font-bold text-neon-pink">ERDE Store</span>
+        </div>
 
-        <h1 className="modal-title text-center">Mi Perfil</h1>
+        <div className="flex items-center gap-8">
+          <a href="#inicio" className="text-text hover:text-primary transition">Inicio</a>
+          <a href="#productos" className="text-text hover:text-primary transition">Productos</a>
+          <a href="#ofertas" className="text-text hover:text-primary transition">Ofertas</a>
+          <a href="#contacto" className="text-text hover:text-primary transition">Contacto</a>
 
-        {error && <p className="text-red-500 mb-6 text-center">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <input
-            type="text"
-            placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            className="auth-input"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
-            className="auth-input"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Dirección"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
-            className="auth-input"
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Teléfono"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            className="auth-input"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="auth-input"
-            required
-          />
-
-          <div className="mt-6">
-            <label className="block text-text-muted mb-3 text-center font-medium">Imagen de perfil</label>
-            <div className="grid grid-cols-3 gap-4 justify-items-center">
-              {predefinedImages.map((imgSrc, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setImagen(imgSrc)}
-                  className={`border-2 rounded-full overflow-hidden w-20 h-20 ${imagen === imgSrc ? 'border-neon-green' : 'border-transparent'}`}
-                >
+          {user ? (
+            <div className="flex items-center gap-4 relative">
+              {user.imagen && (
+                <div className="relative cursor-pointer" onClick={toggleProfileModal}>
                   <img
-                    src={imgSrc}
-                    alt={`Perfil ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
+                    src={user.imagen}
+                    alt="Perfil"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-neon-green shadow-glow-green"
                   />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary w-full py-4 mt-6 font-bold">
-            Guardar Cambios
-          </button>
-        </form>
-
-        <h2 className="text-2xl font-bold mt-8 mb-4 text-neon-green">Historial de Compras</h2>
-        {orders.length === 0 ? (
-          <p className="text-text-muted text-center">No hay compras realizadas</p>
-        ) : (
-          orders.map(order => (
-            <div key={order.id} className="bg-input p-4 rounded-lg mb-4">
-              <p className="font-medium">Orden ID: {order.id}</p>
-              <p>Total: ${order.total.toLocaleString('es-AR')}</p>
-              <p>Fecha: {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}</p>
-            </div>
-          ))
-        )}
-
-        <h2 className="text-2xl font-bold mt-8 mb-4 text-neon-green">Favoritos</h2>
-        {favorites.length === 0 ? (
-          <p className="text-text-muted text-center">No hay favoritos</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {favorites.map(productId => {
-              const product = products.find(p => p.id === productId);
-              if (!product) return null;
-              return (
-                <div key={productId} className="flex gap-4 bg-input p-4 rounded-lg">
-                  <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded" />
-                  <div className="flex-1">
-                    <h3 className="font-medium">{product.name}</h3>
-                    <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>
-                    <button onClick={() => handleFavorite(productId)} className="text-red-400 text-sm mt-2">
-                      Eliminar de favoritos
-                    </button>
-                  </div>
+                  {favoriteCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-accent-pink text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-bg">
+                      {favoriteCount}
+                    </span>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        )}
+              )}
+              <button onClick={toggleProfileModal} className="text-text-muted hover:text-primary transition">
+                Hola, {user.nombre || user.email.split('@')[0]}
+              </button>
+              <button onClick={logout} className="btn btn-outline px-6 py-2">
+                Cerrar sesión
+              </button>
+            </div>
+          ) : (
+            <button onClick={toggleAuthModal} className="btn btn-outline px-6 py-2">
+              Iniciar sesión
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </nav>
   );
 }
