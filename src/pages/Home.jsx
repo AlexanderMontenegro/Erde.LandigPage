@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
-import useProductStore from '../store/productStore.js';
-import ProductCard from '../components/ProductCard.jsx';
-import ProductModal from '../components/ProductModal.jsx';
-import CartDrawer from '../components/CartDrawer.jsx';
-import FloatingCartButton from '../components/FloatingCartButton.jsx';
+import { useEffect, useState } from "react";
+import useProductStore from "../store/productStore.js";
+import ProductCard from "../components/ProductCard.jsx";
+import ProductModal from "../components/ProductModal.jsx";
+import CartDrawer from "../components/CartDrawer.jsx";
+import FloatingCartButton from "../components/FloatingCartButton.jsx";
 
 export default function Home() {
   const { products, fetchProducts } = useProductStore();
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState('todos');
+  const [categoryFilter, setCategoryFilter] = useState("todos");
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
   useEffect(() => {
-    if (categoryFilter === 'todos') {
+    if (categoryFilter === "todos") {
       setFilteredProducts(products);
     } else {
-      setFilteredProducts(products.filter(p => p.category?.toLowerCase() === categoryFilter.toLowerCase()));
+      setFilteredProducts(
+        products.filter(
+          (p) => p.category?.toLowerCase() === categoryFilter.toLowerCase(),
+        ),
+      );
     }
   }, [products, categoryFilter]);
 
-  const categories = ['todos', ...new Set(products.map(p => p.category || 'Otros'))];
+  const categories = [
+    "todos",
+    ...new Set(products.map((p) => p.category || "Otros")),
+  ];
 
   // Productos en oferta (ejemplo: precio < 20000 o campo 'offer' true)
-  const offers = products.filter(p => p.basePrice < 20000 || p.offer);
+  const offers = products.filter((p) => p.basePrice < 20000 || p.offer);
 
   return (
     <div className="min-h-screen bg-bg">
@@ -36,7 +43,8 @@ export default function Home() {
             ¡Personaliza tu mundo con impresión 3D!
           </h1>
           <p className="hero-subtitle">
-            Soportes gamer, figuras otaku, accesorios únicos – hechos a tu medida en Merlo, Buenos Aires
+            Soportes gamer, figuras otaku, accesorios únicos – hechos a tu
+            medida en Merlo, Buenos Aires
           </p>
           <div className="hero-cta">
             <a href="#productos" className="btn btn-primary text-lg px-10 py-5">
@@ -60,7 +68,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="offers-title">Ofertas Especiales</h2>
             <div className="grid-products">
-              {offers.map(product => (
+              {offers.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -75,11 +83,11 @@ export default function Home() {
         </h2>
 
         <div className="filter-container">
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`filter-btn ${categoryFilter === cat ? 'active' : ''}`}
+              className={`filter-btn ${categoryFilter === cat ? "active" : ""}`}
             >
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </button>
@@ -92,7 +100,7 @@ export default function Home() {
           </p>
         ) : (
           <div className="grid-products">
-            {filteredProducts.map(product => (
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -107,28 +115,55 @@ export default function Home() {
           <div className="footer-info">
             <div className="footer-item">
               <h4>Dirección</h4>
-              <p>Merlo, Buenos Aires, Argentina</p>
+              <p>Benvenuto Cellini 817 Moreno, Buenos Aires, Argentina</p>
             </div>
 
             <div className="footer-item">
               <h4>WhatsApp</h4>
-              <a href="https://wa.me/549TU_NUMERO" target="_blank" rel="noopener noreferrer">
-                +54 9 TU_NUMERO
+              <a
+                href="https://wa.me/5491170504193"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                1570504193
               </a>
             </div>
 
             <div className="footer-item">
               <h4>Redes Sociales</h4>
               <div className="footer-links">
-                <a href="#" className="footer-link">Instagram</a>
-                <a href="#" className="footer-link">Facebook</a>
-                <a href="#" className="footer-link">YouTube</a>
+                <a
+                  href="https://www.instagram.com/erde.personalizados/"
+                  className="footer-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://www.facebook.com/Erde.Personalizados"
+                  className="footer-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Facebook
+                </a>
+                <a
+                  href="https://www.tiktok.com/@erde.personalizad"
+                  className="footer-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  TikTok
+                </a>
               </div>
             </div>
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-text-muted">© 2025 ERDE Personalizados - Todos los derechos reservados</p>
+            <p className="text-text-muted">
+              © 2026 ERDE Personalizados - Todos los derechos reservados
+            </p>
           </div>
         </div>
       </footer>
