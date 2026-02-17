@@ -36,19 +36,11 @@ export default function Navbar() {
           <a href="#contacto">Contacto</a>
         </div>
 
-        {/* Barra de búsqueda (descomenta si la quieres) */}
-        {/* <div className="search-container desktop">
-          <input
-            type="search"
-            placeholder="Buscar productos..."
-            className="search-input"
-          />
-        </div> */}
+    
 
-        {/* Acciones derecha */}
+       
         <div className="nav-actions">
           
-
           {/* Usuario / Perfil */}
           {user ? (
             <div className="user-section">
