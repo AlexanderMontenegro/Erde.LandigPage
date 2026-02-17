@@ -836,5 +836,220 @@ body {
 
 }
 
+/* ────────────────────────────────────────────────
+   Navbar actualizado - combina tu estilo con versión limpia
+   ──────────────────────────────────────────────── */
 
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111;
+  text-decoration: none;
+}
+
+.logo-accent {
+  color: #2ecc71;          /* verde profesional - cambia a #ff69b4 si prefieres pink */
+}
+
+/* Links menú */
+.nav-links a {
+  margin: 0 20px;
+  color: #333;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #2ecc71;
+}
+
+/* User section */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.profile-btn:hover {
+  background: rgba(46, 204, 113, 0.08);
+}
+
+.profile-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2ecc71;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+.profile-icon {
+  color: #555;
+  padding: 8px;
+  background: #f0f0f0;
+  border-radius: 50%;
+}
+
+.user-greeting {
+  font-size: 0.95rem;
+  color: #444;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.favorites-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffebee;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.heart-icon {
+  color: #e74c3c;
+}
+
+.badge {
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* Botones */
+.login-btn,
+.logout-btn {
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.login-btn {
+  background: #2ecc71;
+  color: white;
+  border: none;
+}
+
+.login-btn:hover {
+  background: #27ae60;
+}
+
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
+/* Íconos acciones */
+.icon-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+  background: #f0f0f0;
+  color: #2ecc71;
+}
+
+/* Mobile menu */
+.mobile-menu {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.mobile-item {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobile-item.login {
+  background: #2ecc71;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.mobile-item.logout {
+  color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .desktop { display: none !important; }
+  .mobile  { display: flex !important; }
+  .user-greeting { display: none; }
+  .logout-btn { display: none; }
+}
+
+@media (min-width: 993px) {
+  .mobile { display: none !important; }
+  .desktop { display: flex !important; }
+}
 
