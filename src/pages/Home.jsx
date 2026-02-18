@@ -43,10 +43,11 @@ export default function Home() {
             ¡Personaliza tu mundo con impresión 3D!
           </h1>
           <p className="hero-subtitle">
-            Soportes gamer, figuras otaku, accesorios únicos – hechos a tu
-            medida en Merlo, Buenos Aires
+            “Creamos regalos que marcan la diferencia 🎁
+Tazas ☕, remeras 👕, buzos 🧥
+y productos exclusivos en 3D 🖨️✨”
           </p>
-          <div className="hero-cta">
+          {/*<div className="hero-cta">
             <a href="#productos" className="btn btn-primary text-lg px-10 py-5">
               Ver Catálogo
             </a>
@@ -58,7 +59,7 @@ export default function Home() {
             >
               Contactar por WhatsApp
             </a>
-          </div>
+          </div>*/}
         </div>
       </section>
 
@@ -115,7 +116,20 @@ export default function Home() {
           <div className="footer-info">
             <div className="footer-item">
               <h4>Dirección</h4>
-              <p>Benvenuto Cellini 817 Moreno, Buenos Aires, Argentina</p>
+              <p>
+                Benvenuto Cellini 817 Moreno, Buenos Aires, Argentina
+                <a
+                  href="https://maps.app.goo.gl/mFpqq3vwWo1v9VhB9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/img/Iconos/ubicaciones.png"
+                    alt="Ver ubicación en Maps"
+                    className="social-icon"
+                  />
+                </a>
+              </p>
             </div>
 
             <div className="footer-item">
@@ -125,7 +139,11 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                1570504193
+                <img
+                  src="/img/Iconos/whatsapp.png"
+                  alt="Whatsapp"
+                  className="social-icon"
+                />
               </a>
             </div>
 
@@ -138,15 +156,24 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Instagram
+                  <img
+                    src="/img/Iconos/instagram.png"
+                    alt="Instagram"
+                    className="social-icon"
+                  />
                 </a>
+
                 <a
                   href="https://www.facebook.com/Erde.Personalizados"
                   className="footer-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Facebook
+                  <img
+                    src="/img/Iconos/facebook.png"
+                    alt="Facebook"
+                    className="social-icon"
+                  />
                 </a>
                 <a
                   href="https://www.tiktok.com/@erde.personalizad"
@@ -154,7 +181,11 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  TikTok
+                  <img
+                    src="/img/Iconos/tiktok.png"
+                    alt="TikTok"
+                    className="social-icon"
+                  />
                 </a>
               </div>
             </div>
