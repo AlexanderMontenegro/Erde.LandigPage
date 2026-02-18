@@ -5,7 +5,7 @@ const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
   isModalOpen: false,
-  cart: [],           // [{ id, name, image, basePrice, qty }]
+  cart: [],           
   cartOpen: false,
 
   fetchProducts: async () => {
@@ -36,12 +36,10 @@ const useProductStore = create((set, get) => ({
     const existingIndex = get().cart.findIndex(item => item.id === product.id);
     
     if (existingIndex !== -1) {
-      // Actualizar cantidad si ya existe
       const updatedCart = [...get().cart];
       updatedCart[existingIndex].qty += quantity;
       set({ cart: updatedCart });
     } else {
-      // Agregar nuevo
       set({
         cart: [...get().cart, {
           id: product.id,
@@ -66,7 +64,6 @@ const useProductStore = create((set, get) => ({
     });
   },
 
-  // Funciones que faltaban → ahora sí existen
   getTotalItems: () => get().cart.reduce((sum, item) => sum + item.qty, 0),
 
   getTotalPrice: () => get().cart.reduce((sum, item) => sum + (item.basePrice * item.qty), 0).toFixed(0),

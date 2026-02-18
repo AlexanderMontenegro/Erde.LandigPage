@@ -126,7 +126,7 @@ export default function ProfileModal() {
                   <img
                     src={imgSrc}
                     alt={`Perfil ${idx + 1}`}
-                    className="w-full h-full object-cover"
+                    className="u w-full h-full object-cover"
                     onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
                   />
                 </button>
@@ -156,13 +156,13 @@ export default function ProfileModal() {
         {favorites.length === 0 ? (
           <p className="text-text-muted text-center">No hay favoritos</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="ft2">
             {favorites.map(productId => {
               const product = products.find(p => p.id === productId);
               if (!product) return null;
               return (
-                <div key={productId} className="flex gap-4 bg-input p-4 rounded-lg">
-                  <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded" />
+                <div key={productId} className="f">
+                  <img src={product.image} alt={product.name} className="ft  " />
                   <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
                     <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>

@@ -836,9 +836,48 @@ body {
 
 }
 
-/* ────────────────────────────────────────────────
-   Navbar actualizado - combina tu estilo con versión limpia
-   ──────────────────────────────────────────────── */
+/*favoritos*/
+
+.f{
+  display: flex;
+  gap: 2rem; 
+  background: var(--input);
+  padding: 2rem; 
+  border-radius: var(--radius-lg); 
+  margin-left: 2rem;  
+  margin-right: 2rem; 
+
+
+}
+
+.ft{
+  width: 150px;
+  height: 150px;
+  background: var(--primary);
+  border-radius: 10%;
+}
+
+.ft2{
+  display: flex;
+  justify-items: stretch;
+  margin: 10px;
+ 
+}
+
+.ficon{
+  margin: 15px;
+  background-color: none;
+}
+
+.fban{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 25px;
+}
+
+
+
 
 .navbar {
   position: fixed;
@@ -870,7 +909,7 @@ body {
 }
 
 .logo-accent {
-  color: #2ecc71;          /* verde profesional - cambia a #ff69b4 si prefieres pink */
+  color: #2ecc71;         
 }
 
 /* Links menú */
@@ -1052,4 +1091,16 @@ body {
   .mobile { display: none !important; }
   .desktop { display: flex !important; }
 }
+
+.social-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.15);
+}
+
 
