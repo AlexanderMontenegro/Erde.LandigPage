@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom'; // si usas rutas → sino quítalo y usa <a>
+import { Link } from 'react-router-dom'; 
 import { FiMenu, FiX, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import useAuthStore from '../store/authStore.js';
