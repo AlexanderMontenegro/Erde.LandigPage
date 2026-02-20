@@ -6,6 +6,7 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 dotenv.config();
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -25,31 +26,31 @@ app.post("/create_preference", async (req, res) => {
 
     const response = await preference.create({
       body: {
-        items: items.map(item => ({
+        items: items.map((item) => ({
           title: String(item.title),
           quantity: Number(item.quantity),
           unit_price: Number(item.unit_price),
-          currency_id: "ARS"
+          currency_id: "ARS",
         })),
         back_urls: {
-          success: "http://localhost:5173",
-          failure: "http://localhost:5173",
-          pending: "http://localhost:5173",
+          success: "https://erde-landigpage.onrender.com",
+          failure: "https://erde-landigpage.onrender.com",
+          pending: "https://erde-landigpage.onrender.com",
         },
-        auto_return: "approved" // 🔥 ESTA LÍNEA ES LA CLAVE
-      }
+        auto_return: "approved",
+      },
     });
 
     console.log("Preferencia creada:", response.id);
 
     res.json({ id: response.id });
-
   } catch (error) {
     console.error("Error creando preferencia:", error);
     res.status(500).json({ error: "Error creando preferencia" });
   }
 });
+const PORT = process.env.PORT || 5000;
 
-app.listen(5000, () => {
-  console.log("Servidor Mercado Pago corriendo en puerto 5000");
+app.listen(PORT, () => {
+  console.log(`Servidor Mercado Pago corriendo en puerto ${PORT}`);
 });
