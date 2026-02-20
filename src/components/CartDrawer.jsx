@@ -3,7 +3,7 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import useProductStore from "../store/productStore.js";
 import useAuthStore from "../store/authStore.js";
 
-// 🔹 Inicializar UNA sola vez fuera del componente
+// 🔹 Inicializar una sola vez
 initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY);
 
 export default function CartDrawer() {
@@ -25,7 +25,6 @@ export default function CartDrawer() {
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
-  // 🔹 useEffect SIEMPRE declarado sin condiciones externas
   useEffect(() => {
     if (!user || cart.length === 0) {
       setPreferenceId(null);
@@ -42,13 +41,20 @@ export default function CartDrawer() {
           quantity: Number(item.qty),
         }));
 
-        const res = await fetch("http://localhost:5000/create_preference", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ items }),
-        });
+        const res = await fetch(
+          "https://erde-landigpage-server.onrender.com/create_preference",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ items }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Error en servidor");
+        }
 
         const data = await res.json();
         setPreferenceId(data.id);
@@ -62,7 +68,6 @@ export default function CartDrawer() {
     createPreference();
   }, [cart, user]);
 
-  // 👇 return después de TODOS los hooks
   if (!cartOpen) return null;
 
   return (
