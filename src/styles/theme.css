@@ -1104,3 +1104,10 @@ body {
 }
 
 
+.mp-wallet-container {
+  margin-top: 12px;
+}
+
+.mp-wallet-container iframe {
+  width: 100% !important;
+}
