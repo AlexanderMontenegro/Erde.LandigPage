@@ -1,56 +1,57 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { MercadoPagoConfig, Preference } from "mercadopago";
+// server/index.js (versión compatible con mercadopago >=2.0.0)
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
-dotenv.config();
+// Importa las partes necesarias del SDK v2
+const { MercadoPagoConfig, Preference } = require('mercadopago');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
+// Crea el cliente una vez (recomendado: global o por request si necesitas idempotency)
 const client = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN,
+  accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
+  // Opcional: timeout, idempotencyKey, etc.
+  options: { timeout: 10000 }
 });
 
-app.post("/create_preference", async (req, res) => {
+app.post('/create-preference', async (req, res) => {
   try {
-    const { items } = req.body;
+    // Crea instancia de Preferences API
+    const preferenceClient = new Preference(client);
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({ error: "No hay items para pagar" });
-    }
-
-    const preference = new Preference(client);
-
-    const response = await preference.create({
-      body: {
-        items: items.map((item) => ({
-          title: String(item.title),
-          quantity: Number(item.quantity),
-          unit_price: Number(item.unit_price),
-          currency_id: "ARS",
-        })),
-        back_urls: {
-          success: "https://erde-landigpage.onrender.com",
-          failure: "https://erde-landigpage.onrender.com",
-          pending: "https://erde-landigpage.onrender.com",
-        },
-        auto_return: "approved",
+    const preferenceData = {
+      items: req.body.items.map(item => ({
+        title: item.name,
+        unit_price: Number(item.basePrice),
+        quantity: Number(item.quantity),
+        currency_id: 'ARS'  // Obligatorio para Argentina
+      })),
+      back_urls: {
+        success: 'http://localhost:5173/success',  // Cambia a tu URL prod después
+        failure: 'http://localhost:5173/failure',
+        pending: 'http://localhost:5173/pending'
       },
-    });
+      auto_return: 'approved',  // Retorna automáticamente si aprobado
+      // Opcional: payer, payment_methods, etc.
+    };
 
-    console.log("Preferencia creada:", response.id);
-
+    const response = await preferenceClient.create({ body: preferenceData });
+    
+    console.log('Preferencia creada exitosamente:', response.id);
     res.json({ id: response.id });
   } catch (error) {
-    console.error("Error creando preferencia:", error);
-    res.status(500).json({ error: "Error creando preferencia" });
+    console.error('Error al crear preferencia:', error);
+    res.status(500).json({ 
+      error: 'Error creando preferencia',
+      details: error.message || error.cause || 'Desconocido'
+    });
   }
 });
-const PORT = process.env.PORT || 5000;
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Servidor Mercado Pago corriendo en puerto ${PORT}`);
+  console.log(`Backend Mercado Pago corriendo en puerto ${PORT}`);
 });
