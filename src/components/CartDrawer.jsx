@@ -5,6 +5,8 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import useProductStore from '../store/productStore';
 import useAuthStore from '../store/authStore';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
@@ -18,6 +20,8 @@ const CartDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [openOtherPayments, setOpenOtherPayments] = useState(false);
+  const [openContactModal, setOpenContactModal] = useState(false);
+  const [openTransferModal, setOpenTransferModal] = useState(false);
 
   useEffect(() => {
     if (import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY) {
@@ -66,7 +70,6 @@ const CartDrawer = () => {
   const handleMercadoPago = () => {
     if (!preferenceId) return;
 
-    // Abre en nueva ventana flotante (popup)
     const width = 600;
     const height = 800;
     const left = window.screen.width / 2 - width / 2;
@@ -79,61 +82,91 @@ const CartDrawer = () => {
     );
   };
 
-  // Modal para otros medios de pago
+  // Modal Otros Medios de Pago
   const OtherPaymentsModal = () => (
-    <Modal
-      open={openOtherPayments}
-      onClose={() => setOpenOtherPayments(false)}
-      aria-labelledby="other-payments-title"
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          boxShadow: 24,
-          p: 4,
-          outline: 'none',
-        }}
-      >
-        <Typography id="other-payments-title" variant="h6" component="h2" gutterBottom>
-          Otros medios de pago
+    <Modal open={openOtherPayments} onClose={() => setOpenOtherPayments(false)}>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom>Otros medios de pago</Typography>
+        <Button variant="outlined" fullWidth sx={{ mb: 2 }} onClick={() => { setOpenContactModal(true); setOpenOtherPayments(false); }}>
+          Pago en presencia
+        </Button>
+        <Button variant="outlined" fullWidth onClick={() => { setOpenTransferModal(true); setOpenOtherPayments(false); }}>
+          Transferencia bancaria
+        </Button>
+      </Box>
+    </Modal>
+  );
+
+  // Modal Pago en Presencia
+  const ContactModal = () => (
+    <Modal open={openContactModal} onClose={() => setOpenContactModal(false)}>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <LocationOnIcon sx={{ mr: 1 }} /> Pago en presencia
         </Typography>
-
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Podés abonar de las siguientes formas:
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Visítanos en nuestra tienda para pagar en efectivo o con tarjeta.
         </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Dirección: Benvenuto Cellini 817,Francisco Alvarez, Moreno
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Teléfono: +54 11 7050-4193
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          Horarios: Lunes a Viernes 9:00 - 18:00
+        </Typography>
+        {/* Embed de Google Maps */}
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d290.1162905795998!2d-58.868648285726614!3d-34.64734956820712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bc9353ab61262f%3A0xedbdb4fc0b9f10b8!2sErde%20DyC!5e0!3m2!1ses-419!2sar!4v1771849473652!5m2!1ses-419!2sar"
+          width="100%"
+          height="300"
+          style={{ border: 0, borderRadius: 8 }}
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+        <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => setOpenContactModal(false)}>
+          Cerrar
+        </Button>
+      </Box>
+    </Modal>
+  );
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<PaymentIcon />}
-            fullWidth
-            onClick={() => alert('Coordinar pago en efectivo o tarjeta en el local')}
-          >
-            Pago en presencia (efectivo / tarjeta)
-          </Button>
-
-          <Button
-            variant="outlined"
-            startIcon={<AccountBalanceWalletIcon />}
-            fullWidth
-            onClick={() => alert('Datos para transferencia: CBU 1234567890123456789012 - Alias: ERDE.PAGOS')}
-          >
-            Transferencia bancaria
-          </Button>
+  // Modal Transferencia Bancaria
+  const TransferModal = () => (
+    <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <AccountBalanceIcon sx={{ mr: 1 }} /> Transferencia bancaria
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Transfiere el monto total a la siguiente cuenta y envía el comprobante por WhatsApp.
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Banco: [Ej: Banco Nación]
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          CBU: 1234567890123456789012
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Alias: ERDE.PAGOS
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          Titular: Alexander Montenegro
+        </Typography>
+        {/* Imagen QR (reemplaza con tu URL real o asset local) */}
+        <Box sx={{ textAlign: 'center', mb: 3 }}>
+          <img 
+            src="https://via.placeholder.com/200?text=QR+Transferencia" 
+            alt="QR Transferencia" 
+            style={{ width: '200px', height: '200px' }}
+          />
+          <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+            Escanea este QR para transferir
+          </Typography>
         </Box>
-
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 3 }}
-          onClick={() => setOpenOtherPayments(false)}
-        >
+        <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => setOpenTransferModal(false)}>
           Cerrar
         </Button>
       </Box>
@@ -216,8 +249,10 @@ const CartDrawer = () => {
         </Box>
       </Drawer>
 
-      {/* Modal otros pagos */}
+      {/* Modales */}
       <OtherPaymentsModal />
+      <ContactModal />
+      <TransferModal />
     </>
   );
 };

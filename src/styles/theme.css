@@ -6,7 +6,7 @@
   --card-hover:   #1e293b;
   --input:        #1e293b;
   --border:       #334155;
-  --text:         #e2e8f0;
+  --text:         #97bff3;
   --text-muted:   #94a3b8;
   
   --primary:      #00ff9d;
@@ -1110,31 +1110,4 @@ body {
 
 .mp-wallet-container iframe {
   width: 100% !important;
-}
-
-
-/* En index.css o theme.css temporal */
-#walletBrick_container {
-  min-height: 100px !important;
-  width: 100% !important;
-}
-
-
-/* Forzar visibilidad del Wallet Brick */
-#walletBrick_container,
-div[id*="walletButton"],
-iframe[src*="mercadopago"] {
-  min-height: 120px !important;
-  height: auto !important;
-  width: 100% !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  border: 1px solid #ccc; /* borde temporal para debug */
-  margin: 16px 0;
-  background: #fff;
-}
-
-.wallet-button-container {
-  min-height: 100px !important;
 }
