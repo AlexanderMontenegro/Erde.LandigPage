@@ -1,177 +1,138 @@
-import { useEffect, useState } from "react";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import useProductStore from "../store/productStore.js";
-import useAuthStore from "../store/authStore.js";
+import React, { useEffect, useState } from 'react';
+import { Drawer, Button, List, Typography, Divider, Box, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import useProductStore from '../store/productStore';
+import useAuthStore from '../store/authStore';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
-// 🔹 Inicializar una sola vez
-initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY);
-
-export default function CartDrawer() {
-  const {
-    cart,
-    cartOpen,
-    toggleCart,
-    removeFromCart,
-    updateQty,
-    getTotalItems,
-    getTotalPrice,
+const CartDrawer = () => {
+  const { 
+    cartOpen, 
+    toggleCart, 
+    cart, 
+    removeFromCart, 
+    updateQuantity, 
+    total  // ← Cambia aquí: usa 'total' (o el nombre real en tu store)
   } = useProductStore();
-
+  
   const { user, toggleAuthModal } = useAuthStore();
-
-  const [preferenceId, setPreferenceId] = useState(null);
+  const [preferenceId, setPreferenceId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const totalItems = getTotalItems();
-  const totalPrice = getTotalPrice();
+  initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY);
+
+  const createPreference = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error en create-preference: ${response.status} - ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log('Preference ID creada:', data.id); // ← Para debug: verifica si empieza con 1907601748-
+      return data.id;
+    } catch (err) {
+      console.error('Error creando preferencia:', err);
+      setError('No se pudo crear la preferencia de pago. Verifica el servidor.');
+      return null;
+    }
+  };
 
   useEffect(() => {
-    if (!user || cart.length === 0) {
-      setPreferenceId(null);
-      return;
-    }
-
-    const createPreference = async () => {
-      try {
-        setLoading(true);
-
-        const items = cart.map((item) => ({
-          title: item.name,
-          unit_price: Number(item.basePrice),
-          quantity: Number(item.qty),
-        }));
-
-        const res = await fetch(
-          "https://erde-landigpage-server.onrender.com/create_preference",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ items }),
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Error en servidor");
-        }
-
-        const data = await res.json();
-        setPreferenceId(data.id);
-      } catch (error) {
-        console.error("Error creando preferencia:", error);
-      } finally {
+    if (cartOpen && cart.length > 0 && user && !preferenceId) {
+      setLoading(true);
+      setError(null);
+      createPreference().then(id => {
+        if (id) setPreferenceId(id);
         setLoading(false);
-      }
-    };
+      });
+    }
+  }, [cartOpen, cart, user, preferenceId]);
 
-    createPreference();
-  }, [cart, user]);
-
-  if (!cartOpen) return null;
+  const handleCheckout = () => {
+    if (!user) {
+      toggleAuthModal();
+    }
+  };
 
   return (
-    <>
-      <div className="cart-drawer-backdrop" onClick={toggleCart} />
+    <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
+      <Box sx={{ width: 350, p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">Mi carrito ({cart.length})</Typography>
+          <IconButton onClick={toggleCart}><CloseIcon /></IconButton>
+        </Box>
+        <Divider sx={{ my: 2 }} />
+        <List>
+          {cart.map((item, index) => (
+            <Box key={index} sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
+              <img src={item.image} alt={item.name} style={{ width: 80, height: 80, objectFit: 'cover', marginRight: 16 }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="subtitle1">{item.name}</Typography>
+                <Typography variant="body2">${item.basePrice} × {item.quantity}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                  <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>
+                    <RemoveIcon />
+                  </IconButton>
+                  <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
+                  <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                    <AddIcon />
+                  </IconButton>
+                </Box>
+                <Button size="small" color="error" onClick={() => removeFromCart(item.id)} sx={{ mt: 1 }}>
+                  Eliminar
+                </Button>
+              </Box>
+            </Box>
+          ))}
+        </List>
+        <Divider sx={{ my: 2 }} />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="subtitle1">Total:</Typography>
+          <Typography variant="h6" color="primary">${total || 0}</Typography> {/* ← Usa 'total' directamente */}
+        </Box>
 
-      <div className={`cart-drawer ${cartOpen ? "open" : ""}`}>
-        <div className="flex flex-col h-full">
-          <div className="cart-header">
-            <h2 className="cart-title">Mi carrito ({totalItems})</h2>
-            <button className="cart-close-btn" onClick={toggleCart}>
-              ×
-            </button>
-          </div>
+        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
 
-          <div className="flex-1 p-6 overflow-y-auto space-y-6">
-            {cart.length === 0 ? (
-              <div className="text-center py-20 text-text-muted">
-                <p className="text-xl">Tu carrito está vacío</p>
-                <p className="mt-2">¡Agrega productos para continuar!</p>
-              </div>
-            ) : (
-              cart.map((item) => (
-                <div key={item.id} className="cart-item">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="cart-item-img"
-                    onError={(e) =>
-                      (e.target.src =
-                        "https://via.placeholder.com/96?text=Sin+img")
-                    }
-                  />
-                  <div className="cart-item-info">
-                    <h3 className="cart-item-name">{item.name}</h3>
-                    <p className="cart-item-price">
-                      ${item.basePrice.toLocaleString("es-AR")} × {item.qty}
-                    </p>
+        {loading ? (
+          <Typography sx={{ mt: 2 }}>Cargando botón de pago...</Typography>
+        ) : preferenceId ? (
+          <Box sx={{ mt: 3 }}>
+            <Wallet
+              initialization={{ preferenceId }}
+              customization={{ texts: { valueProp: 'smart_option' } }}
+              onError={(err) => {
+                console.error('Error en Wallet Brick:', err);
+                setError('Error al cargar el botón de Mercado Pago: ' + (err.message || 'Desconocido'));
+              }}
+            />
+          </Box>
+        ) : null}
 
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex items-center bg-bg rounded-lg border border-border overflow-hidden">
-                        <button
-                          onClick={() => updateQty(item.id, -1)}
-                          className="w-10 h-10 flex items-center justify-center text-xl hover:bg-card-hover transition"
-                        >
-                          −
-                        </button>
-                        <span className="w-12 text-center font-medium text-lg">
-                          {item.qty}
-                        </span>
-                        <button
-                          onClick={() => updateQty(item.id, 1)}
-                          className="w-10 h-10 flex items-center justify-center text-xl hover:bg-card-hover transition"
-                        >
-                          +
-                        </button>
-                      </div>
+        {!user && cart.length > 0 && (
+          <Button 
+            variant="contained" 
+            color="primary" 
+            fullWidth 
+            sx={{ mt: 2 }} 
+            onClick={handleCheckout}
+          >
+            Iniciar sesión para pagar
+          </Button>
+        )}
 
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="ml-auto text-red-400 hover:text-red-300 text-sm flex items-center gap-1"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {cart.length > 0 && (
-            <div className="cart-footer">
-              <div className="cart-total">
-                <span>Total:</span>
-                <span className="cart-total-price">
-                  ${totalPrice.toLocaleString("es-AR")}
-                </span>
-              </div>
-
-              {!user ? (
-                <button onClick={toggleAuthModal} className="btn-checkout">
-                  Iniciar sesión para pagar
-                </button>
-              ) : loading ? (
-                <button className="btn-checkout" disabled>
-                  Preparando pago...
-                </button>
-              ) : preferenceId ? (
-                <div className="mp-wallet-container">
-                  <Wallet initialization={{ preferenceId }} />
-                </div>
-              ) : null}
-
-              <button
-                onClick={toggleCart}
-                className="w-full text-center text-text-muted hover:text-neon-blue mt-4 transition"
-              >
-                Seguir comprando →
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
+        <Button variant="outlined" fullWidth sx={{ mt: 2 }} onClick={toggleCart}>
+          Seguir comprando
+        </Button>
+      </Box>
+    </Drawer>
   );
-}
+};
+
+export default CartDrawer;
