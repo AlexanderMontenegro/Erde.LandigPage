@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.14.1",
     "@mercadopago/sdk-js": "^0.0.3",
     "@mercadopago/sdk-react": "^1.0.7",
+    "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
     "axios": "^1.13.5",
     "firebase": "^12.9.0",
