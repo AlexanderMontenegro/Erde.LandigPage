@@ -1,19 +1,28 @@
-import useProductStore from '../store/productStore.js';
-import { FaShoppingCart } from 'react-icons/fa';
+import React from 'react';
+import { Fab, Badge } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import useProductStore from '../store/productStore';
 
-export default function FloatingCartButton() {
-  const { cart, toggleCart } = useProductStore();
-  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+const FloatingCartButton = () => {
+  const { toggleCart, totalItems } = useProductStore();
 
   return (
-    <button
+    <Fab
+      color="primary"
+      aria-label="carrito"
+      sx={{
+        position: 'fixed',
+        bottom: 24,
+        right: 24,
+        zIndex: 1300,
+      }}
       onClick={toggleCart}
-      className="cart-float"
     >
-      <FaShoppingCart />
-      {totalItems > 0 && (
-        <span className="cart-count">{totalItems}</span>
-      )}
-    </button>
+      <Badge badgeContent={totalItems()} color="error">
+        <ShoppingCartIcon />
+      </Badge>
+    </Fab>
   );
-}
+};
+
+export default FloatingCartButton;
