@@ -1,52 +1,76 @@
-// server/index.js (versión compatible con mercadopago >=2.0.0)
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
-// Importa las partes necesarias del SDK v2
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Crea el cliente una vez (recomendado: global o por request si necesitas idempotency)
+// Cliente Mercado Pago
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
-  // Opcional: timeout, idempotencyKey, etc.
   options: { timeout: 10000 }
 });
 
 app.post('/create-preference', async (req, res) => {
   try {
-    // Crea instancia de Preferences API
-    const preferenceClient = new Preference(client);
+    console.log('=== BODY RECIBIDO DEL FRONTEND ===');
+    console.log(JSON.stringify(req.body, null, 2));
+    console.log('==================================');
+
+    if (!req.body.items || !Array.isArray(req.body.items) || req.body.items.length === 0) {
+      return res.status(400).json({ error: 'No se recibieron items válidos' });
+    }
+
+    const itemsProcesados = req.body.items.map((item, index) => {
+      console.log(`Procesando item ${index + 1}:`);
+      console.log('  - name:', item.name);
+      console.log('  - basePrice raw:', item.basePrice, 'tipo:', typeof item.basePrice);
+      console.log('  - quantity raw:', item.quantity, 'tipo:', typeof item.quantity);
+
+      const quantityNum = Number(item.quantity);
+      const priceNum = Number(item.basePrice);
+
+      if (isNaN(quantityNum) || quantityNum < 1 || !Number.isInteger(quantityNum)) {
+        throw new Error(`quantity inválido en item ${index + 1}: "${item.quantity}" (tipo: ${typeof item.quantity})`);
+      }
+      if (isNaN(priceNum) || priceNum <= 0) {
+        throw new Error(`basePrice inválido en item ${index + 1}: "${item.basePrice}"`);
+      }
+
+      return {
+        title: String(item.name || 'Producto sin nombre'),
+        unit_price: priceNum,
+        quantity: quantityNum,
+        currency_id: 'ARS'
+      };
+    });
 
     const preferenceData = {
-      items: req.body.items.map(item => ({
-        title: item.name,
-        unit_price: Number(item.basePrice),
-        quantity: Number(item.quantity),
-        currency_id: 'ARS'  // Obligatorio para Argentina
-      })),
+      items: itemsProcesados,
       back_urls: {
-        success: 'http://localhost:5173/success',  // Cambia a tu URL prod después
+        success: 'http://localhost:5173/success',
         failure: 'http://localhost:5173/failure',
         pending: 'http://localhost:5173/pending'
-      },
-      auto_return: 'approved',  // Retorna automáticamente si aprobado
-      // Opcional: payer, payment_methods, etc.
+      }
+      // NO USAR auto_return: 'approved' en localhost (HTTP)
+      // En producción (HTTPS) sí se puede volver a poner
     };
 
+    console.log('Datos que se enviarán a Mercado Pago:');
+    console.log(JSON.stringify(preferenceData, null, 2));
+
+    const preferenceClient = new Preference(client);
     const response = await preferenceClient.create({ body: preferenceData });
-    
+
     console.log('Preferencia creada exitosamente:', response.id);
     res.json({ id: response.id });
   } catch (error) {
     console.error('Error al crear preferencia:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error creando preferencia',
-      details: error.message || error.cause || 'Desconocido'
+      details: error.message || (error.response?.data ? JSON.stringify(error.response.data) : 'Desconocido')
     });
   }
 });
