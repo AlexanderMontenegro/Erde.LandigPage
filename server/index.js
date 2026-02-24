@@ -50,11 +50,11 @@ app.post('/create-preference', async (req, res) => {
     const preferenceData = {
       items: itemsProcesados,
       back_urls: {
-        success: 'https://erde-landigpage-frontend.onrender.com/success', // Cambia a tu URL frontend real
-        failure: 'https://erde-landigpage-frontend.onrender.com/failure',
-        pending: 'https://erde-landigpage-frontend.onrender.com/pending'
+        success: 'https://erde-landigpage-frontend.onrender.com/Success', 
+        failure: 'https://erde-landigpage-frontend.onrender.com/Failure',
+   
       },
-      auto_return: 'approved' // Solo en prod (HTTPS)
+      auto_return: 'approved' 
     };
 
     console.log('Datos que se enviarán a Mercado Pago:');
