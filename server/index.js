@@ -50,10 +50,12 @@ app.post('/create-preference', async (req, res) => {
     const preferenceData = {
       items: itemsProcesados,
       back_urls: {
-        success: 'http://localhost:5173/success',
-        failure: 'http://localhost:5173/failure',
-        pending: 'http://localhost:5173/pending'
-      }
+  success: 'https://erde-landigpage.onrender.com/success',
+  failure: 'https://erde-landigpage.onrender.com/failure',
+  pending: 'https://erde-landigpage.onrender.com/pending'
+},
+// Puedes volver a poner auto_return: 'approved' ahora que es HTTPS
+auto_return: 'approved',
       // NO USAR auto_return: 'approved' en localhost (HTTP)
       // En producción (HTTPS) sí se puede volver a poner
     };
