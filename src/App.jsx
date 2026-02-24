@@ -22,7 +22,6 @@ export default function App() {
       <Navbar />
       <Home />
 
-      {/* Emergentes – renderizados al final para prioridad */}
       <AuthModal />
       <ProfileModal />
       <ProductModal />

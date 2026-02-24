@@ -50,9 +50,9 @@ app.post('/create-preference', async (req, res) => {
     const preferenceData = {
       items: itemsProcesados,
       back_urls: {
-        success: 'https://erde-landigpage-frontend.onrender.com/Success', 
-        failure: 'https://erde-landigpage-frontend.onrender.com/Failure',
-   
+        success: 'https://erde-landigpage-frontend.onrender.com/success', 
+        failure: 'https://erde-landigpage-frontend.onrender.com/failure',
+        pending: 'https://erde-landigpage-frontend.onrender.com/pending'
       },
       auto_return: 'approved' 
     };
