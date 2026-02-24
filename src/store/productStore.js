@@ -5,7 +5,7 @@ const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
   isModalOpen: false,
-  cart: [],           // [{ id, name, image, basePrice, qty }]
+  cart: [],           
   cartOpen: false,
 
   fetchProducts: async () => {
@@ -31,24 +31,29 @@ const useProductStore = create((set, get) => ({
   toggleCart: () => set(state => ({ cartOpen: !state.cartOpen })),
 
   addToCart: (product, quantity = 1) => {
-    console.log('Agregando al carrito:', product.name, 'x' + quantity);
-    
+    const qty = Math.max(1, Number(quantity) || 1); // nunca menor a 1 ni NaN/null
+
+    console.log('Agregando al carrito:', product.name, 'x' + qty);
+
     const existingIndex = get().cart.findIndex(item => item.id === product.id);
-    
+
     if (existingIndex !== -1) {
-      // Actualizar cantidad si ya existe
+      // Incrementar cantidad existente
       const updatedCart = [...get().cart];
-      updatedCart[existingIndex].qty += quantity;
+      updatedCart[existingIndex] = {
+        ...updatedCart[existingIndex],
+        quantity: updatedCart[existingIndex].quantity + qty
+      };
       set({ cart: updatedCart });
     } else {
-      // Agregar nuevo
+      // Agregar nuevo producto con quantity como número
       set({
         cart: [...get().cart, {
           id: product.id,
           name: product.name,
           image: product.image,
-          basePrice: product.basePrice,
-          qty: quantity,
+          basePrice: Number(product.basePrice) || 0, // protección extra
+          quantity: qty,  // siempre número entero ≥1
         }]
       });
     }
@@ -58,18 +63,25 @@ const useProductStore = create((set, get) => ({
     set({ cart: get().cart.filter(item => item.id !== id) });
   },
 
-  updateQty: (id, delta) => {
+  updateQuantity: (id, newQuantity) => {
+    const qty = Math.max(1, Number(newQuantity) || 1); // nunca <1, nunca NaN/null
+
     set({
       cart: get().cart.map(item =>
-        item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+        item.id === id ? { ...item, quantity: qty } : item
       )
     });
   },
 
-  // Funciones que faltaban → ahora sí existen
-  getTotalItems: () => get().cart.reduce((sum, item) => sum + item.qty, 0),
+  // Cantidad total de items (para badge, etc.)
+  totalItems: () => get().cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
 
-  getTotalPrice: () => get().cart.reduce((sum, item) => sum + (item.basePrice * item.qty), 0).toFixed(0),
+  // Total del precio (usar como total() en componentes)
+  total: () => get().cart.reduce((sum, item) => {
+    const price = Number(item.basePrice) || 0;
+    const qty = Number(item.quantity) || 1;
+    return sum + (price * qty);
+  }, 0),
 }));
 
 export default useProductStore;

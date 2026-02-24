@@ -1,0 +1,6 @@
+ya quedo perfecto volveamos a trabajar con el codigo, quiero que realicemos la pagina administracion donde
+ 
+se cargaran productos los cuales debe de estar relacionados a firebase
+se realiza eleccion de categoria de cada producto
+se editan informacion del producto
+se puede manejar las restricciones de usuarios

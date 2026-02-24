@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import AuthModal from './components/AuthModal.jsx';
+import ProfileModal from './components/ProfileModal.jsx';
 import ProductModal from './components/ProductModal.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import FloatingCartButton from './components/FloatingCartButton.jsx';
@@ -21,10 +22,11 @@ export default function App() {
       <Navbar />
       <Home />
 
-      {/* TODOS los emergentes al final del return – clave para z-index */}
+      {/* Emergentes – renderizados al final para prioridad */}
       <AuthModal />
+      <ProfileModal />
       <ProductModal />
-      <CartDrawer /> {/* ← Debe estar aquí, después de <Home /> */}
+      <CartDrawer />
       <FloatingCartButton />
     </div>
   );
