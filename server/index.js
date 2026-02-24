@@ -50,14 +50,11 @@ app.post('/create-preference', async (req, res) => {
     const preferenceData = {
       items: itemsProcesados,
       back_urls: {
-  success: 'https://erde-landigpage-frontend.onrender.com/success',
-  failure: 'https://erde-landigpage-frontend.onrender.com/failure',
-  pending: 'https://erde-landigpage-frontend.onrender.com/pending'
-},
-// Puedes volver a poner auto_return: 'approved' ahora que es HTTPS
-auto_return: 'approved',
-      // NO USAR auto_return: 'approved' en localhost (HTTP)
-      // En producción (HTTPS) sí se puede volver a poner
+        success: 'https://erde-landigpage-frontend.onrender.com/success', // Cambia a tu URL frontend real
+        failure: 'https://erde-landigpage-frontend.onrender.com/failure',
+        pending: 'https://erde-landigpage-frontend.onrender.com/pending'
+      },
+      auto_return: 'approved' // Solo en prod (HTTPS)
     };
 
     console.log('Datos que se enviarán a Mercado Pago:');
