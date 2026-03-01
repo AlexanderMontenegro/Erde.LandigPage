@@ -1111,3 +1111,19 @@ body {
 .mp-wallet-container iframe {
   width: 100% !important;
 }
+
+
+/* ===== BOTÓN FLOTANTE ADMIN (solo para admin) ===== */
+.admin-fab {
+  position: fixed;
+  bottom: 90px; /* justo encima del carrito */
+  right: 24px;
+  z-index: 1400;
+  background: linear-gradient(45deg, #ff9800, #f57c00);
+  box-shadow: 0 4px 20px rgba(255, 152, 0, 0.4);
+}
+
+.admin-fab:hover {
+  background: linear-gradient(45deg, #f57c00, #e65100);
+  transform: scale(1.05);
+}

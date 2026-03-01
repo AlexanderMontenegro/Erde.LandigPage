@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import Success from './pages/Success.jsx'
 import Failure from './pages/Failure.jsx'
+import AdminDashboard from './admin/AdminDashboard.jsx'   // ← NUEVO
 import './styles/theme.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -13,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/success" element={<Success />} />
         <Route path="/failure" element={<Failure />} />
-        {/* Puedes agregar /pending si quieres */}
+        <Route path="/admin" element={<AdminDashboard />} />   {/* ← NUEVO */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
