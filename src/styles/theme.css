@@ -1127,3 +1127,56 @@ body {
   background: linear-gradient(45deg, #f57c00, #e65100);
   transform: scale(1.05);
 }
+
+/* ===== ESTILOS PARA STOCK VISUAL ===== */
+.stock-text {
+  font-size: 0.9rem;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.stock-available {
+  color: #66bb6a; /* verde MUI success */
+}
+
+.stock-low {
+  color: #ff9800; /* naranja warning */
+}
+
+.stock-none {
+  color: #f44336; /* rojo error */
+  font-weight: bold;
+}
+
+/* ===== ESTILOS PARA TOASTIFY (opcional, pero queda lindo) ===== */
+.Toastify__toast {
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+    z-index: 99999;
+
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(45deg, #4caf50, #66bb6a);
+      z-index: 99999;
+
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(45deg, #f44336, #ef5350);
+      z-index: 99999;
+
+
+}
+.Toastify__toast-container {
+  z-index: 999999 !important;   
+}
+
+.Toastify__toast {
+  z-index: 999999 !important;
+}
+
+.MuiModal-root {
+  z-index: 1300 !important;     
+
+}

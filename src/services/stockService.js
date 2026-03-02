@@ -1,48 +1,57 @@
 // src/services/stockService.js
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 /**
- * Valida el stock actual de un producto contra la cantidad solicitada
- * @param {string} productId - ID del producto en Firestore
- * @param {number} requestedQuantity - Cantidad que se quiere agregar o actualizar
- * @returns {Promise<{valid: boolean, currentStock: number, message: string}>}
+ * Obtiene el stock actual de un producto (una sola vez)
  */
-export const validateStock = async (productId, requestedQuantity) => {
+export const getStock = async (productId) => {
   try {
     const productRef = doc(db, 'products', productId);
     const snapshot = await getDoc(productRef);
-
-    if (!snapshot.exists()) {
-      return {
-        valid: false,
-        currentStock: 0,
-        message: 'Producto no encontrado en stock'
-      };
+    if (snapshot.exists()) {
+      return snapshot.data().stock || 0;
     }
-
-    const product = snapshot.data();
-    const currentStock = product.stock || 0;
-
-    if (currentStock < requestedQuantity) {
-      return {
-        valid: false,
-        currentStock,
-        message: `Solo hay ${currentStock} unidades disponibles. No se puede agregar ${requestedQuantity}.`
-      };
-    }
-
-    return {
-      valid: true,
-      currentStock,
-      message: `Stock disponible: ${currentStock}`
-    };
+    return 0;
   } catch (error) {
-    console.error('Error al validar stock:', error);
+    console.error('Error al obtener stock:', error);
+    return 0;
+  }
+};
+
+/**
+ * Valida si se puede agregar/actualizar cantidad (usa getStock)
+ */
+export const validateStock = async (productId, requestedQuantity) => {
+  const currentStock = await getStock(productId);
+
+  if (currentStock < requestedQuantity) {
     return {
       valid: false,
-      currentStock: 0,
-      message: 'Error al verificar stock. Intenta nuevamente.'
+      currentStock,
+      message: `Solo hay ${currentStock} unidades disponibles.`
     };
   }
+
+  return {
+    valid: true,
+    currentStock,
+    message: ''
+  };
+};
+
+/**
+ * Suscripción en tiempo real al stock de un producto (para carrito)
+ * Retorna unsubscribe para limpiar
+ */
+export const subscribeToStock = (productId, callback) => {
+  const productRef = doc(db, 'products', productId);
+  return onSnapshot(productRef, (snapshot) => {
+    if (snapshot.exists()) {
+      const stock = snapshot.data().stock || 0;
+      callback(stock);
+    } else {
+      callback(0);
+    }
+  });
 };

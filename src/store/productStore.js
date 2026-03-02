@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { getProducts } from '../services/productService.js';
-import { validateStock } from '../services/stockService.js';   // ← NUEVO
+import { validateStock } from '../services/stockService.js'; // ← NUEVO
+import { toast } from 'react-toastify';
 
 const useProductStore = create((set, get) => ({
   products: [],
@@ -31,16 +32,14 @@ const useProductStore = create((set, get) => ({
 
   toggleCart: () => set(state => ({ cartOpen: !state.cartOpen })),
 
-  // ==================== MODIFICACIÓN MÍNIMA ====================
   addToCart: async (product, quantity = 1) => {
     const requestedQty = Number(quantity);
 
-    // Validación de stock antes de agregar
+    // Validación de stock
     const validation = await validateStock(product.id, requestedQty);
-    
     if (!validation.valid) {
-      alert(validation.message);
-      return; // ← No agrega al carrito
+      toast.error(validation.message, { position: "top-right", autoClose: 4000 });
+      return;
     }
 
     console.log('Agregando al carrito:', product.name, 'x' + requestedQty);
@@ -62,25 +61,25 @@ const useProductStore = create((set, get) => ({
         }]
       });
     }
+
+    toast.success(`${product.name} agregado al carrito!`, { position: "top-right" });
   },
 
   removeFromCart: (id) => {
     set({ cart: get().cart.filter(item => item.id !== id) });
   },
 
-  // ==================== MODIFICACIÓN MÍNIMA ====================
   updateQuantity: async (id, newQuantity) => {
     const requestedQty = Math.max(1, Number(newQuantity));
 
-    // Validación de stock al aumentar cantidad
+    // Validación de stock al aumentar
     const productInCart = get().cart.find(item => item.id === id);
     if (!productInCart) return;
 
     const validation = await validateStock(id, requestedQty);
-    
     if (!validation.valid) {
-      alert(validation.message);
-      return; // ← No actualiza cantidad
+      toast.error(validation.message, { position: "top-right", autoClose: 4000 });
+      return;
     }
 
     set({
