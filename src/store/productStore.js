@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getProducts } from '../services/productService.js';
+import { validateStock } from '../services/stockService.js';   // ← NUEVO
 
 const useProductStore = create((set, get) => ({
   products: [],
@@ -30,30 +31,34 @@ const useProductStore = create((set, get) => ({
 
   toggleCart: () => set(state => ({ cartOpen: !state.cartOpen })),
 
-  addToCart: (product, quantity = 1) => {
-    const qty = Math.max(1, Number(quantity) || 1); // nunca menor a 1 ni NaN/null
+  // ==================== MODIFICACIÓN MÍNIMA ====================
+  addToCart: async (product, quantity = 1) => {
+    const requestedQty = Number(quantity);
 
-    console.log('Agregando al carrito:', product.name, 'x' + qty);
+    // Validación de stock antes de agregar
+    const validation = await validateStock(product.id, requestedQty);
+    
+    if (!validation.valid) {
+      alert(validation.message);
+      return; // ← No agrega al carrito
+    }
 
+    console.log('Agregando al carrito:', product.name, 'x' + requestedQty);
+    
     const existingIndex = get().cart.findIndex(item => item.id === product.id);
-
+    
     if (existingIndex !== -1) {
-      // Incrementar cantidad existente
       const updatedCart = [...get().cart];
-      updatedCart[existingIndex] = {
-        ...updatedCart[existingIndex],
-        quantity: updatedCart[existingIndex].quantity + qty
-      };
+      updatedCart[existingIndex].quantity += requestedQty;
       set({ cart: updatedCart });
     } else {
-      // Agregar nuevo producto con quantity como número
       set({
         cart: [...get().cart, {
           id: product.id,
           name: product.name,
           image: product.image,
-          basePrice: Number(product.basePrice) || 0, // protección extra
-          quantity: qty,  // siempre número entero ≥1
+          basePrice: product.basePrice,
+          quantity: requestedQty,
         }]
       });
     }
@@ -63,20 +68,30 @@ const useProductStore = create((set, get) => ({
     set({ cart: get().cart.filter(item => item.id !== id) });
   },
 
-  updateQuantity: (id, newQuantity) => {
-    const qty = Math.max(1, Number(newQuantity) || 1); // nunca <1, nunca NaN/null
+  // ==================== MODIFICACIÓN MÍNIMA ====================
+  updateQuantity: async (id, newQuantity) => {
+    const requestedQty = Math.max(1, Number(newQuantity));
+
+    // Validación de stock al aumentar cantidad
+    const productInCart = get().cart.find(item => item.id === id);
+    if (!productInCart) return;
+
+    const validation = await validateStock(id, requestedQty);
+    
+    if (!validation.valid) {
+      alert(validation.message);
+      return; // ← No actualiza cantidad
+    }
 
     set({
       cart: get().cart.map(item =>
-        item.id === id ? { ...item, quantity: qty } : item
+        item.id === id ? { ...item, quantity: requestedQty } : item
       )
     });
   },
 
-  // Cantidad total de items (para badge, etc.)
   totalItems: () => get().cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
 
-  // Total del precio (usar como total() en componentes)
   total: () => get().cart.reduce((sum, item) => {
     const price = Number(item.basePrice) || 0;
     const qty = Number(item.quantity) || 1;
