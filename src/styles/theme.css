@@ -1206,3 +1206,93 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
+
+
+/* ===== MEDIA QUERIES RESPONSIVE (MOBILE/TABLET) ===== */
+
+/* Mobile (hasta 600px) */
+@media (max-width: 600px) {
+  /* Modales generales (Auth, Profile, Product) */
+  .modal-content {
+    width: 90vw !important;  /* Ancho casi full screen */
+    max-width: 320px;        /* Límite para no estirar */
+    padding: 16px !important; /* Padding reducido */
+  }
+
+  .modal-title {
+    font-size: 1.2rem;       /* Título más pequeño */
+  }
+
+  .modal-description {
+    font-size: 0.9rem;       /* Descripción ajustada */
+  }
+
+  .modal-actions {
+    flex-direction: column;  /* Botones uno abajo del otro */
+    gap: 8px;
+  }
+
+  .btn-add-cart, .btn-whatsapp {
+    width: 100%;             /* Botones full width */
+    font-size: 0.9rem;
+  }
+
+  /* Nav bar */
+  .navbar-container {
+    padding: 8px 16px;       /* Padding reducido */
+  }
+
+  .navbar-links {
+    gap: 8px;                /* Espacio entre enlaces menor */
+  }
+
+  .navbar-link {
+    font-size: 0.9rem;       /* Texto más pequeño */
+  }
+
+  /* Hero y catálogo (ajuste básico para mobile) */
+  .hero-title {
+    font-size: 2rem;         /* Título hero ajustado */
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Cards más pequeñas */
+  }
+}
+
+/* Tablet (601px a 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+  /* Modales */
+  .modal-content {
+    width: 80vw !important;
+    max-width: 500px;
+    padding: 20px !important;
+  }
+
+  .modal-actions {
+    flex-direction: row;     /* Botones lado a lado */
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Nav bar */
+  .navbar-container {
+    padding: 12px 24px;
+  }
+
+  /* Hero */
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+/* Ajustes generales para todos los modales (fallback) */
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
