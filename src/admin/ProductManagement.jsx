@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
-  Paper, Button, TextField, Dialog, DialogTitle, DialogContent, 
-  DialogActions, Switch, Typography, Box 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead,        // ← AGREGAR ESTE
+  TableRow,         // ← AGREGAR ESTE
+  Paper, 
+  Button, 
+  TextField, 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Switch, 
+  Typography, 
+  Box 
 } from '@mui/material';
 import { db } from '../config/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
@@ -44,7 +57,7 @@ const ProductManagement = () => {
 
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead>  {/* ← Ahora TableHead está importado */}
             <TableRow>
               <TableCell>Nombre</TableCell>
               <TableCell>Categoría</TableCell>
@@ -74,7 +87,7 @@ const ProductManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal Formulario Producto (completo según estructura) */}
+      {/* Modal Formulario Producto (con prellenado) */}
       <ProductFormModal 
         open={open} 
         onClose={() => { setOpen(false); setCurrentProduct(null); }} 
@@ -85,18 +98,57 @@ const ProductManagement = () => {
   );
 };
 
-// Modal Formulario (completo con todos los campos)
+// Modal Formulario (con prellenado)
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
-  const [form, setForm] = useState(product || {
-    name: '', category: '', description: '', stock: 0, active: true,
+  const [form, setForm] = useState({
+    name: '',
+    category: '',
+    description: '',
+    stock: 0,
+    active: true,
     pricing: { basePrice: 0, currency: 'ARS' },
     media: { image: '', video: '' },
-    // ... puedes expandir con más campos
   });
+
+  // Prellenar formulario al editar
+  useEffect(() => {
+    if (product) {
+      setForm({
+        name: product.name || '',
+        category: product.category || '',
+        description: product.description || '',
+        stock: product.stock || 0,
+        active: product.active ?? true,
+        pricing: product.pricing || { basePrice: 0, currency: 'ARS' },
+        media: product.media || { image: '', video: '' },
+      });
+    } else {
+      setForm({
+        name: '',
+        category: '',
+        description: '',
+        stock: 0,
+        active: true,
+        pricing: { basePrice: 0, currency: 'ARS' },
+        media: { image: '', video: '' },
+      });
+    }
+  }, [product]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSwitchChange = (e) => {
+    setForm(prev => ({ ...prev, active: e.target.checked }));
+  };
+
+  const handleNestedChange = (field, subField, value) => {
+    setForm(prev => ({
+      ...prev,
+      [field]: { ...prev[field], [subField]: value },
+    }));
   };
 
   return (
@@ -107,11 +159,15 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         <TextField fullWidth label="Categoría" name="category" value={form.category} onChange={handleChange} margin="dense" />
         <TextField fullWidth label="Descripción" name="description" value={form.description} onChange={handleChange} margin="dense" multiline rows={3} />
         <TextField fullWidth label="Stock" name="stock" type="number" value={form.stock} onChange={handleChange} margin="dense" />
-        <TextField fullWidth label="Precio Base" name="basePrice" type="number" value={form.pricing?.basePrice || ''} 
-          onChange={(e) => setForm(prev => ({ ...prev, pricing: { ...prev.pricing, basePrice: Number(e.target.value) } }))} margin="dense" />
-        <TextField fullWidth label="Imagen URL" name="image" value={form.media?.image || ''} 
-          onChange={(e) => setForm(prev => ({ ...prev, media: { ...prev.media, image: e.target.value } }))} margin="dense" />
-        {/* Agrega más campos según necesites */}
+        <TextField fullWidth label="Precio Base" type="number" value={form.pricing.basePrice} 
+          onChange={(e) => handleNestedChange('pricing', 'basePrice', Number(e.target.value))} margin="dense" />
+        <TextField fullWidth label="Imagen URL" value={form.media.image} 
+          onChange={(e) => handleNestedChange('media', 'image', e.target.value)} margin="dense" />
+        <TextField fullWidth label="Video URL" value={form.media.video} 
+          onChange={(e) => handleNestedChange('media', 'video', e.target.value)} margin="dense" />
+
+        <Typography variant="body2" sx={{ mt: 2 }}>Activo</Typography>
+        <Switch checked={form.active} onChange={handleSwitchChange} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>

@@ -9,10 +9,10 @@ export const getProducts = async () => {
       id: doc.id,
       name: data.name || 'Sin nombre',
       category: data.category || 'Sin categoría',
-      description: data.description || 'Sin descripción disponible',  // ← CORREGIDO: viene directo de data.description
+      description: data.description || 'Sin descripción disponible', 
       basePrice: data.pricing?.basePrice || 0,
       currency: data.pricing?.currency || 'ARS',
-      stock: Number(data.stock) || 0,               // ← AGREGADO: stock
+      stock: Number(data.stock) || 0,               
       image: data.media?.image || data.image || 'https://via.placeholder.com/600?text=Sin+Imagen',
       video: data.media?.video || '',               // ← AGREGADO: video
       // Puedes agregar más si los necesitas después (active, customizable, etc.)
