@@ -1180,3 +1180,29 @@ body {
   z-index: 1300 !important;     
 
 }
+
+/* ===== ESTILOS PARA STOCK EN MODAL ===== */
+.stock-text {
+  font-size: 1.1rem;
+  margin: 12px 0;
+  font-weight: 600;
+}
+
+.stock-available {
+  color: #66bb6a; /* verde éxito */
+}
+
+.stock-low {
+  color: #ff9800; /* naranja advertencia */
+}
+
+.stock-none {
+  color: #f44336; /* rojo error */
+  font-weight: bold;
+}
+
+/* Asegura que el video sea responsive */
+.modal-video-container iframe {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
