@@ -1162,9 +1162,116 @@ body {
 @media (max-width: 600px) {
   /* Modales generales (Auth, Profile, Product, etc.) */
 
-  .mobile-menu{
-    background-color: red;
-  }
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(18, 18, 18, 0.96);          
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 500;
+  padding: 16px 32px;
+  margin: 12px 0;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+  background: rgba(76, 175, 80, 0.25);        /* Verde primary con transparencia */
+  color: #4caf50;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+}
+
+.mobile-menu .logout {
+  background: rgba(244, 67, 54, 0.15);
+  color: #f44336;
+  border-color: rgba(244, 67, 54, 0.3);
+}
+
+.mobile-menu .logout:hover {
+  background: rgba(244, 67, 54, 0.35);
+  color: #ef5350;
+}
+
+/* Botón cerrar (X) en la esquina superior derecha */
+.mobile-menu::before {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 3rem;
+  color: white;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu::before:hover {
+  background: rgba(244, 67, 54, 0.8);
+  transform: rotate(90deg);
+}
+
+/* Ajuste para que el menú sea visible siempre que exista */
+.mobile-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+
+/* Botón de cierre (X) en menú móvil */
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1300;
+}
+
+.mobile-menu-close:hover {
+  background: rgba(244, 67, 54, 0.8); /* Rojo suave al hover */
+  transform: rotate(90deg);
+}
+
+  
   .modal-content {
     width: 90vw !important;
     max-width: 320px;

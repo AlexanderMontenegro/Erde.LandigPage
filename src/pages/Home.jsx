@@ -36,8 +36,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Hero - Inicio (sin cambios) */}
-      <section className="hero">
+      {/* Hero - Inicio */}
+      <section id="inicio" className="hero">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="hero-title">
             ¡Personaliza tu mundo con impresión 3D!
@@ -47,12 +47,13 @@ export default function Home() {
 Tazas ☕, remeras 👕, buzos 🧥
 y productos exclusivos en 3D 🖨️✨”
           </p>
+         
         </div>
       </section>
 
       {/* Ofertas destacadas - solo productos con featured: true */}
       {offers.length > 0 && (
-        <section className="offers-section">
+        <section id="ofertas" className="offers-section">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="offers-title">Ofertas Especiales</h2>
             <div className="grid-products">
