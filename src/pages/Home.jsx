@@ -31,12 +31,12 @@ export default function Home() {
     ...new Set(products.map((p) => p.category || "Otros")),
   ];
 
-  // Productos en oferta (ejemplo: precio < 20000 o campo 'offer' true)
-  const offers = products.filter((p) => p.basePrice < 20000 || p.offer);
+  // Cambio mínimo: Ofertas ahora usa el campo 'featured' (seleccionable desde panel admin)
+  const offers = products.filter((p) => p.featured === true);
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Hero - Inicio */}
+      {/* Hero - Inicio (sin cambios) */}
       <section className="hero">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="hero-title">
@@ -47,23 +47,10 @@ export default function Home() {
 Tazas ☕, remeras 👕, buzos 🧥
 y productos exclusivos en 3D 🖨️✨”
           </p>
-          {/*<div className="hero-cta">
-            <a href="#productos" className="btn btn-primary text-lg px-10 py-5">
-              Ver Catálogo
-            </a>
-            <a
-              href="https://wa.me/549TU_NUMERO?text=Hola!%20Quiero%20consultar%20por%20un%20producto%20personalizado"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-outline text-lg px-10 py-5 ml-6"
-            >
-              Contactar por WhatsApp
-            </a>
-          </div>*/}
         </div>
       </section>
 
-      {/* Ofertas destacadas */}
+      {/* Ofertas destacadas - solo productos con featured: true */}
       {offers.length > 0 && (
         <section className="offers-section">
           <div className="max-w-7xl mx-auto px-4">
@@ -77,7 +64,7 @@ y productos exclusivos en 3D 🖨️✨”
         </section>
       )}
 
-      {/* Catálogo de productos con filtro */}
+      {/* Catálogo de productos con filtro (sin cambios) */}
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
           Catálogo de Productos
@@ -108,7 +95,7 @@ y productos exclusivos en 3D 🖨️✨”
         )}
       </section>
 
-      {/* Contacto en footer */}
+      {/* Contacto en footer (sin cambios) */}
       <footer id="contacto" className="footer-contact">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="footer-title">Contactanos</h2>
@@ -199,7 +186,7 @@ y productos exclusivos en 3D 🖨️✨”
         </div>
       </footer>
 
-      {/* Componentes emergentes */}
+      {/* Componentes emergentes (sin cambios) */}
       <ProductModal />
       <CartDrawer />
       <FloatingCartButton />
