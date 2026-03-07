@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead,        // ← AGREGAR ESTE
-  TableRow,         // ← AGREGAR ESTE
-  Paper, 
-  Button, 
-  TextField, 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Switch, 
-  Typography, 
-  Box 
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
+  Paper, Button, TextField, Dialog, DialogTitle, DialogContent, 
+  DialogActions, Switch, Typography, Box, FormControlLabel 
 } from '@mui/material';
 import { db } from '../config/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
@@ -25,7 +12,6 @@ const ProductManagement = () => {
   const [open, setOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
 
-  // Carga en tiempo real
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -57,13 +43,14 @@ const ProductManagement = () => {
 
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>  {/* ← Ahora TableHead está importado */}
+          <TableHead>
             <TableRow>
               <TableCell>Nombre</TableCell>
               <TableCell>Categoría</TableCell>
               <TableCell>Precio</TableCell>
               <TableCell>Stock</TableCell>
               <TableCell>Activo</TableCell>
+              <TableCell>Destacado (Ofertas)</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -75,7 +62,15 @@ const ProductManagement = () => {
                 <TableCell>${p.pricing?.basePrice}</TableCell>
                 <TableCell>{p.stock}</TableCell>
                 <TableCell>
-                  <Switch checked={p.active} disabled />
+                  <Switch checked={p.active || false} disabled />
+                </TableCell>
+                <TableCell>
+                  <Switch 
+                    checked={p.featured || false} 
+                    onChange={async (e) => {
+                      await updateDoc(doc(db, 'products', p.id), { featured: e.target.checked });
+                    }}
+                  />
                 </TableCell>
                 <TableCell>
                   <Button size="small" onClick={() => { setCurrentProduct(p); setOpen(true); }}>Editar</Button>
@@ -87,7 +82,7 @@ const ProductManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal Formulario Producto (con prellenado) */}
+      {/* Modal Formulario Producto */}
       <ProductFormModal 
         open={open} 
         onClose={() => { setOpen(false); setCurrentProduct(null); }} 
@@ -98,7 +93,7 @@ const ProductManagement = () => {
   );
 };
 
-// Modal Formulario (con prellenado)
+// Modal Formulario (actualizado para sincronizar datos correctamente)
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
   const [form, setForm] = useState({
     name: '',
@@ -106,11 +101,12 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
     description: '',
     stock: 0,
     active: true,
+    featured: false,
     pricing: { basePrice: 0, currency: 'ARS' },
     media: { image: '', video: '' },
   });
 
-  // Prellenar formulario al editar
+  // Sincronizar formulario con el producto seleccionado cada vez que cambie
   useEffect(() => {
     if (product) {
       setForm({
@@ -118,17 +114,26 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         category: product.category || '',
         description: product.description || '',
         stock: product.stock || 0,
-        active: product.active ?? true,
-        pricing: product.pricing || { basePrice: 0, currency: 'ARS' },
-        media: product.media || { image: '', video: '' },
+        active: product.active !== false,
+        featured: product.featured || false,
+        pricing: {
+          basePrice: product.pricing?.basePrice || 0,
+          currency: product.pricing?.currency || 'ARS'
+        },
+        media: {
+          image: product.media?.image || '',
+          video: product.media?.video || ''
+        },
       });
     } else {
+      // Reset para nuevo producto
       setForm({
         name: '',
         category: '',
         description: '',
         stock: 0,
         active: true,
+        featured: false,
         pricing: { basePrice: 0, currency: 'ARS' },
         media: { image: '', video: '' },
       });
@@ -136,19 +141,23 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
   }, [product]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value, type, checked } = e.target;
 
-  const handleSwitchChange = (e) => {
-    setForm(prev => ({ ...prev, active: e.target.checked }));
-  };
-
-  const handleNestedChange = (field, subField, value) => {
-    setForm(prev => ({
-      ...prev,
-      [field]: { ...prev[field], [subField]: value },
-    }));
+    setForm(prev => {
+      if (type === 'checkbox') {
+        return { ...prev, [name]: checked };
+      }
+      if (name === 'basePrice') {
+        return { ...prev, pricing: { ...prev.pricing, basePrice: Number(value) || 0 } };
+      }
+      if (name === 'image') {
+        return { ...prev, media: { ...prev.media, image: value } };
+      }
+      if (name === 'video') {
+        return { ...prev, media: { ...prev.media, video: value } };
+      }
+      return { ...prev, [name]: value };
+    });
   };
 
   return (
@@ -159,15 +168,24 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         <TextField fullWidth label="Categoría" name="category" value={form.category} onChange={handleChange} margin="dense" />
         <TextField fullWidth label="Descripción" name="description" value={form.description} onChange={handleChange} margin="dense" multiline rows={3} />
         <TextField fullWidth label="Stock" name="stock" type="number" value={form.stock} onChange={handleChange} margin="dense" />
-        <TextField fullWidth label="Precio Base" type="number" value={form.pricing.basePrice} 
-          onChange={(e) => handleNestedChange('pricing', 'basePrice', Number(e.target.value))} margin="dense" />
-        <TextField fullWidth label="Imagen URL" value={form.media.image} 
-          onChange={(e) => handleNestedChange('media', 'image', e.target.value)} margin="dense" />
-        <TextField fullWidth label="Video URL" value={form.media.video} 
-          onChange={(e) => handleNestedChange('media', 'video', e.target.value)} margin="dense" />
+        <TextField fullWidth label="Precio Base" name="basePrice" type="number" value={form.pricing?.basePrice || ''} 
+          onChange={handleChange} margin="dense" />
+        <TextField fullWidth label="Imagen URL" name="image" value={form.media?.image || ''} onChange={handleChange} margin="dense" />
+        <TextField fullWidth label="Video URL (opcional)" name="video" value={form.media?.video || ''} onChange={handleChange} margin="dense" />
+        
+        {/* Switch Activo */}
+        <FormControlLabel
+          control={<Switch checked={form.active} onChange={handleChange} name="active" />}
+          label="Producto activo"
+          sx={{ mt: 2, display: 'block' }}
+        />
 
-        <Typography variant="body2" sx={{ mt: 2 }}>Activo</Typography>
-        <Switch checked={form.active} onChange={handleSwitchChange} />
+        {/* Switch Destacado */}
+        <FormControlLabel
+          control={<Switch checked={form.featured} onChange={handleChange} name="featured" />}
+          label="Destacado en Ofertas"
+          sx={{ mt: 1, display: 'block' }}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
