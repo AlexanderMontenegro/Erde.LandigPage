@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero - Inicio */}
-      <section className="hero">
+      <section id="inicio" className="hero">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="hero-title">
             ¡Personaliza tu mundo con impresión 3D!
@@ -47,25 +47,13 @@ export default function Home() {
 Tazas ☕, remeras 👕, buzos 🧥
 y productos exclusivos en 3D 🖨️✨”
           </p>
-          {/*<div className="hero-cta">
-            <a href="#productos" className="btn btn-primary text-lg px-10 py-5">
-              Ver Catálogo
-            </a>
-            <a
-              href="https://wa.me/549TU_NUMERO?text=Hola!%20Quiero%20consultar%20por%20un%20producto%20personalizado"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-outline text-lg px-10 py-5 ml-6"
-            >
-              Contactar por WhatsApp
-            </a>
-          </div>*/}
+         
         </div>
       </section>
 
       {/* Ofertas destacadas */}
       {offers.length > 0 && (
-        <section className="offers-section">
+        <section id="ofertas" className="offers-section">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="offers-title">Ofertas Especiales</h2>
             <div className="grid-products">

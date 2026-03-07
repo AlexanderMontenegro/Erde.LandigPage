@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom'; 
 import { FiMenu, FiX, FiShoppingCart, FiUser } from 'react-icons/fi';
@@ -87,6 +86,13 @@ export default function Navbar() {
       {/* Menú mobile */}
       {menuOpen && (
         <div className="mobile-menu">
+          <button 
+            className="mobile-menu-close" 
+            onClick={toggleMenu}
+            aria-label="Cerrar menú"
+          >
+            <FiX size={32} />
+          </button>
           <a href="#inicio" onClick={toggleMenu}>Inicio</a>
           <a href="#productos" onClick={toggleMenu}>Productos</a>
           <a href="#ofertas" onClick={toggleMenu}>Ofertas</a>
