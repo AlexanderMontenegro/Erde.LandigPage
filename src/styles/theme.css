@@ -1168,9 +1168,7 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(18, 18, 18, 0.96);          /* Fondo negro oscuro semi-transparente */
-  backdrop-filter: blur(12px);                 /* Efecto vidrio esmerilado moderno */
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(18, 18, 18, 0.96);          
   z-index: 1200;
   display: flex;
   flex-direction: column;
@@ -1196,7 +1194,6 @@ body {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
 }
 
 .mobile-menu a:hover,
