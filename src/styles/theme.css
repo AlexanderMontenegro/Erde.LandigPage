@@ -62,7 +62,6 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
-  /*backdrop-filter: blur(8px);*/
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -76,7 +75,9 @@ body {
   max-width: 1000px;
   width: 60%;
   max-height: 92vh;
+  height: 80%;
   overflow-y: auto;
+  overflow-anchor: 2px;
   position: relative;
   border: 1px solid var(--primary);
   box-shadow: var(--glow-green);
@@ -827,10 +828,12 @@ body {
 }
 
 .ft2{
-  display: flex;
-  justify-items: stretch;
-  margin: 10px;
- 
+ display: flex;
+    justify-items: stretch;
+    margin: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
 }
 
 .ficon{
@@ -843,6 +846,18 @@ body {
     flex-direction: column;
     align-items: center;
     margin: 25px;
+}
+
+.offers-section-fav {
+     display: inline-flex;
+    background: var(--offer-bg);
+    padding: 2rem 2rem;
+    border-radius: var(--radius-lg);
+    margin: 1rem;
+    Color :var(--text);
+    font-size: medium;
+
+    
 }
 
 
