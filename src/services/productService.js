@@ -14,8 +14,7 @@ export const getProducts = async () => {
       currency: data.pricing?.currency || 'ARS',
       stock: Number(data.stock) || 0,               
       image: data.media?.image || data.image || 'https://via.placeholder.com/600?text=Sin+Imagen',
-      video: data.media?.video || '',               // ← AGREGADO: video
-      // Puedes agregar más si los necesitas después (active, customizable, etc.)
+      video: data.media?.video || '',               
       active: data.active ?? true,
       customizable: data.customizable ?? false,
       fabricationTimeDays: data.fabricationTimeDays || 0,

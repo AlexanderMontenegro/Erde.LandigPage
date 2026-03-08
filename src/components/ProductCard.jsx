@@ -31,8 +31,16 @@ export default function ProductCard({ product }) {
         </button>
 
         {user && (
-          <button onClick={handleFavorite} className=" mt-2 text-red-400 hover:text-red-600">
-            {isFavorite ? <FaHeart size={24} /> : <FaRegHeart size={24} />}
+          <button 
+            onClick={handleFavorite} 
+            className="btnfav favorite-btn"  
+            aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          >
+            {isFavorite ? (
+              <FaHeart size={28} className="text-red-500 animate-heart-pop" />
+            ) : (
+              <FaRegHeart size={28} className="text-red-400 hover:text-red-500 transition-colors" />
+            )}
           </button>
         )}
       </div>

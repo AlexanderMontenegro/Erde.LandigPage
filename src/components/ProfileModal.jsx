@@ -166,13 +166,13 @@ export default function ProfileModal() {
                   <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
                     <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>
-                    <button onClick={() => handleFavorite(productId)} className="text-red-400 text-sm mt-2">
+                    <button onClick={() => handleFavorite(productId)} className="offers-section-fav">
                       Eliminar
                     </button>
 
                     <button
               onClick={() => useProductStore.getState().openModal(product)}
-              className="bg-neon-green hover:bg-opacity-90 text-black text-sm flex-1 py-2 rounded-lg font-medium transition shadow-glow-green"
+              className="offers-section-fav"
             >
               Detalle
             </button>

@@ -31,7 +31,7 @@ export default function Home() {
     ...new Set(products.map((p) => p.category || "Otros")),
   ];
 
-  // Cambio mínimo: Ofertas ahora usa el campo 'featured' (seleccionable desde panel admin)
+  
   const offers = products.filter((p) => p.featured === true);
 
   return (
