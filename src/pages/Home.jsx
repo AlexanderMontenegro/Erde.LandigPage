@@ -6,7 +6,7 @@ import CartDrawer from "../components/CartDrawer.jsx";
 import FloatingCartButton from "../components/FloatingCartButton.jsx";
 
 export default function Home() {
-  const { products, fetchProducts } = useProductStore();
+  const { products, fetchProducts, openModal } = useProductStore();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState("todos");
 
@@ -31,12 +31,12 @@ export default function Home() {
     ...new Set(products.map((p) => p.category || "Otros")),
   ];
 
-  
+  // Todos los productos destacados (featured: true)
   const offers = products.filter((p) => p.featured === true);
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Hero - Inicio */}
+      {/* Hero - Inicio (sin cambios) */}
       <section id="inicio" className="hero">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="hero-title">
@@ -47,19 +47,47 @@ export default function Home() {
 Tazas ☕, remeras 👕, buzos 🧥
 y productos exclusivos en 3D 🖨️✨”
           </p>
-         
         </div>
       </section>
 
-      {/* Ofertas destacadas - solo productos con featured: true */}
+      {/* Ofertas destacadas - CARRUSEL INFINITO CONTINUO */}
       {offers.length > 0 && (
         <section id="ofertas" className="offers-section">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="offers-title">Ofertas Especiales</h2>
-            <div className="grid-products">
-              {offers.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+
+            {/* Carrusel infinito continuo */}
+            <div className="offers-carousel-container">
+              <div className="offers-carousel-track">
+                {/* Primera copia de las imágenes */}
+                {offers.map((product) => (
+                  <div 
+                    key={product.id + '-1'}
+                    className="carousel-item cursor-pointer"
+                    onClick={() => openModal(product)}
+                  >
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="carousel-image"
+                    />
+                  </div>
+                ))}
+                {/* Segunda copia (para efecto infinito) */}
+                {offers.map((product) => (
+                  <div 
+                    key={product.id + '-2'}
+                    className="carousel-item cursor-pointer"
+                    onClick={() => openModal(product)}
+                  >
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="carousel-image"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -67,7 +95,7 @@ y productos exclusivos en 3D 🖨️✨”
 
       {/* Catálogo de productos con filtro (sin cambios) */}
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
-        <h2 className="offers-oferts">
+        <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
           Catálogo de Productos
         </h2>
 
