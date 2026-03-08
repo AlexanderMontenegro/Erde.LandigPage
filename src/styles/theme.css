@@ -1512,7 +1512,6 @@ margin: 10px;
 
 .no-scrollbar {
   -ms-overflow-style: none;          /* IE y Edge */
-  scrollbar-width: none;             /* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {
