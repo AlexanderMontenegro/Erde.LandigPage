@@ -77,7 +77,6 @@ body {
   max-height: 92vh;
   height: 80%;
   overflow-y: auto;
-  overflow-anchor: 2px;
   position: relative;
   border: 1px solid var(--primary);
   box-shadow: var(--glow-green);
