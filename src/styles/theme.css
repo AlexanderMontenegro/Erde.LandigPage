@@ -479,7 +479,8 @@ body {
   transition: var(--transition);
   display: flex;
   flex-direction: column;
-  height:90%;
+  height:75vh;
+  max-height: 80vh;
 }
 
 
@@ -487,7 +488,7 @@ body {
 
 .card img {
   width: 100%;
-  height: 50vh;
+  min-height: 50vh;
   object-fit: cover;
   transition: var(--transition);
   
@@ -562,6 +563,15 @@ body {
 }
 
 .offers-title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--accent-yellow);
+}
+
+
+.offers-oferts {
   font-size: 3rem;
   font-weight: bold;
   text-align: center;
