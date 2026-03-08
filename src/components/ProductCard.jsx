@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
         {user && (
           <button 
             onClick={handleFavorite} 
-            className="btnfav favorite-btn"  // ← Clase extra para estilizar solo este botón
+            className="btnfav favorite-btn"  
             aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
           >
             {isFavorite ? (
