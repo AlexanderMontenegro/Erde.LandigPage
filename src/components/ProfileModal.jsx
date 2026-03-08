@@ -7,17 +7,29 @@ import { db } from '../config/firebase';
 export default function ProfileModal() {
   const { user, isProfileModalOpen, toggleProfileModal, updateUser, addFavorite, removeFavorite, error } = useAuthStore();
   const { products } = useProductStore();
-  const [nombre, setNombre] = useState(user?.nombre || '');
-  const [apellido, setApellido] = useState(user?.apellido || '');
-  const [direccion, setDireccion] = useState(user?.direccion || '');
-  const [telefono, setTelefono] = useState(user?.telefono || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [imagen, setImagen] = useState(user?.imagen || '');
+
+  // Estados del formulario (inicializados vacíos)
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [email, setEmail] = useState('');
+  const [imagen, setImagen] = useState('');
+
   const [orders, setOrders] = useState([]);
   const favorites = user?.favorites || [];
 
+  // Sincronizar campos del formulario cada vez que el modal se abre o el user cambia
   useEffect(() => {
     if (isProfileModalOpen && user) {
+      setNombre(user.nombre || '');
+      setApellido(user.apellido || '');
+      setDireccion(user.direccion || '');
+      setTelefono(user.telefono || '');
+      setEmail(user.email || '');
+      setImagen(user.imagen || '');
+
+      // Cargar historial de compras
       const fetchOrders = async () => {
         try {
           const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
@@ -30,7 +42,7 @@ export default function ProfileModal() {
       };
       fetchOrders();
     }
-  }, [isProfileModalOpen, user]);
+  }, [isProfileModalOpen, user]);  // Dependencias clave: modal abierto + usuario
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +76,7 @@ export default function ProfileModal() {
 
   return (
     <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content  no-scrollbar" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
         <h1 className="modal-title text-center">Mi Perfil</h1>
@@ -115,7 +127,7 @@ export default function ProfileModal() {
 
           <div className="mt-6">
             <label className="block text-text-muted mb-3 text-center font-medium">Imagen de perfil</label>
-            <div className="grid grid-cols-3 gap-4 justify-items-center">
+            <div className="ussgrup grid grid-cols-3 gap-4 justify-items-center">
               {predefinedImages.map((imgSrc, idx) => (
                 <button
                   key={idx}
@@ -126,7 +138,7 @@ export default function ProfileModal() {
                   <img
                     src={imgSrc}
                     alt={`Perfil ${idx + 1}`}
-                    className="u w-full h-full object-cover"
+                    className="uss w-full h-full object-cover"
                     onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
                   />
                 </button>
@@ -162,7 +174,7 @@ export default function ProfileModal() {
               if (!product) return null;
               return (
                 <div key={productId} className="f">
-                  <img src={product.image} alt={product.name} className="ft  " />
+                  <img src={product.image} alt={product.name} className="ft" />
                   <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
                     <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>
@@ -171,11 +183,11 @@ export default function ProfileModal() {
                     </button>
 
                     <button
-              onClick={() => useProductStore.getState().openModal(product)}
-              className="offers-section-fav"
-            >
-              Detalle
-            </button>
+                      onClick={() => useProductStore.getState().openModal(product)}
+                      className="offers-section-fav"
+                    >
+                      Detalle
+                    </button>
                   </div>
                 </div>
               );
