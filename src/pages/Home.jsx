@@ -31,12 +31,10 @@ export default function Home() {
     ...new Set(products.map((p) => p.category || "Otros")),
   ];
 
-  // Todos los productos destacados (featured: true)
   const offers = products.filter((p) => p.featured === true);
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Hero - Inicio (sin cambios) */}
       <section id="inicio" className="hero">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="hero-title">
@@ -50,16 +48,13 @@ y productos exclusivos en 3D 🖨️✨”
         </div>
       </section>
 
-      {/* Ofertas destacadas - CARRUSEL INFINITO CONTINUO */}
       {offers.length > 0 && (
         <section id="ofertas" className="offers-section">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="offers-title">Ofertas Especiales</h2>
 
-            {/* Carrusel infinito continuo */}
             <div className="offers-carousel-container">
               <div className="offers-carousel-track">
-                {/* Primera copia de las imágenes */}
                 {offers.map((product) => (
                   <div 
                     key={product.id + '-1'}
@@ -73,7 +68,6 @@ y productos exclusivos en 3D 🖨️✨”
                     />
                   </div>
                 ))}
-                {/* Segunda copia (para efecto infinito) */}
                 {offers.map((product) => (
                   <div 
                     key={product.id + '-2'}
@@ -93,7 +87,6 @@ y productos exclusivos en 3D 🖨️✨”
         </section>
       )}
 
-      {/* Catálogo de productos con filtro (sin cambios) */}
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
           Catálogo de Productos
@@ -124,7 +117,6 @@ y productos exclusivos en 3D 🖨️✨”
         )}
       </section>
 
-      {/* Contacto en footer (sin cambios) */}
       <footer id="contacto" className="footer-contact">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="footer-title">Contactanos</h2>
@@ -215,7 +207,6 @@ y productos exclusivos en 3D 🖨️✨”
         </div>
       </footer>
 
-      {/* Componentes emergentes (sin cambios) */}
       <ProductModal />
       <CartDrawer />
       <FloatingCartButton />

@@ -1,10 +1,7 @@
-// src/services/stockService.js
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-/**
- * Obtiene el stock actual de un producto (una sola vez)
- */
+
 export const getStock = async (productId) => {
   try {
     const productRef = doc(db, 'products', productId);
@@ -19,9 +16,7 @@ export const getStock = async (productId) => {
   }
 };
 
-/**
- * Valida si se puede agregar/actualizar cantidad (usa getStock)
- */
+
 export const validateStock = async (productId, requestedQuantity) => {
   const currentStock = await getStock(productId);
 

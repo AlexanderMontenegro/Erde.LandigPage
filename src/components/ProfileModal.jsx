@@ -8,7 +8,6 @@ export default function ProfileModal() {
   const { user, isProfileModalOpen, toggleProfileModal, updateUser, addFavorite, removeFavorite, error } = useAuthStore();
   const { products } = useProductStore();
 
-  // Estados del formulario (inicializados vacíos)
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [direccion, setDireccion] = useState('');
@@ -19,7 +18,6 @@ export default function ProfileModal() {
   const [orders, setOrders] = useState([]);
   const favorites = user?.favorites || [];
 
-  // Sincronizar campos del formulario cada vez que el modal se abre o el user cambia
   useEffect(() => {
     if (isProfileModalOpen && user) {
       setNombre(user.nombre || '');
@@ -29,7 +27,6 @@ export default function ProfileModal() {
       setEmail(user.email || '');
       setImagen(user.imagen || '');
 
-      // Cargar historial de compras
       const fetchOrders = async () => {
         try {
           const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
@@ -42,8 +39,7 @@ export default function ProfileModal() {
       };
       fetchOrders();
     }
-  }, [isProfileModalOpen, user]);  // Dependencias clave: modal abierto + usuario
-
+  }, [isProfileModalOpen, user]);  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -64,12 +60,17 @@ export default function ProfileModal() {
     }
   };
 
-  // Imágenes predefinidas – ruta desde public/img/Usuarios
   const predefinedImages = [
     '/img/Usuarios/U1.jpg',
     '/img/Usuarios/U2.jpg',
     '/img/Usuarios/U3.jpg',
-    // Agrega más si tienes
+    '/img/Usuarios/U4.jpg',
+    '/img/Usuarios/U5.jpg',
+    '/img/Usuarios/U6.jpg',
+    '/img/Usuarios/U7.jpg',
+    '/img/Usuarios/U8.jpg',
+    '/img/Usuarios/U9.jpg',
+    '/img/Usuarios/U10.jpg',
   ];
 
   if (!isProfileModalOpen) return null;

@@ -248,7 +248,6 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  /*backdrop-filter: blur(4px);*/
   z-index: 9998;
 }
 
@@ -894,6 +893,13 @@ margin: 10px;
   justify-content: space-between;
 }
 
+.logo{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
 .logo-text {
   font-size: 1.8rem;
   font-weight: 700;
@@ -903,6 +909,13 @@ margin: 10px;
 
 .logo-accent {
   color: #2ecc71;         
+}
+
+.logoNav{
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+
 }
 
 /* Links menú */

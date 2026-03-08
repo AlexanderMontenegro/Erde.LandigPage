@@ -66,7 +66,6 @@ const CartDrawer = () => {
     }
   }, [cartOpen, cart.length, user]);
 
-  // Botón Mercado Pago - abre en popup
   const handleMercadoPago = () => {
     if (!preferenceId) return;
 
@@ -82,7 +81,6 @@ const CartDrawer = () => {
     );
   };
 
-  // Modal Otros Medios de Pago
   const OtherPaymentsModal = () => (
     <Modal open={openOtherPayments} onClose={() => setOpenOtherPayments(false)}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
@@ -97,7 +95,6 @@ const CartDrawer = () => {
     </Modal>
   );
 
-  // Modal Pago en Presencia
   const ContactModal = () => (
     <Modal open={openContactModal} onClose={() => setOpenContactModal(false)}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
@@ -133,7 +130,6 @@ const CartDrawer = () => {
     </Modal>
   );
 
-  // Modal Transferencia Bancaria
   const TransferModal = () => (
     <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
@@ -144,18 +140,18 @@ const CartDrawer = () => {
           Transfiere el monto total a la siguiente cuenta y envía el comprobante por WhatsApp.
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Banco: [Ej: Banco Nación]
+          Banco: Mercado Pago
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          CBU: 1234567890123456789012
+          CBU:  0000003100074314531448
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Alias: ERDE.PAGOS
+          Alias: erde.personalizacion
         </Typography>
         <Typography variant="body2" sx={{ mb: 2 }}>
-          Titular: Alexander Montenegro
+          Titular: Alexander Gabriel Montenegro
         </Typography>
-        {/* Imagen QR (reemplaza con tu URL real o asset local) */}
+        {/* Imagen QR (reemplaza con  URL real o asset local)
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <img 
             src="https://via.placeholder.com/200?text=QR+Transferencia" 
@@ -164,8 +160,8 @@ const CartDrawer = () => {
           />
           <Typography variant="caption" display="block" sx={{ mt: 1 }}>
             Escanea este QR para transferir
-          </Typography>
-        </Box>
+          </Typography> 
+        </Box>   */}
         <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => setOpenTransferModal(false)}>
           Cerrar
         </Button>
@@ -177,7 +173,6 @@ const CartDrawer = () => {
     <>
       <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
         <Box sx={{ width: 360, p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-          {/* Header */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h6">Mi carrito ({totalItems()})</Typography>
             <IconButton onClick={toggleCart}><CloseIcon /></IconButton>
@@ -185,7 +180,6 @@ const CartDrawer = () => {
 
           <Divider />
 
-          {/* Items */}
           <Box sx={{ flex: 1, overflowY: 'auto', py: 2 }}>
             {cart.map((item, index) => (
               <Box key={index} sx={{ display: 'flex', mb: 3 }}>
@@ -212,7 +206,6 @@ const CartDrawer = () => {
 
           <Divider sx={{ my: 2 }} />
 
-          {/* Total */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
             <Typography variant="subtitle1">Total:</Typography>
             <Typography variant="h5">${Number(total()).toLocaleString()}</Typography>
@@ -220,7 +213,6 @@ const CartDrawer = () => {
 
           {errorMsg && <Typography color="error" sx={{ mb: 2 }}>{errorMsg}</Typography>}
 
-          {/* Botones de pago */}
           {loading ? (
             <CircularProgress sx={{ mx: 'auto', display: 'block' }} />
           ) : preferenceId ? (

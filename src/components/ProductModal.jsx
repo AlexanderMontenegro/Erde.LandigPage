@@ -23,16 +23,13 @@ export default function ProductModal() {
   );
   const whatsappLink = `https://wa.me/5491170504193?text=${whatsappMsg}`;
 
-  // Extracción robusta de datos (soporta ambas estructuras: plana y con sub-mapas)
   const name = selectedProduct.name || 'Sin nombre';
   const category = selectedProduct.category || 'Sin categoría';
   const description = selectedProduct.description || 'Sin descripción disponible';
   
-  // Precio: busca en pricing.basePrice o basePrice directo
   const basePrice = selectedProduct.pricing?.basePrice || selectedProduct.basePrice || 0;
   const currency = selectedProduct.pricing?.currency || 'ARS';
 
-  // Stock: busca stock directo o dentro de cualquier sub-objeto (por si el mapeo varía)
   const stockRaw = selectedProduct.stock ?? 
                    selectedProduct.pricing?.stock ?? 
                    selectedProduct.inventory?.stock ?? 0;
@@ -41,7 +38,6 @@ export default function ProductModal() {
   const image = selectedProduct.media?.image || selectedProduct.image || 'https://via.placeholder.com/600?text=Sin+Imagen';
   const videoUrl = selectedProduct.media?.video || selectedProduct.video || '';
 
-  // Color y texto de stock
   let stockClass = 'stock-none';
   let stockText = 'Sin stock disponible';
   if (stock > 0) {
@@ -55,7 +51,6 @@ export default function ProductModal() {
         <button className="modal-close-btn" onClick={closeModal}>×</button>
 
         <div className="modal-grid">
-          {/* Columna izquierda: Imagen + Video */}
           <div className="modal-image-container">
             <img
               src={image}
@@ -82,7 +77,6 @@ export default function ProductModal() {
             )}
           </div>
 
-          {/* Columna derecha: Información */}
           <div className="modal-info-container">
             <h1 className="modal-title">{name}</h1>
 

@@ -16,5 +16,4 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// Sesión persistente (local)
 setPersistence(auth, browserLocalPersistence);

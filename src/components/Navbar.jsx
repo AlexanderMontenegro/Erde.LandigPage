@@ -20,14 +20,13 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Logo */}
         <div className="logo">
           <Link to="/" className="logo-text">
             ERDE <span className="logo-accent">Store</span>
           </Link>
+          <img className='logoNav' src="../../public/img/Iconos/LOGO.png" alt="" />
         </div>
 
-        {/* Menú desktop */}
         <div className="nav-links desktop">
           <a href="#inicio">Inicio</a>
           <a href="#productos">Productos</a>
@@ -40,7 +39,6 @@ export default function Navbar() {
        
         <div className="nav-actions">
           
-          {/* Usuario / Perfil */}
           {user ? (
             <div className="user-section">
               <button
@@ -76,14 +74,12 @@ export default function Navbar() {
             </button>
           )}
 
-          {/* Hamburguesa mobile */}
           <button className="hamburger mobile" onClick={toggleMenu} aria-label="Menú">
             {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
           </button>
         </div>
       </div>
 
-      {/* Menú mobile */}
       {menuOpen && (
         <div className="mobile-menu">
           <button 

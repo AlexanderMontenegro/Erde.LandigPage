@@ -7,7 +7,6 @@ const Success = () => {
   const { cart, total } = useProductStore();
 
   useEffect(() => {
-    // Limpia el carrito al cargar éxito
     useProductStore.setState({ cart: [] });
   }, []);
 
@@ -24,7 +23,6 @@ const Success = () => {
         Te enviaremos un correo con los detalles del pedido.
       </Typography>
 
-      {/* Mensaje para cerrar ventana */}
       <Box sx={{ bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 3, mb: 4 }}>
         <Typography variant="h6" gutterBottom>
           Puedes cerrar esta ventana ahora
@@ -34,7 +32,7 @@ const Success = () => {
           color="primary"
           size="large"
           onClick={() => window.close()}
-          disabled={!window.opener} // Solo muestra si fue abierto como popup
+          disabled={!window.opener} 
           sx={{ mt: 2 }}
         >
           Cerrar ventana

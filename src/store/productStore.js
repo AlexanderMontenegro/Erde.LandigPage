@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { getProducts } from '../services/productService.js';
-import { validateStock } from '../services/stockService.js'; // ← NUEVO
+import { validateStock } from '../services/stockService.js'; 
 import { toast } from 'react-toastify';
 
 const useProductStore = create((set, get) => ({
@@ -35,7 +35,6 @@ const useProductStore = create((set, get) => ({
   addToCart: async (product, quantity = 1) => {
     const requestedQty = Number(quantity);
 
-    // Validación de stock
     const validation = await validateStock(product.id, requestedQty);
     if (!validation.valid) {
       toast.error(validation.message, { position: "top-right", autoClose: 4000 });
@@ -72,7 +71,6 @@ const useProductStore = create((set, get) => ({
   updateQuantity: async (id, newQuantity) => {
     const requestedQty = Math.max(1, Number(newQuantity));
 
-    // Validación de stock al aumentar
     const productInCart = get().cart.find(item => item.id === id);
     if (!productInCart) return;
 

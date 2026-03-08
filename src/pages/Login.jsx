@@ -19,7 +19,6 @@ export default function Login() {
     try {
       await loginWithEmail(email, password);
     } catch (err) {
-      // Error ya está en el store
     }
   };
 
@@ -27,7 +26,6 @@ export default function Login() {
     try {
       await loginWithGoogle();
     } catch (err) {
-      // Error ya está en el store
     }
   };
 

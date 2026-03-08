@@ -8,7 +8,6 @@ import {
 } from "firebase/firestore";
 
 export const createOrder = async (cart, buyer) => {
-  // Validar productos desde Firebase
   for (const item of cart) {
     const ref = doc(db, "productos", item.id);
     const snap = await getDoc(ref);
