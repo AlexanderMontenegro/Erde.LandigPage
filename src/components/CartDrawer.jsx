@@ -113,7 +113,6 @@ const CartDrawer = () => {
         <Typography variant="body2" sx={{ mb: 2 }}>
           Horarios: Lunes a Viernes 9:00 - 18:00
         </Typography>
-        {/* Embed de Google Maps */}
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d290.1162905795998!2d-58.868648285726614!3d-34.64734956820712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bc9353ab61262f%3A0xedbdb4fc0b9f10b8!2sErde%20DyC!5e0!3m2!1ses-419!2sar!4v1771849473652!5m2!1ses-419!2sar"
           width="100%"
@@ -130,44 +129,82 @@ const CartDrawer = () => {
     </Modal>
   );
 
-  const TransferModal = () => (
-    <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
-      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
-        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-          <AccountBalanceIcon sx={{ mr: 1 }} /> Transferencia bancaria
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Transfiere el monto total a la siguiente cuenta y envía el comprobante por WhatsApp.
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Banco: Mercado Pago
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          CBU:  0000003100074314531448
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Alias: erde.personalizacion
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          Titular: Alexander Gabriel Montenegro
-        </Typography>
-        {/* Imagen QR (reemplaza con  URL real o asset local)
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <img 
-            src="https://via.placeholder.com/200?text=QR+Transferencia" 
-            alt="QR Transferencia" 
-            style={{ width: '200px', height: '200px' }}
-          />
-          <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-            Escanea este QR para transferir
-          </Typography> 
-        </Box>   */}
-        <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => setOpenTransferModal(false)}>
-          Cerrar
-        </Button>
-      </Box>
-    </Modal>
-  );
+  const TransferModal = () => {
+    const totalAmount = useProductStore.getState().total();
+    const cartItems = useProductStore.getState().cart;
+
+    const customerName = user?.nombre ? `${user.nombre} ${user.apellido || ''}` : 'Cliente';
+    const customerPhone = user?.telefono || 'No registrado';
+    const customerEmail = user?.email || 'No registrado';
+    const customerAddress = user?.direccion || 'No registrado';
+
+    const orderDetails = cartItems.map(item => 
+      `${item.quantity}x ${item.name} - $${(item.basePrice * item.quantity).toLocaleString('es-AR')}`
+    ).join('\n');
+
+    const totalText = `Total: $${totalAmount.toLocaleString('es-AR')}`;
+    const message = 
+`¡Hola! Realicé una transferencia por el siguiente pedido:
+
+${orderDetails}
+
+${totalText}
+
+Datos del cliente:
+Nombre: ${customerName}
+Teléfono: ${customerPhone}
+Email: ${customerEmail}
+Dirección: ${customerAddress}
+
+Envio Comprobante.
+A confirmar pago. Gracias!`;
+
+    const whatsappNumber = '5491170504193'; 
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    return (
+      <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+            <AccountBalanceIcon sx={{ mr: 1 }} /> Transferencia bancaria
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Transfiere el monto total a la siguiente cuenta y envía el comprobante por WhatsApp.
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Banco: Mercado Pago
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            CBU: 0000003100074314531448
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Alias: erde.personalizacion
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Titular: Alexander Gabriel Montenegro
+          </Typography>
+
+          {/* Botón PAGADO - envía por WhatsApp */}
+          <Button 
+            variant="contained" 
+            color="background.paper" 
+            fullWidth 
+            sx={{ mt: 3, py: 1.5 }}
+            onClick={() => {
+              window.open(whatsappLink, '_blank', 'noopener,noreferrer');
+              setOpenTransferModal(false); 
+            }}
+          >
+            Pagado - Enviar comprobante por WhatsApp
+          </Button>
+
+          <Button variant="outlined" fullWidth sx={{ mt: 2 }} onClick={() => setOpenTransferModal(false)}>
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+    );
+  };
 
   return (
     <>
