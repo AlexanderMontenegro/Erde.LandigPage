@@ -479,20 +479,19 @@ body {
   transition: var(--transition);
   display: flex;
   flex-direction: column;
-  height:60vh;
+  height:75vh;
+  max-height: 80vh;
 }
 
 
 
 
 .card img {
-  width: 95%;
-  max-height: 35vh;
-  min-height: 35vh;
+  width: 100%;
+  min-height: 50vh;
   object-fit: cover;
   transition: var(--transition);
-  margin: 10px;
-  border-radius: 20px;
+  
 }
 
 .card:hover img {
@@ -564,6 +563,15 @@ body {
 }
 
 .offers-title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--accent-yellow);
+}
+
+
+.offers-oferts {
   font-size: 3rem;
   font-weight: bold;
   text-align: center;
@@ -1163,6 +1171,30 @@ body {
 /* Mobile pequeño (hasta 600px) */
 @media (max-width: 600px) {
   /* Modales generales (Auth, Profile, Product, etc.) */
+
+
+  .card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height:70vh;
+}
+
+
+
+
+.card img {
+  width: 100%;
+  max-height: 40vh;
+  min-height: 35vh;
+  object-fit: cover;
+  transition: var(--transition);
+  border-radius: 20px;
+}
 
 .mobile-menu {
   position: fixed;

@@ -67,7 +67,7 @@ y productos exclusivos en 3D 🖨️✨”
 
       {/* Catálogo de productos con filtro (sin cambios) */}
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
+        <h2 className="offers-oferts">
           Catálogo de Productos
         </h2>
 
