@@ -26,4 +26,4 @@ export default function MercadoPagoButton({ item }) {
       <Wallet initialization={{ preferenceId }} />
     </div>
   );
-}S
+}

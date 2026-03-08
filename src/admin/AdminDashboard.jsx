@@ -19,7 +19,6 @@ const AdminDashboard = () => {
   return (
     <ProtectedAdminRoute>
       <Container maxWidth="xl" sx={{ py: 4, position: 'relative' }}>
-        {/* Botón de volver (arriba a la derecha) */}
         <Tooltip title="Volver al sitio principal">
           <IconButton
             onClick={handleBack}

@@ -23,7 +23,6 @@ export default function Register() {
     try {
       await registerWithEmail(email, password, nombre, apellido, direccion, telefono);
     } catch (err) {
-      // Error ya está en el store
     }
   };
 
@@ -31,7 +30,6 @@ export default function Register() {
     try {
       await loginWithGoogle();
     } catch (err) {
-      // Error ya está en el store
     }
   };
 

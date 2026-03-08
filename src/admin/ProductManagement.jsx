@@ -93,7 +93,6 @@ const ProductManagement = () => {
   );
 };
 
-// Modal Formulario (actualizado para sincronizar datos correctamente)
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
   const [form, setForm] = useState({
     name: '',
@@ -106,7 +105,6 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
     media: { image: '', video: '' },
   });
 
-  // Sincronizar formulario con el producto seleccionado cada vez que cambie
   useEffect(() => {
     if (product) {
       setForm({
@@ -126,7 +124,6 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         },
       });
     } else {
-      // Reset para nuevo producto
       setForm({
         name: '',
         category: '',
@@ -173,14 +170,12 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         <TextField fullWidth label="Imagen URL" name="image" value={form.media?.image || ''} onChange={handleChange} margin="dense" />
         <TextField fullWidth label="Video URL (opcional)" name="video" value={form.media?.video || ''} onChange={handleChange} margin="dense" />
         
-        {/* Switch Activo */}
         <FormControlLabel
           control={<Switch checked={form.active} onChange={handleChange} name="active" />}
           label="Producto activo"
           sx={{ mt: 2, display: 'block' }}
         />
 
-        {/* Switch Destacado */}
         <FormControlLabel
           control={<Switch checked={form.featured} onChange={handleChange} name="featured" />}
           label="Destacado en Ofertas"

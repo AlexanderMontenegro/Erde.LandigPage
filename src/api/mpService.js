@@ -30,7 +30,7 @@ export const createPreference = async (cartItems, user) => {
       pending: `${window.location.origin}/pending`,
     },
     auto_return: 'approved',
-    notification_url: `${window.location.origin}/webhook`, // Opcional por ahora
+    notification_url: `${window.location.origin}/webhook`, 
   };
 
   try {
@@ -45,7 +45,7 @@ export const createPreference = async (cartItems, user) => {
       }
     );
 
-    return response.data.init_point; // URL del checkout
+    return response.data.init_point; 
   } catch (error) {
     console.error('Error creando preferencia Mercado Pago:', error.response?.data || error);
     throw new Error('No se pudo iniciar el pago. Intenta de nuevo.');

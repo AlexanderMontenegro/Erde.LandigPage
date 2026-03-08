@@ -5,8 +5,8 @@ import App from './App.jsx'
 import Success from './pages/Success.jsx'
 import Failure from './pages/Failure.jsx'
 import AdminDashboard from './admin/AdminDashboard.jsx'
-import { ToastContainer } from 'react-toastify'        // ← NUEVO
-import 'react-toastify/dist/ReactToastify.css'         // ← NUEVO (estilos obligatorios)
+import { ToastContainer } from 'react-toastify'        
+import 'react-toastify/dist/ReactToastify.css'        
 import './styles/theme.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -19,7 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
 
-      {/* Contenedor global de notificaciones (siempre visible) */}
       <ToastContainer
         position="top-right"
         autoClose={4000}
@@ -30,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"  // combina con tu tema oscuro
+        theme="dark"  
       />
     </BrowserRouter>
   </React.StrictMode>,

@@ -49,7 +49,7 @@ const useAuthStore = create((set, get) => ({
         apellido,
         direccion,
         telefono,
-        imagen: '', // Imagen predefinida inicial
+        imagen: '', 
         createdAt: new Date(),
         favorites: [],
       };

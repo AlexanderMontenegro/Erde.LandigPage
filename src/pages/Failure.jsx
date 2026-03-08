@@ -14,7 +14,6 @@ const Failure = () => {
         Algo salió mal durante el proceso.
       </Typography>
 
-      {/* Mensaje para cerrar */}
       <Box sx={{ bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 3, mb: 4 }}>
         <Typography variant="h6" gutterBottom>
           Puedes cerrar esta ventana ahora

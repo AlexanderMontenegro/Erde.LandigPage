@@ -22,7 +22,6 @@ export default function AuthModal() {
         await registerWithEmail(email, password, nombre, apellido, direccion, telefono);
       }
     } catch (err) {
-      // Error ya manejado en store
     }
   };
 
