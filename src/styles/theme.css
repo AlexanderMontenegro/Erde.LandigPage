@@ -797,13 +797,23 @@ body {
 
 
 /*Usuarios*/
-.u{
+.uss{
   width: 60px;
   height: 60px;
   background: var(--primary);
   border-radius: 50%;
-
+margin: 10px;
 }
+
+.ussgrup{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-around;
+    align-content: space-around;
+}
+
 
 /*favoritos*/
 
@@ -1497,4 +1507,14 @@ body {
 
 .animate-heart-pop {
   animation: heart-pop 0.4s ease-out forwards;
+}
+
+
+.no-scrollbar {
+  -ms-overflow-style: none;          /* IE y Edge */
+  scrollbar-width: none;             /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;                     /* Chrome, Safari, Opera */
 }
