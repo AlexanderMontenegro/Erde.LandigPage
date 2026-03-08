@@ -36,13 +36,11 @@ const FloatingCartButton = () => {
 
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
 
-    console.log('Modo aplicado:', darkMode ? 'Oscuro' : 'Claro');
   }, [darkMode]);
 
   const toggleDarkMode = () => {
     setDarkMode(prev => {
       const newMode = !prev;
-      console.log('Cambiando a:', newMode ? 'Oscuro' : 'Claro'); 
       return newMode;
     });
   };

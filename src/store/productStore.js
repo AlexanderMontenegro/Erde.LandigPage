@@ -14,19 +14,16 @@ const useProductStore = create((set, get) => ({
     try {
       const products = await getProducts();
       set({ products });
-      console.log('Productos cargados:', products);
     } catch (error) {
       console.error('Error al cargar productos:', error);
     }
   },
 
   openModal: (product) => {
-    console.log('openModal llamado con:', product);
     set({ selectedProduct: product, isModalOpen: true });
   },
 
   closeModal: () => {
-    console.log('closeModal llamado');
     set({ selectedProduct: null, isModalOpen: false });
   },
 
@@ -41,7 +38,6 @@ const useProductStore = create((set, get) => ({
       return;
     }
 
-    console.log('Agregando al carrito:', product.name, 'x' + requestedQty);
     
     const existingIndex = get().cart.findIndex(item => item.id === product.id);
     

@@ -24,7 +24,7 @@ export default function Navbar() {
           <Link to="/" className="logo-text">
             ERDE <span className="logo-accent">Store</span>
           </Link>
-          <img className='logoNav' src="../../public/img/Iconos/LOGO.png" alt="" />
+          <img className='logoNav' src="/img/Iconos/LOGO.png" alt="" />
         </div>
 
         <div className="nav-links desktop">
