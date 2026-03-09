@@ -39,7 +39,8 @@ export default function ProfileModal() {
       };
       fetchOrders();
     }
-  }, [isProfileModalOpen, user]);  
+  }, [isProfileModalOpen, user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -60,24 +61,19 @@ export default function ProfileModal() {
     }
   };
 
+  // Imágenes predefinidas – ruta desde public/img/Usuarios
   const predefinedImages = [
     '/img/Usuarios/U1.jpg',
     '/img/Usuarios/U2.jpg',
     '/img/Usuarios/U3.jpg',
-    '/img/Usuarios/U4.jpg',
-    '/img/Usuarios/U5.jpg',
-    '/img/Usuarios/U6.jpg',
-    '/img/Usuarios/U7.jpg',
-    '/img/Usuarios/U8.jpg',
-    '/img/Usuarios/U9.jpg',
-    '/img/Usuarios/U10.jpg',
+    // Agrega más si tienes
   ];
 
   if (!isProfileModalOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content  no-scrollbar" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content no-scrollbar" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
         <h1 className="modal-title text-center">Mi Perfil</h1>
@@ -128,7 +124,7 @@ export default function ProfileModal() {
 
           <div className="mt-6">
             <label className="block text-text-muted mb-3 text-center font-medium">Imagen de perfil</label>
-            <div className="ussgrup grid grid-cols-3 gap-4 justify-items-center">
+            <div className="grid grid-cols-3 gap-4 justify-items-center">
               {predefinedImages.map((imgSrc, idx) => (
                 <button
                   key={idx}
@@ -161,6 +157,7 @@ export default function ProfileModal() {
               <p className="font-medium">Orden ID: {order.id}</p>
               <p>Total: ${order.total.toLocaleString('es-AR')}</p>
               <p>Fecha: {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}</p>
+              <p>Estado: {order.status || 'Pendiente'}</p>  {/* ← NUEVO: muestra estado */}
             </div>
           ))
         )}
@@ -175,7 +172,7 @@ export default function ProfileModal() {
               if (!product) return null;
               return (
                 <div key={productId} className="f">
-                  <img src={product.image} alt={product.name} className="ft" />
+                  <img src={product.image} alt={product.name} className="ft  " />
                   <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
                     <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>

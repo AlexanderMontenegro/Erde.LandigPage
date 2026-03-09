@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Container, Tabs, Tab, Box, Typography, IconButton, Tooltip 
-} from '@mui/material';
+import { Container, Tabs, Tab, Box, Typography, IconButton, Tooltip } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import ProductManagement from './ProductManagement';
 import UserManagement from './UserManagement';
+import OrderManagement from './OrderManagement';  // ← NUEVO
 import ProtectedAdminRoute from './ProtectedAdminRoute';
 
 const AdminDashboard = () => {
@@ -37,18 +36,20 @@ const AdminDashboard = () => {
           </IconButton>
         </Tooltip>
 
-        <Typography variant="h4"  gutterBottom sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
           Panel Administrativo
         </Typography>
 
         <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)} sx={{ mb: 3 }}>
-          <Tab  label="Gestión de Productos" />
+          <Tab label="Gestión de Productos" />
           <Tab label="Gestión de Usuarios" />
+          <Tab label="Gestión de Órdenes" />  {/* ← NUEVO */}
         </Tabs>
 
         <Box sx={{ mt: 2 }}>
           {tab === 0 && <ProductManagement />}
           {tab === 1 && <UserManagement />}
+          {tab === 2 && <OrderManagement />}  {/* ← NUEVO */}
         </Box>
       </Container>
     </ProtectedAdminRoute>
