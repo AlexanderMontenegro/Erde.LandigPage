@@ -1,0 +1,6 @@
+actualiza tu memoria con el siguiete repositor
+https://github.com/AlexanderMontenegro/Erde.LandigPage.git
+correspondiente al proyecto actual analiza hoja por hoja
+
+
+reglas principales, modifica lo minimo el codigo para no romper funciones, si es posible realizarlo modular ,conserva el estilo y paletas de colores, brindame codigo completo de las hojas 
