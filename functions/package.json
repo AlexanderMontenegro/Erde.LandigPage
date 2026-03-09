@@ -1,0 +1,20 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^13.7.0",
+    "firebase-functions": "^7.1.0",
+    "nodemailer": "^8.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.3",
+    "eslint-plugin-node": "^11.1.0"
+  }
+}

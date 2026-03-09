@@ -73,7 +73,7 @@ export default function ProfileModal() {
 
   return (
     <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content no-scrollbar" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
         <h1 className="modal-title text-center">Mi Perfil</h1>
@@ -135,7 +135,7 @@ export default function ProfileModal() {
                   <img
                     src={imgSrc}
                     alt={`Perfil ${idx + 1}`}
-                    className="uss w-full h-full object-cover"
+                    className="u w-full h-full object-cover"
                     onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
                   />
                 </button>
@@ -157,7 +157,15 @@ export default function ProfileModal() {
               <p className="font-medium">Orden ID: {order.id}</p>
               <p>Total: ${order.total.toLocaleString('es-AR')}</p>
               <p>Fecha: {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}</p>
-              <p>Estado: {order.status || 'Pendiente'}</p>  {/* ← NUEVO: muestra estado */}
+              <p style={{
+                color: 
+                  order.status === 'PENDIENTE' ? '#a855f7' :
+                  order.status === 'A CONFIRMAR' ? '#2196f3' :
+                  order.status === 'PAGO' ? '#ffeb3b' :
+                  order.status === 'ENVIADO' ? '#4caf50' :
+                  order.status === 'ENTREGADO' ? '#ff9800' : '#9e9e9e'
+              }}>Estado: {order.status || 'PENDIENTE'}</p>
+              {order.trackingNumber && <p>N° Tracking: {order.trackingNumber}</p>}
             </div>
           ))
         )}

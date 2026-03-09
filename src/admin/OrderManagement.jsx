@@ -9,6 +9,7 @@ import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [trackingNumber, setTrackingNumber] = useState({});
+  const [pendingStatus, setPendingStatus] = useState({});
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'orders'), (snapshot) => {
@@ -17,22 +18,41 @@ const OrderManagement = () => {
     return unsubscribe;
   }, []);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  const handleStatusChange = (orderId, newStatus) => {
+    setPendingStatus(prev => ({ ...prev, [orderId]: newStatus }));
+  };
+
+  const saveChanges = async (orderId) => {
+    const newStatus = pendingStatus[orderId];
+    const tracking = trackingNumber[orderId] || '';
+
+    if (!newStatus) {
+      alert('No hay cambios en el estado.');
+      return;
+    }
+
+    // Validar tracking si se cambia a ENVIADO
+    if (newStatus === 'ENVIADO' && !tracking) {
+      alert('Ingresa un número de seguimiento para estado ENVIADO.');
+      return;
+    }
+
     const orderRef = doc(db, 'orders', orderId);
-    await updateDoc(orderRef, { status: newStatus });
+    const updateData = { status: newStatus };
+
+    if (tracking) {
+      updateData.trackingNumber = tracking;
+    }
+
+    await updateDoc(orderRef, updateData);
+
+    // Limpiar inputs
+    setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));
+    setTrackingNumber(prev => ({ ...prev, [orderId]: '' }));
   };
 
   const handleTrackingChange = (orderId, value) => {
     setTrackingNumber(prev => ({ ...prev, [orderId]: value }));
-  };
-
-  const saveTracking = async (orderId) => {
-    const tracking = trackingNumber[orderId];
-    if (tracking) {
-      await updateDoc(doc(db, 'orders', orderId), { trackingNumber: tracking });
-      // Limpia el input después de guardar
-      setTrackingNumber(prev => ({ ...prev, [orderId]: '' }));
-    }
   };
 
   return (
@@ -65,27 +85,26 @@ const OrderManagement = () => {
                 <TableCell>{order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'N/A'}</TableCell>
                 <TableCell>
                   <Select
-                    value={order.status || 'A CONFIRMAR'}
+                    value={pendingStatus[order.id] || order.status || 'PENDIENTE'}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                     size="small"
                     sx={{
                       minWidth: 140,
                       backgroundColor: 
-                        order.status === 'PAGO' ? '#ffeb3b' : 
-                        order.status === 'A CONFIRMAR' ? '#2196f3' : 
-                        order.status === 'ENVIADO' ? '#4caf50' : 
-                        order.status === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',
-                      color: order.status === 'PAGO' ? '#000' : '#fff',
+                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  // Violeta
+                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  // Azul
+                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  // Amarillo
+                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  // Verde
+                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',  // Naranja
+                      color: (pendingStatus[order.id] || order.status) === 'PAGO' ? '#000' : '#fff',
                     }}
                   >
+                    <MenuItem value="PENDIENTE">PENDIENTE</MenuItem>
                     <MenuItem value="A CONFIRMAR">A CONFIRMAR</MenuItem>
                     <MenuItem value="PAGO">PAGO</MenuItem>
                     <MenuItem value="ENVIADO">ENVIADO</MenuItem>
                     <MenuItem value="ENTREGADO">ENTREGADO</MenuItem>
                   </Select>
-                </TableCell>
-                <TableCell>
-                  {order.trackingNumber || trackingNumber[order.id] || '-'}
                 </TableCell>
                 <TableCell>
                   <TextField
@@ -95,14 +114,19 @@ const OrderManagement = () => {
                     onChange={(e) => handleTrackingChange(order.id, e.target.value)}
                     sx={{ width: 140 }}
                   />
-                  <Button 
-                    size="small" 
-                    onClick={() => saveTracking(order.id)}
-                    disabled={!trackingNumber[order.id]}
-                    sx={{ ml: 1 }}
-                  >
-                    Guardar
-                  </Button>
+                  {order.trackingNumber && <span> (Guardado: {order.trackingNumber})</span>}
+                </TableCell>
+                <TableCell>
+                  {(pendingStatus[order.id] || trackingNumber[order.id]) && (
+                    <Button 
+                      size="small" 
+                      variant="contained" 
+                      color="primary"
+                      onClick={() => saveChanges(order.id)}
+                    >
+                      Guardar
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
