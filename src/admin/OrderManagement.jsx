@@ -4,7 +4,9 @@ import {
   Paper, Select, MenuItem, Typography, Box, TextField, Button 
 } from '@mui/material';
 import { db } from '../config/firebase';
-import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, updateDoc, doc, getDoc } from 'firebase/firestore';  // ← Agregado getDoc aquí
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -45,6 +47,45 @@ const OrderManagement = () => {
     }
 
     await updateDoc(orderRef, updateData);
+
+    // Enviar email con Resend desde el backend
+    try {
+      const order = orders.find(o => o.id === orderId);
+
+      // Obtener email del usuario desde Firestore
+      const userDoc = await getDoc(doc(db, 'users', order.userId));
+      const userEmail = userDoc.exists() ? userDoc.data().email : null;
+
+      if (!userEmail) {
+        console.warn('No se encontró email del usuario');
+        alert('Estado guardado, pero no se encontró email del usuario para enviar notificación.');
+        return;
+      }
+
+      const response = await fetch(`${BACKEND_URL}/send-order-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          status: newStatus,
+          emailTo: userEmail,
+          orderDetails: order.items?.map(item => `${item.quantity}x ${item.name}`).join('\n') || 'Sin detalle',
+          total: order.total || 0,
+          tracking
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        console.error('Error backend email:', err);
+        alert('Estado guardado, pero no se pudo enviar email.');
+      } else {
+        console.log('Email enviado desde backend');
+      }
+    } catch (err) {
+      console.error('Error al llamar al endpoint de email:', err);
+      alert('Estado guardado, pero error al enviar email.');
+    }
 
     // Limpiar inputs
     setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));

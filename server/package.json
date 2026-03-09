@@ -9,6 +9,7 @@
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
-    "mercadopago": "^2.12.0"
+    "mercadopago": "^2.12.0",
+    "resend": "^6.9.3"
   }
 }
