@@ -12,6 +12,21 @@ const client = new MercadoPagoConfig({
   options: { timeout: 10000 }
 });
 
+// Función para generar ID único ERDE0001, ERDE0002...
+async function generateOrderId() {
+  // Contador simple (en producción deberías usar Firestore o DB para atomicidad)
+  const counterRef = doc(db, 'counters', 'orders');
+  const counterSnap = await getDoc(counterRef);
+  let count = 1;
+  if (counterSnap.exists()) {
+    count = counterSnap.data().lastId + 1;
+    await updateDoc(counterRef, { lastId: count });
+  } else {
+    await setDoc(counterRef, { lastId: count });
+  }
+  return `ERDE${String(count).padStart(4, '0')}`;
+}
+
 app.post('/create-preference', async (req, res) => {
   try {
     console.log('=== BODY RECIBIDO DEL FRONTEND ===');
@@ -32,10 +47,10 @@ app.post('/create-preference', async (req, res) => {
       const priceNum = Number(item.basePrice);
 
       if (isNaN(quantityNum) || quantityNum < 1 || !Number.isInteger(quantityNum)) {
-        throw new Error(`quantity inválido en item ${index + 1}: "${item.quantity}" (tipo: ${typeof item.quantity})`);
+        throw new Error(`quantity inválido en item ${index + 1}`);
       }
       if (isNaN(priceNum) || priceNum <= 0) {
-        throw new Error(`basePrice inválido en item ${index + 1}: "${item.basePrice}"`);
+        throw new Error(`basePrice inválido en item ${index + 1}`);
       }
 
       return {
@@ -46,14 +61,18 @@ app.post('/create-preference', async (req, res) => {
       };
     });
 
+    const internalOrderId = await generateOrderId(); // ← NUEVO: ID ERDE0001
+
     const preferenceData = {
       items: itemsProcesados,
       back_urls: {
-        success: 'https://erde-landigpage-frontend.onrender.com/success', 
+        success: 'https://erde-landigpage-frontend.onrender.com/success',
         failure: 'https://erde-landigpage-frontend.onrender.com/failure',
         pending: 'https://erde-landigpage-frontend.onrender.com/pending'
       },
-      auto_return: 'approved' 
+      auto_return: 'approved',
+      external_reference: internalOrderId, // ← Guardamos el ID interno aquí
+      metadata: { internalOrderId } // ← También en metadata para fácil acceso
     };
 
     console.log('Datos que se enviarán a Mercado Pago:');
@@ -63,7 +82,7 @@ app.post('/create-preference', async (req, res) => {
     const response = await preferenceClient.create({ body: preferenceData });
 
     console.log('Preferencia creada exitosamente:', response.id);
-    res.json({ id: response.id });
+    res.json({ id: response.id, internalOrderId }); // ← Devolvemos también el ID
   } catch (error) {
     console.error('Error al crear preferencia:', error);
     res.status(500).json({
