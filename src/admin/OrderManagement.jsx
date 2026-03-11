@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { db } from '../config/firebase';
 import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { sendStatusNotification } from '../services/whatsappService';  // ← Nuevo
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -24,29 +25,30 @@ const OrderManagement = () => {
 
   const saveChanges = async (orderId) => {
     const newStatus = pendingStatus[orderId];
-    const tracking = trackingNumber[orderId] || '';
-
-    if (!newStatus) {
-      alert('No hay cambios en el estado.');
-      return;
-    }
-
-    // Validar tracking si se cambia a ENVIADO
-    if (newStatus === 'ENVIADO' && !tracking) {
-      alert('Ingresa un número de seguimiento para estado ENVIADO.');
-      return;
-    }
+    if (!newStatus) return;
 
     const orderRef = doc(db, 'orders', orderId);
     const updateData = { status: newStatus };
 
-    if (tracking) {
+    if (newStatus === 'ENVIADO') {
+      const tracking = trackingNumber[orderId] || '';
+      if (!tracking) {
+        alert('Ingresa un número de seguimiento para estado ENVIADO.');
+        return;
+      }
       updateData.trackingNumber = tracking;
     }
 
     await updateDoc(orderRef, updateData);
 
-    // Limpiar inputs
+    // Obtener orden actualizada para notificación
+    const updatedOrder = { ...orders.find(o => o.id === orderId), ...updateData };
+
+    // Enviar notificación por WhatsApp al cliente
+    const clientPhone = updatedOrder.clientPhone || ''; // Se guardará al crear la orden
+    sendStatusNotification(updatedOrder, clientPhone);
+
+    // Limpiar
     setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));
     setTrackingNumber(prev => ({ ...prev, [orderId]: '' }));
   };
@@ -91,11 +93,11 @@ const OrderManagement = () => {
                     sx={{
                       minWidth: 140,
                       backgroundColor: 
-                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  // Violeta
-                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  // Azul
-                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  // Amarillo
-                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  // Verde
-                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',  // Naranja
+                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :
+                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :
+                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :
+                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :
+                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',
                       color: (pendingStatus[order.id] || order.status) === 'PAGO' ? '#000' : '#fff',
                     }}
                   >

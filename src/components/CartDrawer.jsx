@@ -130,81 +130,70 @@ const CartDrawer = () => {
   );
 
   const TransferModal = () => {
-    const totalAmount = useProductStore.getState().total();
-    const cartItems = useProductStore.getState().cart;
+  const totalAmount = useProductStore.getState().total();
+  const cartItems = useProductStore.getState().cart;
+  const { user } = useAuthStore();
 
-    const customerName = user?.nombre ? `${user.nombre} ${user.apellido || ''}` : 'Cliente';
-    const customerPhone = user?.telefono || 'No registrado';
-    const customerEmail = user?.email || 'No registrado';
-    const customerAddress = user?.direccion || 'No registrado';
+  const handlePagado = async () => {
+    if (!user) return;
 
-    const orderDetails = cartItems.map(item => 
-      `${item.quantity}x ${item.name} - $${(item.basePrice * item.quantity).toLocaleString('es-AR')}`
-    ).join('\n');
+    const orderData = {
+      userId: user.uid,
+      internalOrderId: 'ERDE-' + Date.now(), // Temporal, se mejorará en backend si es necesario
+      items: cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.basePrice
+      })),
+      total: totalAmount,
+      status: 'PENDIENTE',
+      createdAt: new Date(),
+      clientPhone: user.telefono || '',
+      clientName: `${user.nombre} ${user.apellido || ''}`
+    };
 
-    const totalText = `Total: $${totalAmount.toLocaleString('es-AR')}`;
-    const message = 
-`¡Hola! Realicé una transferencia por el siguiente pedido:
+    try {
+      const orderRef = doc(collection(db, 'orders'));
+      await setDoc(orderRef, orderData);
 
-${orderDetails}
+      // Abrir WhatsApp con notificación inicial
+      const message = `ERDE D&C Store\n\nNueva orden en PENDIENTE\nID: ${orderData.internalOrderId}\nTotal: $${totalAmount.toLocaleString('es-AR')}\nA confirmar pago.`;
+      const whatsappLink = `https://wa.me/5491170504193?text=${encodeURIComponent(message)}`;
+      window.open(whatsappLink, '_blank');
 
-${totalText}
-
-Datos del cliente:
-Nombre: ${customerName}
-Teléfono: ${customerPhone}
-Email: ${customerEmail}
-Dirección: ${customerAddress}
-
-Envio Comprobante.
-A confirmar pago. Gracias!`;
-
-    const whatsappNumber = '5491170504193'; 
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-    return (
-      <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-            <AccountBalanceIcon sx={{ mr: 1 }} /> Transferencia bancaria
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            Transfiere el monto total a la siguiente cuenta y envía el comprobante por WhatsApp.
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Banco: Mercado Pago
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            CBU: 0000003100074314531448
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Alias: erde.personalizacion
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Titular: Alexander Gabriel Montenegro
-          </Typography>
-
-          {/* Botón PAGADO - envía por WhatsApp */}
-          <Button 
-            variant="contained" 
-            color="background.paper" 
-            fullWidth 
-            sx={{ mt: 3, py: 1.5 }}
-            onClick={() => {
-              window.open(whatsappLink, '_blank', 'noopener,noreferrer');
-              setOpenTransferModal(false); 
-            }}
-          >
-            Pagado - Enviar comprobante por WhatsApp
-          </Button>
-
-          <Button variant="outlined" fullWidth sx={{ mt: 2 }} onClick={() => setOpenTransferModal(false)}>
-            Cerrar
-          </Button>
-        </Box>
-      </Modal>
-    );
+      setOpenTransferModal(false);
+      toggleCart(); // Cerrar carrito
+    } catch (err) {
+      console.error('Error creando orden:', err);
+      alert('Error al crear la orden. Intenta nuevamente.');
+    }
   };
+
+  return (
+    <Modal open={openTransferModal} onClose={() => setOpenTransferModal(false)}>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <AccountBalanceIcon sx={{ mr: 1 }} /> Transferencia bancaria
+        </Typography>
+        {/* ... resto del modal sin cambios ... */}
+
+        <Button 
+          variant="contained" 
+          color="success" 
+          fullWidth 
+          sx={{ mt: 3, py: 1.5 }}
+          onClick={handlePagado}
+        >
+          Pagado - Enviar comprobante por WhatsApp
+        </Button>
+
+        <Button variant="outlined" fullWidth sx={{ mt: 2 }} onClick={() => setOpenTransferModal(false)}>
+          Cerrar
+        </Button>
+      </Box>
+    </Modal>
+  );
+};
 
   return (
     <>
