@@ -80,7 +80,7 @@ export default function ProductModal() {
           <div className="modal-info-container">
             <h1 className="modal-title">{name}</h1>
 
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography className='text-catego' variant="subtitle1" fontSize={24}  gutterBottom>
               Categoría: {category}
             </Typography>
 
