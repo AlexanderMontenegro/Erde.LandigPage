@@ -47,7 +47,7 @@ export default function ProductModal() {
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <div className="modal-content no-scrollbar" onClick={e => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={closeModal}>×</button>
 
         <div className="modal-grid">
