@@ -73,7 +73,7 @@ export default function ProfileModal() {
 
   return (
     <div className="modal-overlay" onClick={toggleProfileModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content no-scrollbar" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={toggleProfileModal}>×</button>
 
         <h1 className="modal-title text-center">Mi Perfil</h1>

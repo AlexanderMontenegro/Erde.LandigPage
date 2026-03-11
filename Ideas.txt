@@ -16,3 +16,10 @@ Frecuencia/privacidad: solo a números registrados del cliente.
 Servicio de envío: gratis con wa.me a traves del bonton que guarda los estados
 
 reglas principales, modifica lo minimo el codigo para no romper funciones, si es posible realizarlo modular ,conserva el estilo y paletas de colores, brindame codigo completo de las hojas 
+
+
+
+
+cotizador de envios mediante carga de codigo postal en el modal del carrito se cotiza con correo argentino y correo andreani esto se debe sumar al precioa  abonar
+
+
