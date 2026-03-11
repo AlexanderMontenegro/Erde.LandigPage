@@ -124,7 +124,7 @@ export default function ProfileModal() {
 
           <div className="mt-6">
             <label className="block text-text-muted mb-3 text-center font-medium">Imagen de perfil</label>
-            <div className="grid grid-cols-3 gap-4 justify-items-center">
+            <div className="ussgrup grid grid-cols-3 gap-4 justify-items-center">
               {predefinedImages.map((imgSrc, idx) => (
                 <button
                   key={idx}
@@ -135,7 +135,7 @@ export default function ProfileModal() {
                   <img
                     src={imgSrc}
                     alt={`Perfil ${idx + 1}`}
-                    className="u w-full h-full object-cover"
+                    className="uss w-full h-full object-cover"
                     onError={(e) => (e.target.src = 'https://via.placeholder.com/80?text=Imagen')}
                   />
                 </button>
