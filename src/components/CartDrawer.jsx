@@ -133,16 +133,24 @@ const CartDrawer = () => {
     const totalAmount = useProductStore.getState().total();
     const cartItems = useProductStore.getState().cart;
 
+    // Datos del cliente
     const customerName = user?.nombre ? `${user.nombre} ${user.apellido || ''}` : 'Cliente';
     const customerPhone = user?.telefono || 'No registrado';
     const customerEmail = user?.email || 'No registrado';
     const customerAddress = user?.direccion || 'No registrado';
 
+    // Generar detalle del pedido
     const orderDetails = cartItems.map(item => 
       `${item.quantity}x ${item.name} - $${(item.basePrice * item.quantity).toLocaleString('es-AR')}`
     ).join('\n');
 
     const totalText = `Total: $${totalAmount.toLocaleString('es-AR')}`;
+
+    // Mensaje con ID interno (simulado o desde backend si lo tenés)
+    // Nota: como el ID interno se genera en backend al crear preferencia, aquí usamos un placeholder.
+    // En producción, el backend debería devolver el ID interno al crear la preferencia.
+    const internalOrderId = 'ERDE' + Math.floor(1000 + Math.random() * 9000); // ← Temporal (reemplazar con real)
+
     const message = 
 `¡Hola! Realicé una transferencia por el siguiente pedido:
 
@@ -156,10 +164,12 @@ Teléfono: ${customerPhone}
 Email: ${customerEmail}
 Dirección: ${customerAddress}
 
+ID interno de la orden: ${internalOrderId}
+
 Envio Comprobante.
 A confirmar pago. Gracias!`;
 
-    const whatsappNumber = '5491170504193'; 
+    const whatsappNumber = '5491170504193'; // Tu número
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     return (
@@ -184,15 +194,15 @@ A confirmar pago. Gracias!`;
             Titular: Alexander Gabriel Montenegro
           </Typography>
 
-          {/* Botón PAGADO - envía por WhatsApp */}
+          {/* Botón PAGADO - envía por WhatsApp con ID interno */}
           <Button 
             variant="contained" 
-            color="background.paper" 
+            color="success" 
             fullWidth 
             sx={{ mt: 3, py: 1.5 }}
             onClick={() => {
               window.open(whatsappLink, '_blank', 'noopener,noreferrer');
-              setOpenTransferModal(false); 
+              setOpenTransferModal(false); // Cierra modal después de enviar
             }}
           >
             Pagado - Enviar comprobante por WhatsApp

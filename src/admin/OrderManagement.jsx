@@ -15,7 +15,7 @@ const OrderManagement = () => {
   const [pendingStatus, setPendingStatus] = useState({});
 
   const { cart, total } = useProductStore();
-  const { user } = useAuthStore(); // ← Acceso al usuario actual (admin)
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'orders'), (snapshot) => {
@@ -51,7 +51,7 @@ const OrderManagement = () => {
 
     await updateDoc(orderRef, updateData);
 
-    // Recargar orden actualizada para WhatsApp
+    // Recargar orden actualizada
     const updatedOrder = { ...orders.find(o => o.id === orderId), ...updateData };
 
     // Generar y abrir WhatsApp automáticamente

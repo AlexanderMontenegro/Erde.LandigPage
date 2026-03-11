@@ -1,7 +1,7 @@
 // src/services/whatsappService.js
 export const generateWhatsAppNotification = (order, cartItems, totalAmount, user) => {
   if (!user || !user.telefono) {
-    alert('No se encontró teléfono del cliente para notificar.');
+    alert('No se encontró teléfono registrado del cliente para notificar.');
     return null;
   }
 
@@ -10,7 +10,7 @@ export const generateWhatsAppNotification = (order, cartItems, totalAmount, user
   const status = order.status || 'PENDIENTE';
   const total = totalAmount ? `$${Number(totalAmount).toLocaleString('es-AR')}` : 'N/A';
 
-  // Detalle de productos (usamos cartItems pasado desde OrderManagement)
+  // Detalle de productos
   const itemsText = cartItems.length > 0 
     ? cartItems.map(item => 
         `${item.quantity}x ${item.name} - $${(Number(item.basePrice) * Number(item.quantity)).toLocaleString('es-AR')}`
@@ -18,9 +18,9 @@ export const generateWhatsAppNotification = (order, cartItems, totalAmount, user
     : 'Sin detalles disponibles';
 
   let message = `ERDE D&C Store\n\n`;
-  message += `Cliente: ${user.nombre || 'Cliente'} ${user.apellido || ''}\n`;  // ← Nombre del usuario
-  message += `Orden: ${internalOrderId}\n`;  // ← ID interno siempre primero
-  message += `Estado: ${status}\n\n`;
+  message += `Cliente: ${user.nombre || 'Cliente'} ${user.apellido || ''}\n`;
+  message += `Orden: ${internalOrderId}\n`;
+  message += `Estado actual: ${status}\n\n`;
   message += `Detalle de la compra:\n${itemsText}\n`;
   message += `Total: ${total}\n\n`;
 
