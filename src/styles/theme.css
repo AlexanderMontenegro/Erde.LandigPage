@@ -497,8 +497,9 @@ body.light {
 .card img {
   width: 100%;
   min-height: 50vh;
-  object-fit: cover;
+  object-fit: contain;
   transition: var(--transition);
+  padding: 10px;
 }
 
 .card:hover img {
@@ -1206,9 +1207,10 @@ body.light {
     width: 100%;
     max-height: 40vh;
     min-height: 35vh;
-    object-fit: cover;
+    object-fit: contain;
     transition: var(--transition);
     border-radius: 20px;
+    padding: 10px;
   }
 
   .mobile-menu {
