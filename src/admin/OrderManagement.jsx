@@ -5,11 +5,17 @@ import {
 } from '@mui/material';
 import { db } from '../config/firebase';
 import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import useProductStore from '../store/productStore';
+import useAuthStore from '../store/authStore';
+import { generateWhatsAppNotification } from '../services/whatsappService';
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [trackingNumber, setTrackingNumber] = useState({});
   const [pendingStatus, setPendingStatus] = useState({});
+
+  const { cart, total } = useProductStore();
+  const { user } = useAuthStore(); // ← Acceso al usuario actual (admin)
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'orders'), (snapshot) => {
@@ -31,7 +37,6 @@ const OrderManagement = () => {
       return;
     }
 
-    // Validar tracking si se cambia a ENVIADO
     if (newStatus === 'ENVIADO' && !tracking) {
       alert('Ingresa un número de seguimiento para estado ENVIADO.');
       return;
@@ -45,6 +50,15 @@ const OrderManagement = () => {
     }
 
     await updateDoc(orderRef, updateData);
+
+    // Recargar orden actualizada para WhatsApp
+    const updatedOrder = { ...orders.find(o => o.id === orderId), ...updateData };
+
+    // Generar y abrir WhatsApp automáticamente
+    const whatsappLink = generateWhatsAppNotification(updatedOrder, cart, total(), user);
+    if (whatsappLink) {
+      window.open(whatsappLink, '_blank', 'noopener,noreferrer');
+    }
 
     // Limpiar inputs
     setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));
@@ -91,11 +105,11 @@ const OrderManagement = () => {
                     sx={{
                       minWidth: 140,
                       backgroundColor: 
-                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  // Violeta
-                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  // Azul
-                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  // Amarillo
-                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  // Verde
-                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',  // Naranja
+                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  
+                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  
+                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  
+                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  
+                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',
                       color: (pendingStatus[order.id] || order.status) === 'PAGO' ? '#000' : '#fff',
                     }}
                   >
