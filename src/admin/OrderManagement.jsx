@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { db } from '../config/firebase';
 import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { sendWhatsAppNotification } from '../services/whatsappNotificationService';  // ← NUEVO (módulo independiente)
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -31,7 +32,6 @@ const OrderManagement = () => {
       return;
     }
 
-    // Validar tracking si se cambia a ENVIADO
     if (newStatus === 'ENVIADO' && !tracking) {
       alert('Ingresa un número de seguimiento para estado ENVIADO.');
       return;
@@ -45,6 +45,10 @@ const OrderManagement = () => {
     }
 
     await updateDoc(orderRef, updateData);
+
+    // === NUEVO: Enviar notificación WhatsApp al cliente ===
+    const updatedOrder = { ...orders.find(o => o.id === orderId), status: newStatus, trackingNumber: tracking };
+    await sendWhatsAppNotification(updatedOrder);
 
     // Limpiar inputs
     setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));
@@ -91,11 +95,11 @@ const OrderManagement = () => {
                     sx={{
                       minWidth: 140,
                       backgroundColor: 
-                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  // Violeta
-                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  // Azul
-                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  // Amarillo
-                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  // Verde
-                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',  // Naranja
+                        (pendingStatus[order.id] || order.status) === 'PENDIENTE' ? '#a855f7' :  
+                        (pendingStatus[order.id] || order.status) === 'A CONFIRMAR' ? '#2196f3' :  
+                        (pendingStatus[order.id] || order.status) === 'PAGO' ? '#ffeb3b' :  
+                        (pendingStatus[order.id] || order.status) === 'ENVIADO' ? '#4caf50' :  
+                        (pendingStatus[order.id] || order.status) === 'ENTREGADO' ? '#ff9800' : '#9e9e9e',
                       color: (pendingStatus[order.id] || order.status) === 'PAGO' ? '#000' : '#fff',
                     }}
                   >
