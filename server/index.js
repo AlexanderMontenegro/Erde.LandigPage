@@ -7,25 +7,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Inicializa Mercado Pago
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
   options: { timeout: 10000 }
 });
 
-// Función para generar ID único ERDE0001, ERDE0002...
-async function generateOrderId() {
-  // Contador simple (en producción deberías usar Firestore o DB para atomicidad)
-  const counterRef = doc(db, 'counters', 'orders');
-  const counterSnap = await getDoc(counterRef);
-  let count = 1;
-  if (counterSnap.exists()) {
-    count = counterSnap.data().lastId + 1;
-    await updateDoc(counterRef, { lastId: count });
-  } else {
-    await setDoc(counterRef, { lastId: count });
-  }
-  return `ERDE${String(count).padStart(4, '0')}`;
-}
+// Contador simple en memoria (reinicia al redeploy del servidor, suficiente para serial visual)
+let orderCounter = 0;
 
 app.post('/create-preference', async (req, res) => {
   try {
@@ -61,7 +50,9 @@ app.post('/create-preference', async (req, res) => {
       };
     });
 
-    const internalOrderId = await generateOrderId(); // ← NUEVO: ID ERDE0001
+    // Genera ID interno simple (solo visual)
+    orderCounter += 1;
+    const internalOrderId = `ERDE${String(orderCounter).padStart(4, '0')}`;
 
     const preferenceData = {
       items: itemsProcesados,
@@ -71,8 +62,7 @@ app.post('/create-preference', async (req, res) => {
         pending: 'https://erde-landigpage-frontend.onrender.com/pending'
       },
       auto_return: 'approved',
-      external_reference: internalOrderId, // ← Guardamos el ID interno aquí
-      metadata: { internalOrderId } // ← También en metadata para fácil acceso
+      external_reference: internalOrderId  // Opcional: referencia visible en MP
     };
 
     console.log('Datos que se enviarán a Mercado Pago:');
@@ -82,7 +72,7 @@ app.post('/create-preference', async (req, res) => {
     const response = await preferenceClient.create({ body: preferenceData });
 
     console.log('Preferencia creada exitosamente:', response.id);
-    res.json({ id: response.id, internalOrderId }); // ← Devolvemos también el ID
+    res.json({ id: response.id, internalOrderId });  // Devuelve ID interno al frontend
   } catch (error) {
     console.error('Error al crear preferencia:', error);
     res.status(500).json({
