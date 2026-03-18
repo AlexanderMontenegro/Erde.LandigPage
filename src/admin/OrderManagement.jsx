@@ -51,16 +51,13 @@ const OrderManagement = () => {
 
     await updateDoc(orderRef, updateData);
 
-    // Recargar orden actualizada
     const updatedOrder = { ...orders.find(o => o.id === orderId), ...updateData };
 
-    // Generar y abrir WhatsApp automáticamente
     const whatsappLink = generateWhatsAppNotification(updatedOrder, cart, total(), user);
     if (whatsappLink) {
       window.open(whatsappLink, '_blank', 'noopener,noreferrer');
     }
 
-    // Limpiar inputs
     setPendingStatus(prev => ({ ...prev, [orderId]: undefined }));
     setTrackingNumber(prev => ({ ...prev, [orderId]: '' }));
   };
