@@ -5,20 +5,20 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions 
 } from '@mui/material';
 import { db } from '../config/firebase';
-import { collection, onSnapshot, updateDoc, doc, addDoc } from 'firebase/firestore';
+import { collection, onSnapshot, updateDoc, doc, addDoc, query, where, getDocs } from 'firebase/firestore';
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [trackingNumber, setTrackingNumber] = useState({});
   const [pendingStatus, setPendingStatus] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');           // ← Filtro por ID Interno
-  const [showManualModal, setShowManualModal] = useState(false); // ← Modal manual
-  const [manualForm, setManualForm] = useState({              // ← Datos para orden manual
-    userId: '',
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [manualForm, setManualForm] = useState({
     email: '',
     telefono: '',
     total: 0,
-    items: ''  // texto simple: "2x Producto A, 1x Producto B"
+    items: '',
+    referenciaPago: ''  // ← Número de referencia para transferencias manuales
   });
 
   useEffect(() => {
@@ -62,28 +62,56 @@ const OrderManagement = () => {
     setTrackingNumber(prev => ({ ...prev, [orderId]: value }));
   };
 
-  // Crear orden manual
+  // Crear orden manual + sincronizar/crear usuario
   const createManualOrder = async () => {
-    if (!manualForm.userId || !manualForm.email || !manualForm.telefono || !manualForm.total) {
-      alert('Faltan datos obligatorios');
+    if (!manualForm.email || !manualForm.telefono || !manualForm.total) {
+      alert('Faltan datos obligatorios: email, teléfono y total');
       return;
     }
 
+    // Buscar usuario existente por email o teléfono
+    let userId = null;
+    const qEmail = query(collection(db, 'users'), where('email', '==', manualForm.email));
+    const qPhone = query(collection(db, 'users'), where('telefono', '==', manualForm.telefono));
+
+    const [snapEmail, snapPhone] = await Promise.all([getDocs(qEmail), getDocs(qPhone)]);
+
+    if (!snapEmail.empty) {
+      userId = snapEmail.docs[0].id;
+    } else if (!snapPhone.empty) {
+      userId = snapPhone.docs[0].id;
+    } else {
+      // Crear nuevo usuario
+      const newUser = {
+        email: manualForm.email,
+        telefono: manualForm.telefono,
+        nombre: 'Usuario Manual',
+        apellido: '',
+        direccion: '',
+        role: 'client',
+        createdAt: new Date()
+      };
+      const userRef = await addDoc(collection(db, 'users'), newUser);
+      userId = userRef.id;
+    }
+
+    // Crear orden
     const newOrder = {
-      internalOrderId: `ERDE${String(Date.now()).slice(-4)}`, // serial simple único
-      userId: manualForm.userId,
+      internalOrderId: `ERDE${String(Date.now()).slice(-5)}`, // serial único simple
+      userId,
       email: manualForm.email,
       telefono: manualForm.telefono,
       total: Number(manualForm.total),
       items: manualForm.items.split(',').map(i => i.trim()),
       status: 'PENDIENTE',
       createdAt: new Date(),
-      trackingNumber: ''
+      trackingNumber: '',
+      referenciaPago: manualForm.referenciaPago || ''  // ← referencia manual para transferencias
     };
 
     await addDoc(collection(db, 'orders'), newOrder);
     setShowManualModal(false);
-    setManualForm({ userId: '', email: '', telefono: '', total: 0, items: '' });
+    setManualForm({ email: '', telefono: '', total: 0, items: '', referenciaPago: '' });
   };
 
   return (
@@ -118,6 +146,7 @@ const OrderManagement = () => {
           <TableHead>
             <TableRow>
               <TableCell>ID Interno</TableCell>
+              <TableCell>ID Mercado Pago / Referencia</TableCell>
               <TableCell>ID Cliente (Email)</TableCell>
               <TableCell>ID Contacto (Teléfono)</TableCell>
               <TableCell>Total</TableCell>
@@ -131,6 +160,7 @@ const OrderManagement = () => {
             {filteredOrders.map(order => (
               <TableRow key={order.id}>
                 <TableCell>{order.internalOrderId || 'N/A'}</TableCell>
+                <TableCell>{order.referenciaPago || order.id || 'N/A'}</TableCell>
                 <TableCell>{order.email || 'N/A'}</TableCell>
                 <TableCell>{order.telefono || 'N/A'}</TableCell>
                 <TableCell>${order.total?.toLocaleString() || 'N/A'}</TableCell>
@@ -190,10 +220,10 @@ const OrderManagement = () => {
       <Dialog open={showManualModal} onClose={() => setShowManualModal(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Nueva Orden Manual</DialogTitle>
         <DialogContent>
-          <TextField fullWidth label="ID Usuario" value={manualForm.userId} onChange={(e) => setManualForm({...manualForm, userId: e.target.value})} margin="dense" />
-          <TextField fullWidth label="Email (ID Cliente)" value={manualForm.email} onChange={(e) => setManualForm({...manualForm, email: e.target.value})} margin="dense" />
-          <TextField fullWidth label="Teléfono (ID Contacto)" value={manualForm.telefono} onChange={(e) => setManualForm({...manualForm, telefono: e.target.value})} margin="dense" />
-          <TextField fullWidth label="Total" type="number" value={manualForm.total} onChange={(e) => setManualForm({...manualForm, total: e.target.value})} margin="dense" />
+          <TextField fullWidth label="Email (ID Cliente)" value={manualForm.email} onChange={(e) => setManualForm({...manualForm, email: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Teléfono (ID Contacto)" value={manualForm.telefono} onChange={(e) => setManualForm({...manualForm, telefono: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Total" type="number" value={manualForm.total} onChange={(e) => setManualForm({...manualForm, total: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Número de Referencia (Pago Transferencia)" value={manualForm.referenciaPago} onChange={(e) => setManualForm({...manualForm, referenciaPago: e.target.value})} margin="dense" />
           <TextField fullWidth label="Ítems (ej: 2x Producto A, 1x Producto B)" value={manualForm.items} onChange={(e) => setManualForm({...manualForm, items: e.target.value})} margin="dense" multiline rows={2} />
         </DialogContent>
         <DialogActions>
