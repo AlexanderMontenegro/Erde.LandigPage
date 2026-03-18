@@ -60,7 +60,7 @@ export default function Navbar() {
                 </span>
                 <div className="favorites-badge">
                   <FaHeart className="heart-icon" />
-                  <span className="badge">{favoriteCount}</span>
+           {/* <span className="badge">{favoriteCount}</span>*/}
                 </div>
               </button>
 

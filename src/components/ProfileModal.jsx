@@ -175,16 +175,17 @@ export default function ProfileModal() {
           <p className="text-text-muted text-center">No hay favoritos</p>
         ) : (
           <div className="ft2">
-            {favorites.map(productId => {
-              const product = products.find(p => p.id === productId);
-              if (!product) return null;
-              return (
-                <div key={productId} className="f">
-                  <img src={product.image} alt={product.name} className="ft  " />
+            {/* Filtro: solo mostrar productos que aún existen */}
+            {favorites
+              .map(productId => products.find(p => p.id === productId))
+              .filter(product => product !== undefined)  // ← Solo productos existentes
+              .map((product) => (
+                <div key={product.id} className="f">
+                  <img src={product.image} alt={product.name} className="ft" />
                   <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
                     <p className="text-price">${product.basePrice.toLocaleString('es-AR')}</p>
-                    <button onClick={() => handleFavorite(productId)} className="offers-section-fav">
+                    <button onClick={() => handleFavorite(product.id)} className="offers-section-fav">
                       Eliminar
                     </button>
 
@@ -196,8 +197,12 @@ export default function ProfileModal() {
                     </button>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+
+            {/* Si después del filtro no queda ninguno */}
+            {favorites.length > 0 && products.filter(p => favorites.includes(p.id)).length === 0 && (
+              <p className="text-text-muted text-center">Los productos favoritos ya no están disponibles</p>
+            )}
           </div>
         )}
       </div>
