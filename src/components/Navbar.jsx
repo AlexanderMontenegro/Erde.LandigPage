@@ -82,13 +82,7 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="mobile-menu">
-          <button 
-            className="mobile-menu-close" 
-            onClick={toggleMenu}
-            aria-label="Cerrar menú"
-          >
-            <FiX size={32} />
-          </button>
+         
           <a href="#inicio" onClick={toggleMenu}>Inicio</a>
           <a href="#productos" onClick={toggleMenu}>Productos</a>
           <a href="#ofertas" onClick={toggleMenu}>Ofertas</a>

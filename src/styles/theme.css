@@ -1232,237 +1232,206 @@ body.light {
 
 /* Mobile pequeño (hasta 600px) */
 @media (max-width: 600px) {
-  .card {
-    background: var(--card);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    height: 70vh;
-  }
-
-  .card img {
-    width: 100%;
-    max-height: 40vh;
-    min-height: 35vh;
-    object-fit: contain;
-    transition: var(--transition);
-    border-radius: 20px;
-    padding: 10px;
-  }
-
-  .mobile-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(18, 18, 18, 0.96);
-    z-index: 1200;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
-
-  .mobile-menu a,
-  .mobile-menu button {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.6rem;
-    font-weight: 500;
-    padding: 16px 32px;
-    margin: 12px 0;
-    width: 100%;
-    max-width: 360px;
-    text-align: center;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-  }
-
-  .mobile-menu a:hover,
-  .mobile-menu button:hover {
-    background: rgba(76, 175, 80, 0.25);
-    color: #4caf50;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
-  }
-
-  .mobile-menu .logout {
-    background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
-    border-color: rgba(244, 67, 54, 0.3);
-  }
-
-  .mobile-menu .logout:hover {
-    background: rgba(244, 67, 54, 0.35);
-    color: #ef5350;
-  }
-
-  .mobile-menu::before {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 3rem;
-    color: white;
-    cursor: pointer;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-  }
-
-  .mobile-menu::before:hover {
-    background: rgba(244, 67, 54, 0.8);
-    transform: rotate(90deg);
-  }
-
-  .mobile-menu {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .mobile-menu-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    font-size: 2.5rem;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 1300;
-  }
-
-  .mobile-menu-close:hover {
-    background: rgba(244, 67, 54, 0.8);
-    transform: rotate(90deg);
-  }
-
-  .modal-content {
-    width: 90vw !important;
-    max-width: 320px;
-    padding: 16px !important;
-  }
-
-  .modal-title {
-    font-size: 1.2rem;
-  }
-
-  .modal-description {
-    font-size: 0.9rem;
-    white-space: pre-line
-
-  }
-
-  .modal-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .btn-add-cart,
-  .btn-whatsapp {
-    width: 100%;
-    font-size: 0.9rem;
-  }
-
-  /* Nav bar */
-
-  .nav-actions {
-    display: flex;
-  }
-  .navbar-container {
-    padding: 8px 16px;
-  }
-
-  .navbar-links {
-    gap: 8px;
-  }
-
-  .navbar-link {
-    font-size: 0.9rem;
-  }
-
-  /* Hero y catálogo */
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  }
-
-  .desktop {
-    display: none !important;
-  }
-  .mobile {
-    display: flex !important;
-  }
-  .user-greeting {
-    display: none;
-  }
-  .logout-btn {
-    display: none;
-  }
+ .card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
 }
 
-/* Tabtet (601px – 990px) */
-@media (min-width: 601px) and (max-width: 990px) {
-  /* Modales */
-  .modal-content {
-    width: 80vw !important;
-    max-width: 500px;
-    padding: 20px !important;
-  }
-
-  .modal-actions {
-    flex-direction: row;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  /* Nav bar */
-  .navbar-container {
-    padding: 12px 24px;
-  }
-
-  .nav-actions {
-    display: flex;
-  }
-
-  /* Hero y catálogo */
-  .hero-title {
-    font-size: 3rem;
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .modal-price {
-    font-size: 2.5rem;
-  }
+.card img {
+  width: 100%;
+  max-height: 40vh;
+  min-height: 35vh;
+  object-fit: contain;
+  transition: var(--transition);
+  border-radius: 20px;
+  padding: 10px;
 }
 
+/* MOBILE MENU */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(18, 18, 18, 0.96);
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 500;
+  padding: 16px 32px;
+  margin: 12px 0;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+  background: rgba(76, 175, 80, 0.25);
+  color: #4caf50;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+}
+
+.mobile-menu .logout {
+  background: rgba(244, 67, 54, 0.15);
+  color: #f44336;
+  border-color: rgba(244, 67, 54, 0.3);
+}
+
+.mobile-menu .logout:hover {
+  background: rgba(244, 67, 54, 0.35);
+  color: #ef5350;
+}
+
+.mobile-menu::before {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 3rem;
+  color: white;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu::before:hover {
+  background: rgba(244, 67, 54, 0.8);
+  transform: rotate(90deg);
+}
+/*
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1300;
+}
+
+.mobile-menu-close:hover {
+  background: rgba(244, 67, 54, 0.8);
+  transform: rotate(90deg);
+}
+*/
+/* MODAL  */
+.modal-content {
+  width: 80vw !important;
+  max-width: 500px;
+  padding: 20px !important;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+}
+
+.modal-description {
+  font-size: 0.9rem;
+  white-space: pre-line;
+}
+
+.modal-actions {
+  flex-direction: row;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-add-cart,
+.btn-whatsapp {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.modal-price {
+  font-size: 2.5rem;
+}
+
+/* NAVBAR (última versión activa) */
+.nav-actions {
+  display: flex;
+}
+
+.navbar-container {
+  padding: 12px 24px;
+}
+
+.navbar-links {
+  gap: 8px;
+}
+
+.navbar-link {
+  font-size: 0.9rem;
+}
+
+/* HERO Y CATÁLOGO (última versión activa) */
+.hero-title {
+  font-size: 3rem;
+}
+
+.product-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* VISIBILIDAD */
+.desktop {
+  display: none !important;
+}
+
+.mobile {
+  display: flex !important;
+}
+
+.user-greeting {
+  display: none;
+}
+
+.logout-btn {
+  display: none;
+}
+
+}
 /* Desktop (991px en adelante) */
 @media (min-width: 991px) {
   .mobile {
@@ -1561,9 +1530,7 @@ body.light {
   display: none;
 }
 
-/* ============================================= 
-CARRUSEL INFINITO CONTINUO DE OFERTAS 
-============================================= */
+/*Carrusel*/
 
 .offers-section {
   overflow: hidden;
