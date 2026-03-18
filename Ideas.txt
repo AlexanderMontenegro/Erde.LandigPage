@@ -3,17 +3,6 @@ https://github.com/AlexanderMontenegro/Erde.LandigPage.git
 correspondiente al proyecto actual analiza hoja por hoja
 
 
-Número de WhatsApp del negocio: +5491170504193
-
-Configuración de WhatsApp: enlaces wa.me von mensajes predefinidos para cada estado donde se colocan los datos de cada estado
-
-Estados que notifican: al cliente en cada cambio de estado
-
-Contenido de notificación: debe de incluir en el mensaje nuestro nombre ERDE D&C Store, ID orden, estado de la orden, detalle de la compra, link/ numero de seguimiento.
-
-Frecuencia/privacidad: solo a números registrados del cliente.
-
-Servicio de envío: gratis con wa.me a traves del bonton que guarda los estados
 
 reglas principales, modifica lo minimo el codigo para no romper funciones, si es posible realizarlo modular ,conserva el estilo y paletas de colores, brindame codigo completo de las hojas 
 
