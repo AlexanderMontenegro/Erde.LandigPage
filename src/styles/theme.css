@@ -251,6 +251,15 @@ body.light {
   transform: translateY(-2px);
 }
 
+
+
+/*Panel Admin*/
+
+.gest{
+  display: flex;
+  flex-direction: column;
+}
+
 /* Carrito lateral */
 .cart-drawer-backdrop {
   position: fixed;
@@ -1464,7 +1473,48 @@ body.light {
   .modal-price {
     font-size: 3.5rem;
   }
+
+   /* Contenedor principal */
+  .MuiContainer-root {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Título */
+  .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+    text-align: center;
+  }
+
+  /* Tabs */
+  .MuiTabs-root {
+    overflow-x: auto !important;
+  }
+
+  .MuiTabs-flexContainer {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+  }
+
+  .MuiTab-root {
+    min-width: auto !important;
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Botón volver */
+  .MuiIconButton-root {
+    top: 8px !important;
+    right: 8px !important;
+    transform: scale(0.85);
+  }
+
+  /* Box contenido */
+  .MuiBox-root {
+    margin-top: 10px !important;
+  }
 }
+
 
 .modal-overlay {
   display: flex;

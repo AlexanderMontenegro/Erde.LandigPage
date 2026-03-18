@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import ProductManagement from './ProductManagement';
 import UserManagement from './UserManagement';
-import OrderManagement from './OrderManagement';  // ← NUEVO
+import OrderManagement from './OrderManagement'; 
 import ProtectedAdminRoute from './ProtectedAdminRoute';
 
 const AdminDashboard = () => {
@@ -43,13 +43,13 @@ const AdminDashboard = () => {
         <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)} sx={{ mb: 3 }}>
           <Tab label="Gestión de Productos" />
           <Tab label="Gestión de Usuarios" />
-          <Tab label="Gestión de Órdenes" />  {/* ← NUEVO */}
+          <Tab label="Gestión de Órdenes" />  
         </Tabs>
 
         <Box sx={{ mt: 2 }}>
           {tab === 0 && <ProductManagement />}
           {tab === 1 && <UserManagement />}
-          {tab === 2 && <OrderManagement />}  {/* ← NUEVO */}
+          {tab === 2 && <OrderManagement />}  
         </Box>
       </Container>
     </ProtectedAdminRoute>
