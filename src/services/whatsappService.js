@@ -1,4 +1,3 @@
-// src/services/whatsappService.js
 export const generateWhatsAppNotification = (order, cartItems, totalAmount, user) => {
   if (!user || !user.telefono) {
     alert('No se encontró teléfono registrado del cliente para notificar.');
