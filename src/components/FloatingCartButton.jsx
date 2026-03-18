@@ -47,7 +47,7 @@ const FloatingCartButton = () => {
 
   return (
     <>
-      <Tooltip title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"} arrow placement="left">
+      <Tooltip className='floatboton' title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"} arrow placement="left">
         <Fab
           aria-label="toggle dark mode"
           sx={{

@@ -740,6 +740,10 @@ body.light {
 }
 
 /* Botón carrito flotante  */
+.floatboton{
+  width: 10px;
+}
+
 .cart-float {
   position: fixed;
   bottom: 100px;
