@@ -143,7 +143,7 @@ const CartDrawer = () => {
 
     if (method === 'correo-argentino') cost = 3500;
     if (method === 'andreani') cost = 5000;
-    if (method === 'enviosflex') cost = 800;
+    if (method === 'enviosflex') cost = 9400;
 
     setShippingCost(cost);
     setStep(3);
@@ -444,9 +444,9 @@ A confirmar pago. Gracias!`;
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Elige el servicio de envío</FormLabel>
                   <RadioGroup value={shippingMethod} onChange={(e) => handleShippingMethodChange(e.target.value)}>
-                    <FormControlLabel value="correo-argentino" control={<Radio />} label="Correo Argentino - $3500" />
-                    <FormControlLabel value="andreani" control={<Radio />} label="Correo Andreani - $5000" />
-                    <FormControlLabel value="enviosflex" control={<Radio />} label="EnviosFlex (propio) - $800" />
+                    {/*<FormControlLabel value="correo-argentino" control={<Radio />} label="Correo Argentino - $3500" />*/}
+                   {/*<FormControlLabel value="andreani" control={<Radio />} label="Correo Andreani - $5000" />*/}
+                    <FormControlLabel value="enviosflex" control={<Radio />} label="EnviosFlex - $9400" />
                   </RadioGroup>
                 </FormControl>
               )}
