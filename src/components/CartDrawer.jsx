@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer, Button, Typography, Divider, Box, IconButton, CircularProgress, Modal } from '@mui/material';
+import { 
+  Drawer, Button, Typography, Divider, Box, IconButton, CircularProgress, Modal,
+  TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel 
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -7,21 +10,45 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import useProductStore from '../store/productStore';
 import useAuthStore from '../store/authStore';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const CartDrawer = () => {
   const { cartOpen, toggleCart, cart, removeFromCart, updateQuantity, total, totalItems } = useProductStore();
-  const { user, toggleAuthModal } = useAuthStore();
+  const { user, toggleAuthModal, updateUser } = useAuthStore();
+
   const [preferenceId, setPreferenceId] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+
   const [openOtherPayments, setOpenOtherPayments] = useState(false);
   const [openContactModal, setOpenContactModal] = useState(false);
   const [openTransferModal, setOpenTransferModal] = useState(false);
+
+  // Flujo de envío en 3 pasos
+  const [step, setStep] = useState(1);
+  const [shippingOption, setShippingOption] = useState(null);
+  const [shippingMethod, setShippingMethod] = useState('');
+  const [shippingCost, setShippingCost] = useState(0);
+  const [showShippingForm, setShowShippingForm] = useState(false);
+  const [shippingData, setShippingData] = useState({
+    direccion: '',
+    codigoPostal: '',
+    provincia: '',
+    localidad: ''
+  });
+
+  // Subtotal dinámico
+  const [subtotalProducts, setSubtotalProducts] = useState(0);
+
+  useEffect(() => {
+    const newSubtotal = cart.reduce((acc, item) => acc + Number(item.basePrice) * Number(item.quantity), 0);
+    setSubtotalProducts(newSubtotal);
+  }, [cart]);
 
   useEffect(() => {
     if (import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY) {
@@ -81,6 +108,89 @@ const CartDrawer = () => {
     );
   };
 
+  const saveNewShipping = async () => {
+    if (!shippingData.direccion || !shippingData.codigoPostal || 
+        !shippingData.provincia || !shippingData.localidad) {
+      alert('Todos los campos son obligatorios');
+      return;
+    }
+
+    const cp = shippingData.codigoPostal.trim();
+
+    let baseCost = 10000;
+    if (cp.startsWith('1') || cp.startsWith('14') || cp.startsWith('C1')) baseCost = 3500; // CABA
+    else if (cp.startsWith('16') || cp.startsWith('18') || cp.startsWith('19') || cp.startsWith('B')) baseCost = 5000; // GBA
+    else baseCost = 8000; // Interior
+
+    await updateUser({
+      direccion: shippingData.direccion,
+      codigoPostal: cp,
+      provincia: shippingData.provincia,
+      localidad: shippingData.localidad
+    });
+
+    setShippingCost(baseCost);
+    setShippingOption('new');
+    setShowShippingForm(false);
+    setStep(2);
+  };
+
+  const handleShippingMethodChange = (method) => {
+    setShippingMethod(method);
+
+    // REEMPLAZO TOTAL: cada método tiene su costo fijo independiente
+    let cost = 0;
+
+    if (method === 'correo-argentino') cost = 3500;
+    if (method === 'andreani') cost = 5000;
+    if (method === 'enviosflex') cost = 800;
+
+    setShippingCost(cost);
+    setStep(3);
+  };
+
+  const cancelShipping = () => {
+    setStep(1);
+    setShippingOption(null);
+    setShippingMethod('');
+    setShippingCost(0);
+    setShowShippingForm(false);
+    setShippingData({
+      direccion: '',
+      codigoPostal: '',
+      provincia: '',
+      localidad: ''
+    });
+  };
+
+  const goBack = () => {
+    if (step === 2) setStep(1);
+    if (step === 3) setStep(2);
+  };
+
+  const finalTotal = subtotalProducts + shippingCost;
+
+  const getShippingSummary = () => {
+    if (!shippingOption) return null;
+
+    if (shippingOption === 'local') return 'Retiro en Local';
+
+    if (shippingOption === 'user') {
+      return user?.direccion 
+        ? `${user.direccion}, ${user.localidad || ''}, ${user.provincia || ''} (${user.codigoPostal || 'N/A'})`
+        : 'Datos de usuario (sin dirección registrada)';
+    }
+
+    if (shippingOption === 'new') {
+      return `${shippingData.direccion}, ${shippingData.localidad}, ${shippingData.provincia} (${shippingData.codigoPostal})`;
+    }
+
+    return null;
+  };
+
+  const shippingSummary = getShippingSummary();
+
+  // === Modales ===
   const OtherPaymentsModal = () => (
     <Modal open={openOtherPayments} onClose={() => setOpenOtherPayments(false)}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
@@ -105,7 +215,7 @@ const CartDrawer = () => {
           Visítanos en nuestra tienda para pagar en efectivo o con tarjeta.
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Dirección: Benvenuto Cellini 817,Francisco Alvarez, Moreno
+          Dirección: Benvenuto Cellini 817, Francisco Alvarez, Moreno
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
           Teléfono: +54 11 7050-4193
@@ -133,23 +243,18 @@ const CartDrawer = () => {
     const totalAmount = useProductStore.getState().total();
     const cartItems = useProductStore.getState().cart;
 
-    // Datos del cliente
     const customerName = user?.nombre ? `${user.nombre} ${user.apellido || ''}` : 'Cliente';
     const customerPhone = user?.telefono || 'No registrado';
     const customerEmail = user?.email || 'No registrado';
     const customerAddress = user?.direccion || 'No registrado';
 
-    // Generar detalle del pedido
     const orderDetails = cartItems.map(item => 
       `${item.quantity}x ${item.name} - $${(item.basePrice * item.quantity).toLocaleString('es-AR')}`
     ).join('\n');
 
     const totalText = `Total: $${totalAmount.toLocaleString('es-AR')}`;
 
-    // Mensaje con ID interno (simulado o desde backend si lo tenés)
-    // Nota: como el ID interno se genera en backend al crear preferencia, aquí usamos un placeholder.
-    // En producción, el backend debería devolver el ID interno al crear la preferencia.
-    const internalOrderId = 'ERDE' + Math.floor(1000 + Math.random() * 9000); // ← Temporal (reemplazar con real)
+    const internalOrderId = 'ERDE' + Math.floor(1000 + Math.random() * 9000);
 
     const message = 
 `¡Hola! Realicé una transferencia por el siguiente pedido:
@@ -169,7 +274,7 @@ ID interno de la orden: ${internalOrderId}
 Envio Comprobante.
 A confirmar pago. Gracias!`;
 
-    const whatsappNumber = '5491170504193'; // Tu número
+    const whatsappNumber = '5491170504193';
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     return (
@@ -194,7 +299,6 @@ A confirmar pago. Gracias!`;
             Titular: Alexander Gabriel Montenegro
           </Typography>
 
-          {/* Botón PAGADO - envía por WhatsApp con ID interno */}
           <Button 
             variant="contained" 
             color="success" 
@@ -202,7 +306,7 @@ A confirmar pago. Gracias!`;
             sx={{ mt: 3, py: 1.5 }}
             onClick={() => {
               window.open(whatsappLink, '_blank', 'noopener,noreferrer');
-              setOpenTransferModal(false); // Cierra modal después de enviar
+              setOpenTransferModal(false);
             }}
           >
             Pagado - Enviar comprobante por WhatsApp
@@ -249,46 +353,215 @@ A confirmar pago. Gracias!`;
                 </Box>
               </Box>
             ))}
+
+            {/* Subtotal al final de la lista */}
+            {cart.length > 0 && (
+              <Box sx={{ mt: 3, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="subtitle1">Subtotal productos:</Typography>
+                  <Typography variant="h6">${subtotalProducts.toLocaleString('es-AR')}</Typography>
+                </Box>
+              </Box>
+            )}
           </Box>
 
           <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-            <Typography variant="subtitle1">Total:</Typography>
-            <Typography variant="h5">${Number(total()).toLocaleString()}</Typography>
-          </Box>
+          {/* Resumen de dirección */}
+          {shippingOption && (
+            <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Dirección de envío:
+              </Typography>
+              <Typography variant="body1" fontWeight="medium">
+                {shippingSummary}
+              </Typography>
+            </Box>
+          )}
 
-          {errorMsg && <Typography color="error" sx={{ mb: 2 }}>{errorMsg}</Typography>}
+          {/* Paso 1 */}
+          {step === 1 && (
+            <>
+              <Typography variant="subtitle1" sx={{ mb: 2 }}>Paso 1: Datos de Envío</Typography>
 
-          {loading ? (
-            <CircularProgress sx={{ mx: 'auto', display: 'block' }} />
-          ) : preferenceId ? (
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              size="large"
-              startIcon={<PaymentIcon />}
-              onClick={handleMercadoPago}
-              sx={{ mb: 2, py: 1.5 }}
-            >
-              Pagar con Mercado Pago
-            </Button>
-          ) : null}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
+                <Button 
+                  variant={shippingOption === 'local' ? 'contained' : 'outlined'} 
+                  fullWidth 
+                  onClick={() => { setShippingOption('local'); setShippingCost(0); setStep(2); }}
+                >
+                  1. Retiro en Local (Gratis)
+                </Button>
 
-          <Button
-            variant="outlined"
-            fullWidth
-            size="large"
-            startIcon={<AccountBalanceWalletIcon />}
-            onClick={() => setOpenOtherPayments(true)}
-          >
-            Otros medios de pago
-          </Button>
+                <Button 
+                  variant={shippingOption === 'user' ? 'contained' : 'outlined'} 
+                  fullWidth 
+                  onClick={() => { setShippingOption('user'); setShippingCost(4500); setStep(2); }}
+                >
+                  2. Envío a datos de usuario
+                </Button>
+
+                <Button 
+                  variant={shippingOption === 'new' ? 'contained' : 'outlined'} 
+                  fullWidth 
+                  onClick={() => setShowShippingForm(true)}
+                >
+                  3. Nuevos datos de envío
+                </Button>
+              </Box>
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                <Button variant="outlined" fullWidth onClick={cancelShipping}>
+                  Cancelar
+                </Button>
+                <Button 
+                  variant="contained" 
+                  fullWidth 
+                  disabled={!shippingOption} 
+                  onClick={() => setStep(2)}
+                >
+                  Continuar
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {/* Paso 2 */}
+          {step === 2 && (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <IconButton onClick={() => setStep(1)} size="small">
+                  <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="subtitle1">Paso 2: Opciones de Envío</Typography>
+              </Box>
+
+              {shippingOption === 'local' ? (
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  Retiro en local seleccionado. No aplica costo de envío.
+                </Typography>
+              ) : (
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Elige el servicio de envío</FormLabel>
+                  <RadioGroup value={shippingMethod} onChange={(e) => handleShippingMethodChange(e.target.value)}>
+                    <FormControlLabel value="correo-argentino" control={<Radio />} label="Correo Argentino - $3500" />
+                    <FormControlLabel value="andreani" control={<Radio />} label="Correo Andreani - $5000" />
+                    <FormControlLabel value="enviosflex" control={<Radio />} label="EnviosFlex (propio) - $800" />
+                  </RadioGroup>
+                </FormControl>
+              )}
+
+              {shippingMethod && (
+                <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold' }}>
+                  Costo de envío: ${shippingCost.toLocaleString('es-AR')}
+                </Typography>
+              )}
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                <Button variant="outlined" fullWidth onClick={cancelShipping}>
+                  Cancelar
+                </Button>
+                <Button 
+                  variant="contained" 
+                  fullWidth 
+                  disabled={!shippingMethod && shippingOption !== 'local'} 
+                  onClick={() => setStep(3)}
+                >
+                  Continuar
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {/* Paso 3 */}
+          {step === 3 && (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <IconButton onClick={() => setStep(2)} size="small">
+                  <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="subtitle1">Paso 3: Forma de Pago</Typography>
+              </Box>
+
+              <Box sx={{ p: 2, bgcolor: 'action.hover', borderRadius: 1, mb: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Subtotal productos:</Typography>
+                  <Typography>${subtotalProducts.toLocaleString('es-AR')}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Costo de envío:</Typography>
+                  <Typography>${shippingCost.toLocaleString('es-AR')}</Typography>
+                </Box>
+                <Divider />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                  <Typography variant="subtitle1">Total a pagar:</Typography>
+                  <Typography variant="h5" color="primary">${finalTotal.toLocaleString('es-AR')}</Typography>
+                </Box>
+              </Box>
+
+              {loading ? (
+                <CircularProgress sx={{ mx: 'auto', display: 'block' }} />
+              ) : preferenceId ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  size="large"
+                  startIcon={<PaymentIcon />}
+                  onClick={handleMercadoPago}
+                  sx={{ mb: 2, py: 1.5 }}
+                >
+                  Pagar con Mercado Pago (${finalTotal.toLocaleString('es-AR')})
+                </Button>
+              ) : null}
+
+              <Button
+                variant="outlined"
+                fullWidth
+                size="large"
+                startIcon={<AccountBalanceWalletIcon />}
+                onClick={() => setOpenOtherPayments(true)}
+              >
+                Otros medios de pago (${finalTotal.toLocaleString('es-AR')})
+              </Button>
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                <Button variant="outlined" fullWidth onClick={cancelShipping}>
+                  Cancelar compra
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {step < 3 && (
+            <Typography color="text.secondary" align="center" sx={{ mt: 2 }}>
+              Completa el paso {step} para continuar
+            </Typography>
+          )}
         </Box>
       </Drawer>
 
-      {/* Modales */}
+      {/* Modal Nuevos Datos de Envío */}
+      <Modal open={showShippingForm} onClose={() => setShowShippingForm(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 420, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
+          <Typography variant="h6" gutterBottom>Nuevos datos de envío</Typography>
+          
+          <TextField fullWidth label="Dirección" value={shippingData.direccion} onChange={(e) => setShippingData({...shippingData, direccion: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Código Postal" value={shippingData.codigoPostal} onChange={(e) => setShippingData({...shippingData, codigoPostal: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Provincia" value={shippingData.provincia} onChange={(e) => setShippingData({...shippingData, provincia: e.target.value})} margin="dense" required />
+          <TextField fullWidth label="Localidad" value={shippingData.localidad} onChange={(e) => setShippingData({...shippingData, localidad: e.target.value})} margin="dense" required />
+
+          <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+            <Button variant="outlined" fullWidth onClick={() => setShowShippingForm(false)}>
+              Cancelar
+            </Button>
+            <Button variant="contained" fullWidth onClick={saveNewShipping}>
+              Guardar y Continuar
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
       <OtherPaymentsModal />
       <ContactModal />
       <TransferModal />
