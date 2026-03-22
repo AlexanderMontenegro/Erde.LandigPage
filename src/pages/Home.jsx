@@ -88,9 +88,9 @@ y productos exclusivos en 3D 🖨️✨”
       )}
 
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
+       {/* <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
           Catálogo de Productos
-        </h2>
+        </h2>*/}
 
         <div className="filter-container">
           {categories.map((cat) => (
