@@ -65,6 +65,14 @@ body.light {
   color: var(--text);
 }
 
+.center{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -668,6 +676,10 @@ body.light {
 .footer-item a:hover {
   color: var(--primary);
   text-decoration: underline;
+}
+
+.footer-item2{
+  display: flex;
 }
 
 .footer-links {
@@ -1602,8 +1614,8 @@ body.light {
 
 .carousel-item {
   flex: 0 0 auto;
-  width: 220px;
-  height: 220px;
+  width: 300px;
+  height: 300px;
   margin-right: 20px;
   cursor: pointer;
 }
@@ -1611,7 +1623,7 @@ body.light {
 .carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   transition:
