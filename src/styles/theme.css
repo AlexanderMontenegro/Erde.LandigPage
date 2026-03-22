@@ -130,13 +130,15 @@ body.light {
 }
 
 .modal-main-image {
-  width: 100%;
-  max-height: 60vh;
-  object-fit: contain;
+  width: 20vw;
+  height: 30vh;
+  object-fit: inherit;
   border-radius: 0.75rem;
   border: 2px solid rgba(0, 255, 157, 0.3);
   box-shadow: var(--glow-green);
 }
+
+
 
 .modal-info-container {
   padding: 2rem 3rem;
