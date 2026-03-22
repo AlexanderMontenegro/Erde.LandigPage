@@ -45,6 +45,9 @@ const CartDrawer = () => {
   // Subtotal dinámico
   const [subtotalProducts, setSubtotalProducts] = useState(0);
 
+  // Controla si EnviosFlex está disponible
+  const [isEnviosFlexAvailable, setIsEnviosFlexAvailable] = useState(true);
+
   useEffect(() => {
     const newSubtotal = cart.reduce((acc, item) => acc + Number(item.basePrice) * Number(item.quantity), 0);
     setSubtotalProducts(newSubtotal);
@@ -117,10 +120,22 @@ const CartDrawer = () => {
 
     const cp = shippingData.codigoPostal.trim();
 
-    let baseCost = 10000;
-    if (cp.startsWith('1') || cp.startsWith('14') || cp.startsWith('C1')) baseCost = 3500; // CABA
-    else if (cp.startsWith('16') || cp.startsWith('18') || cp.startsWith('19') || cp.startsWith('B')) baseCost = 5000; // GBA
-    else baseCost = 8000; // Interior
+    let baseCost = 8300;
+    let isEnviosFlexAvailable = true;
+
+    const cpStart = cp.substring(0, 2);
+
+    if (cpStart.startsWith('1') || cpStart.startsWith('14') || cpStart.startsWith('C1')) {
+      baseCost = 3900; // CABA
+    } else if (cpStart.startsWith('17') || cpStart.startsWith('B17') || 
+               cpStart === 'B16' || cpStart.startsWith('18') || cpStart.startsWith('19')) {
+      baseCost = 5500; // Franja 1
+    } else if (cpStart.startsWith('16') || cpStart.startsWith('B')) {
+      baseCost = 6900; // Franja 2
+    } else {
+      baseCost = 8300;
+      isEnviosFlexAvailable = false; // No disponible en Franja 3 o interior lejano
+    }
 
     await updateUser({
       direccion: shippingData.direccion,
@@ -133,17 +148,23 @@ const CartDrawer = () => {
     setShippingOption('new');
     setShowShippingForm(false);
     setStep(2);
+    setIsEnviosFlexAvailable(isEnviosFlexAvailable);
   };
 
   const handleShippingMethodChange = (method) => {
     setShippingMethod(method);
 
-    // REEMPLAZO TOTAL: cada método tiene su costo fijo independiente
     let cost = 0;
 
     if (method === 'correo-argentino') cost = 3500;
     if (method === 'andreani') cost = 5000;
-    if (method === 'enviosflex') cost = 9400;
+    if (method === 'enviosflex') {
+      if (!isEnviosFlexAvailable) {
+        alert('EnviosFlex no está disponible en esta zona (solo CABA y Franjas 1 y 2).');
+        return;
+      }
+      cost = shippingCost; // usa el costo calculado por código postal
+    }
 
     setShippingCost(cost);
     setStep(3);
@@ -161,6 +182,7 @@ const CartDrawer = () => {
       provincia: '',
       localidad: ''
     });
+    setIsEnviosFlexAvailable(true);
   };
 
   const goBack = () => {
@@ -172,25 +194,20 @@ const CartDrawer = () => {
 
   const getShippingSummary = () => {
     if (!shippingOption) return null;
-
     if (shippingOption === 'local') return 'Retiro en Local';
-
     if (shippingOption === 'user') {
       return user?.direccion 
         ? `${user.direccion}, ${user.localidad || ''}, ${user.provincia || ''} (${user.codigoPostal || 'N/A'})`
         : 'Datos de usuario (sin dirección registrada)';
     }
-
     if (shippingOption === 'new') {
       return `${shippingData.direccion}, ${shippingData.localidad}, ${shippingData.provincia} (${shippingData.codigoPostal})`;
     }
-
     return null;
   };
 
   const shippingSummary = getShippingSummary();
 
-  // === Modales ===
   const OtherPaymentsModal = () => (
     <Modal open={openOtherPayments} onClose={() => setOpenOtherPayments(false)}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2 }}>
@@ -354,7 +371,6 @@ A confirmar pago. Gracias!`;
               </Box>
             ))}
 
-            {/* Subtotal al final de la lista */}
             {cart.length > 0 && (
               <Box sx={{ mt: 3, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -367,7 +383,6 @@ A confirmar pago. Gracias!`;
 
           <Divider sx={{ my: 2 }} />
 
-          {/* Resumen de dirección */}
           {shippingOption && (
             <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
               <Typography variant="subtitle2" color="text.secondary">
@@ -444,10 +459,22 @@ A confirmar pago. Gracias!`;
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Elige el servicio de envío</FormLabel>
                   <RadioGroup value={shippingMethod} onChange={(e) => handleShippingMethodChange(e.target.value)}>
-                    {/*<FormControlLabel value="correo-argentino" control={<Radio />} label="Correo Argentino - $3500" />*/}
-                   {/*<FormControlLabel value="andreani" control={<Radio />} label="Correo Andreani - $5000" />*/}
-                    <FormControlLabel value="enviosflex" control={<Radio />} label="EnviosFlex - $9400" />
+
+                   {/* <FormControlLabel value="correo-argentino" control={<Radio />} label="Correo Argentino - $3500" /> */}
+                    {/* <FormControlLabel value="andreani" control={<Radio />} label="Correo Andreani - $5000" />*/}
+                    
+                    <FormControlLabel 
+                      value="enviosflex" 
+                      control={<Radio disabled={!isEnviosFlexAvailable} />} 
+                      label={`EnviosFlex  - $${isEnviosFlexAvailable ? shippingCost : 'No disponible'}`} 
+                      disabled={!isEnviosFlexAvailable}
+                    />
                   </RadioGroup>
+                  {!isEnviosFlexAvailable && (
+                    <Typography variant="caption" color="error" sx={{ mt: 1 }}>
+                      EnviosFlex no disponible en esta zona (solo CABA y Franjas 1 y 2).
+                    </Typography>
+                  )}
                 </FormControl>
               )}
 
