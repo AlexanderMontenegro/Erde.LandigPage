@@ -10,7 +10,5 @@ reglas principales, modifica lo minimo el codigo para no romper funciones, si es
 
 
 
-agregar 
-cotizador de envios mediante carga de codigo postal en el modal del carrito se cotiza con correo argentino y correo andreani esto se debe sumar al precioa  abonar
 
 

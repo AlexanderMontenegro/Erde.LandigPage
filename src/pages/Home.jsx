@@ -140,7 +140,8 @@ y productos exclusivos en 3D 🖨️✨”
               </p>
             </div>
 
-            <div className="footer-item">
+            <div className=" footer-links">
+              <div className="center">
               <h4>WhatsApp</h4>
               <a
                 href="https://wa.me/5491170504193"
@@ -153,6 +154,22 @@ y productos exclusivos en 3D 🖨️✨”
                   className="social-icon"
                 />
               </a>
+              </div>
+              
+              <div className="center">
+              <h4>Telefono</h4>
+              <a
+                href="tel:+541170504193"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="/img/Iconos/llamada.png"
+                  alt="Llamada"
+                  className="social-icon"
+                />
+              </a>
+              </div>
             </div>
 
             <div className="footer-item">
@@ -199,10 +216,20 @@ y productos exclusivos en 3D 🖨️✨”
             </div>
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-text-muted">
-              © 2026 ERDE Personalizados - Todos los derechos reservados
-            </p>
+          <div className="center mt-12 text-center">
+            <p>© 2026 ERDE Personalizados - Todos los derechos reservados</p>
+          <a
+                  href="https://portafolio-p9aq.onrender.com/"
+                  className="footer-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/img/Iconos/MiLogo.png"
+                    alt="AGM Developer"
+                    className="social-icon"
+                  />
+                </a>
           </div>
         </div>
       </footer>
