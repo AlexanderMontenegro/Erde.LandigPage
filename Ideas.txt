@@ -6,7 +6,7 @@ avisame cuando sepas el contenido de cada hoja
 
 
 
-reglas principales, modifica lo minimo el codigo para no romper funciones, si es posible realizarlo modular ,conserva el estilo y paletas de colores, brindame codigo completo de las hojas 
+reglas principales,trabaja en la tarea que se designa, modifica lo minimo el codigo para no romper funciones, si es posible crear archivo  modular para incertar en el codigo ,conserva el estilo y paletas de colores, brindame codigo completo de las hojas 
 
 
 

@@ -88,9 +88,7 @@ y productos exclusivos en 3D 🖨️✨”
       )}
 
       <section id="productos" className="py-16 px-4 max-w-7xl mx-auto">
-       {/* <h2 className="text-4xl font-bold text-center mb-12 text-neon-green">
-          Catálogo de Productos
-        </h2>*/}
+      
 
         <div className="filter-container">
           {categories.map((cat) => (
@@ -217,7 +215,7 @@ y productos exclusivos en 3D 🖨️✨”
           </div>
 
           <div className="center mt-12 text-center">
-            <p>© 2026 ERDE Personalizados - Todos los derechos reservados</p>
+            <p>© 2026 ERDE Personalizados <br />Todos los derechos reservados</p>
           <a
                   href="https://portafolio-p9aq.onrender.com/"
                   className="footer-link"
