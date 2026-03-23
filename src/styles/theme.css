@@ -499,32 +499,13 @@ body.light {
 /* Grid productos */
 .grid-products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
   gap: 2rem;
   padding: 2rem 1rem;
 }
 
 /* Card producto */
-/*
-.card {
-  background: var(--card);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  height: 75vh;
-  max-height: 80vh;
-}
 
-.card img {
-  width: 100%;
-  min-height: 50vh;
-  object-fit: contain;
-  transition: var(--transition);
-  padding: 10px;
-}*/
 
 .card {
   background: var(--card);
@@ -538,12 +519,14 @@ body.light {
 .card-img {
   width: 100%;
   height: 400px;
-  background: #fff;
+ /* background: #fff;*/
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
   transition: transform .3s;
+  border-radius: 25px;
+
 }
 
 .card-img img {
